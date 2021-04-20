@@ -8,6 +8,7 @@
 
 import React, {useState} from 'react';
 import {t} from 'react-native-tailwindcss';
+import 'react-native-gesture-handler';
 
 // import Header from './component/Header';
 // import {v4 as uuidv4} from 'uuid';
@@ -27,41 +28,35 @@ import Header from './component/Header';
 import ListItem from './component/ListItem';
 import AddItem from './component/AddItem';
 
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import Signup from './component/Signup';
+import Login from './component/Login';
+const Stack = createStackNavigator();
 const App = () => {
-  const [items, setItems] = useState([
-    {id: 1, text: 'Living room', iconName: 'coffee'},
-    {id: 2, text: 'Kitchen', iconName: 'coffee'},
-    {id: 3, text: 'Bathroomroom', iconName: 'coffee'},
-    {id: 4, text: 'Washroom', iconName: 'coffee'},
-  ]);
-
-  const deleteItem = id => {
-    setItems(prevItems => {
-      return prevItems.filter(item => item.id != id);
-    });
-  };
-
-  const addItem = text => {
-    if (!text) {
-      Alert.alert('Error', 'Please enter an item', [{text: 'Ok'}]);
-    } else {
-      setItems(prevItems => {
-        return [{id: prevItems.id++, text, iconName: 'coffee'}, ...prevItems];
-      });
-    }
-  };
   return (
-    <View style={[t.flex1, t.bgGray200]}>
-      <Header />
-      <AddItem addItem={addItem} />
-      <FlatList
-        numColumns={3}
-        data={items}
-        renderItem={({item}) => (
-          <ListItem deleteItem={deleteItem} item={item} />
-        )}
-      />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="Login" component={Login} />
+      </Stack.Navigator>
+    </NavigationContainer>
+    // <View style={[t.flex1, t.bgGray200]}>
+
+    //  {/* <Header /> */}
+    // {/* <Login /> */}
+    // {/*<AddItem addItem={addItem} />
+    // <FlatList
+    //   numColumns={3}
+    //   data={items}
+    //   renderItem={({item}) => (
+    //     <ListItem deleteItem={deleteItem} item={item} />
+    //   )}
+    // /> */}
+    // </View>
   );
 };
 

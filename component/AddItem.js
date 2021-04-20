@@ -31,7 +31,7 @@ const AddItem = ({addItem}) => {
             borderWidth: 1,
             borderRadius: 5,
           }}
-          placeholderTextColor={'#g5g5g5'}
+          // placeholderTextColor={'#g5g5g5'}
           placeholder={'Search in rooms'}
           onChangeText={onChange}
         />

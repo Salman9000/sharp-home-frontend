@@ -18,7 +18,7 @@ const Header = () => {
   return (
     <Appbar.Header style={[t.bgBlue900]}>
       <Appbar.BackAction onPress={_goBack} size={20} />
-      <Appbar.Content title="Your rooms" titleStyle={{textAlign: 'center'}} />
+      <Appbar.Content title={title} titleStyle={{textAlign: 'center'}} />
       <Appbar.Action icon="dots-vertical" onPress={_handleMore} size={24} />
     </Appbar.Header>
   );
