@@ -32,6 +32,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Signup from './component/Signup';
 import Login from './component/Login';
+import LoadingScreen from './component/LoadingScreen'
+import HomeScreen  from './component/HomeScreen'
 const Stack = createStackNavigator();
 const App = () => {
   return (
@@ -40,6 +42,8 @@ const App = () => {
         screenOptions={{
           headerShown: false,
         }}>
+        <Stack.Screen name="loading" component={LoadingScreen} />
+        <Stack.Screen name="home" component={HomeScreen} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>

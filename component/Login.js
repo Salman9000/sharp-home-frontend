@@ -9,8 +9,15 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import {HelperText, TextInput, Button} from 'react-native-paper';
 import Header from './Header';
+const axios = require('axios');
+import {storeToken,getToken,removeToken} from './Storage'
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setpassword] = useState('');
@@ -20,48 +27,72 @@ const Login = ({navigation}) => {
     return !text.includes('@');
   };
 
+  const Enterhouse = (email, password) => {
+    // console.log(email, password);
+    axios
+      .post('http://192.168.18.6:3000/v1/auth/login', {
+        email: email,
+        password: password,
+      })
+      .catch(function (error) {
+        console.log(
+          'There has been a problem with your fetch operation: ' +
+            error.message,
+        );
+        // ADD THIS THROW error
+      })
+      .then(function (response) {
+        // AsyncStorage.setItem('token', response.data.tokens.access.token);
+        storeToken('token')
+        navigation.replace('home');
+        // console.log();
+      });
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.top}>
-        <Text style={styles.Text}>Smart Home</Text>
-      </View>
-      <View style={styles.otherboxes}>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.TextInput}
-            value={email}
-            placeholder="Email"
-            selectionColor="white"
-            placeholderTextColor="#ffffff"
-            onChangeText={(email) => setEmail(email)}
-          />
+      <ScrollView>
+        <View style={styles.top}>
+          <Text style={styles.Text}>Smart Home</Text>
         </View>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.TextInput}
-            value={password}
-            placeholder="Password"
-            // secureTextEntry={true}
-            placeholderTextColor="#ffffff"
-            onChangeText={(pass) => setpassword(pass)}
-          />
+        <View style={styles.otherboxes}>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.TextInput}
+              value={email}
+              placeholder="Email"
+              selectionColor="white"
+              placeholderTextColor="#ffffff"
+              onChangeText={email => setEmail(email)}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.TextInput}
+              value={password}
+              placeholder="Password"
+              secureTextEntry={true}
+              placeholderTextColor="#ffffff"
+              onChangeText={pass => setpassword(pass)}
+            />
+          </View>
         </View>
-      </View>
-      <View style={styles.otherboxes2}>
-        <Button
-          style={styles.button1}
-          mode="contained"
-          onPress={() => Enterhouse(email, password)}>
-          Enter The House
-        </Button>
+        <View style={styles.otherboxes2}>
+          <Button
+            style={styles.button1}
+            mode="contained"
+            onPress={() => Enterhouse(email, password)}>
+            Enter The House
+          </Button>
 
-        <Button
-          style={styles.button2}
-          mode="contained"
-          onPress={() => navigation.navigate('Signup')}>
-          New Residence
-        </Button>
-      </View>
+          <Button
+            style={styles.button2}
+            mode="contained"
+            onPress={() => navigation.navigate('Signup')}>
+            New Residence
+          </Button>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -75,14 +106,14 @@ const styles = StyleSheet.create({
   inputView: {
     backgroundColor: '#003f5c',
     // borderRadius: 30,
-    width: '100%',
+    width: wp('100%'),
     height: 50,
     marginBottom: 20,
     alignItems: 'center',
   },
   TextInput: {
     height: 50,
-    width: '100%',
+    width: wp('100%'),
     flex: 1,
     fontSize: 20,
     alignItems: 'flex-start',
@@ -94,18 +125,19 @@ const styles = StyleSheet.create({
   },
   top: {
     marginTop: 80,
+    alignItems: 'center',
   },
   otherboxes: {
-    flex: 1,
-    width: '100%',
+    height: hp('50%'),
+    width: wp('100%'),
     marginTop: 50,
     flexDirection: 'column',
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
   otherboxes2: {
-    flex: 1,
-    width: '100%',
+    height: hp('20%'),
+    width: wp('100%'),
     marginTop: 50,
     flexDirection: 'column',
     alignItems: 'center',
