@@ -16,8 +16,8 @@ import {
 import {HelperText, TextInput, Button} from 'react-native-paper';
 import Header from './Header';
 const axios = require('axios');
-import {storeToken,getToken,removeToken} from './Storage'
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import Storage from './Storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setpassword] = useState('');
@@ -30,7 +30,7 @@ const Login = ({navigation}) => {
   const Enterhouse = (email, password) => {
     // console.log(email, password);
     axios
-      .post('http://192.168.18.6:3000/v1/auth/login', {
+      .post('http://192.168.1.122:3000/v1/auth/login', {
         email: email,
         password: password,
       })
@@ -42,8 +42,9 @@ const Login = ({navigation}) => {
         // ADD THIS THROW error
       })
       .then(function (response) {
-        // AsyncStorage.setItem('token', response.data.tokens.access.token);
-        storeToken('token')
+        AsyncStorage.setItem('token', response.data.tokens.access.token);
+        // Storage.storeToken(response.data.tokens.access.token);
+        // console.log(response.data.tokens.access.token);
         navigation.replace('home');
         // console.log();
       });

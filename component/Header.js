@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {Appbar} from 'react-native-paper';
 
-const Header = () => {
+const Header = ({title}) => {
   const _goBack = () => console.log('Went back');
   const _handleMore = () => console.log('Shown more');
   return (

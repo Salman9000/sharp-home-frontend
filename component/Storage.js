@@ -1,13 +1,13 @@
 import SInfo from 'react-native-sensitive-info';
 
 const key = 'authToken';
-const storeToken = async (authToken) => {
+const storeToken = async authToken => {
   try {
     await SInfo.setItem(key, authToken, {
       sharedPreferencesName: 'mySharedPrefs',
       keychainService: 'myKeychain',
     });
-    console.log('stored token')
+    console.log('stored token');
   } catch (error) {
     console.log('Error storing the auth token');
   }
@@ -21,7 +21,7 @@ const getToken = async () => {
     });
     return authToken;
   } catch (error) {
-    console.log('Errpr getting the auth token');
+    console.log('Error getting the auth token');
   }
 };
 
@@ -36,4 +36,4 @@ const removeToken = async () => {
   }
 };
 
-export default{storeToken,getToken,removeToken}
+export default {storeToken, getToken, removeToken};
