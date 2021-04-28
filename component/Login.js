@@ -17,7 +17,7 @@ import {
 import {HelperText, TextInput, Button} from 'react-native-paper';
 import Header from './Header';
 const axios = require('axios');
-import {storeToken, getToken, removeToken} from './Storage';
+import Storage from './Storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -44,7 +44,8 @@ const Login = ({navigation}) => {
       })
       .then(function (response) {
         AsyncStorage.setItem('token', response.data.tokens.access.token);
-        // storeToken('token');
+        // Storage.storeToken(response.data.tokens.access.token);
+        // console.log(response.data.tokens.access.token);
         navigation.replace('home');
         // console.log();
       });
