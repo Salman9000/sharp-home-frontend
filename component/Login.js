@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {getIp} from '../helper';
 import {
   SafeAreaView,
   ScrollView,
@@ -16,8 +17,8 @@ import {
 import {HelperText, TextInput, Button} from 'react-native-paper';
 import Header from './Header';
 const axios = require('axios');
-import {storeToken,getToken,removeToken} from './Storage'
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import {storeToken, getToken, removeToken} from './Storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setpassword] = useState('');
@@ -30,9 +31,9 @@ const Login = ({navigation}) => {
   const Enterhouse = (email, password) => {
     // console.log(email, password);
     axios
-      .post('http://192.168.18.6:3000/v1/auth/login', {
-        email: email,
-        password: password,
+      .post(`http://${getIp}/v1/auth/login`, {
+        email: 'salmanhanif33@gmail.com',
+        password: 'salman33',
       })
       .catch(function (error) {
         console.log(
@@ -42,8 +43,8 @@ const Login = ({navigation}) => {
         // ADD THIS THROW error
       })
       .then(function (response) {
-        // AsyncStorage.setItem('token', response.data.tokens.access.token);
-        storeToken('token')
+        AsyncStorage.setItem('token', response.data.tokens.access.token);
+        // storeToken('token');
         navigation.replace('home');
         // console.log();
       });

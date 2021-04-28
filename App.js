@@ -32,8 +32,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Signup from './component/Signup';
 import Login from './component/Login';
-import LoadingScreen from './component/LoadingScreen'
-import HomeScreen  from './component/HomeScreen'
+import LoadingScreen from './component/LoadingScreen';
+import HomeScreen from './component/HomeScreen';
+import ChartOne from './component/Chartone';
 const Stack = createStackNavigator();
 const App = () => {
   return (
@@ -46,6 +47,7 @@ const App = () => {
         <Stack.Screen name="home" component={HomeScreen} />
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Chartone" component={ChartOne} />
       </Stack.Navigator>
     </NavigationContainer>
     // <View style={[t.flex1, t.bgGray200]}>
