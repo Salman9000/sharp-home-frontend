@@ -33,8 +33,8 @@ const Login = props => {
 
     axios
       .post(`http://192.168.1.122:3000/v1/auth/login`, {
-        email: 'rasheedaabbas@gmail.com',
-        password: 'rashi123',
+        email: 'test@test.com',
+        password: 'test1234',
       })
       .then(function (response) {
         AsyncStorage.setItem('token', response.data.tokens.access.token);

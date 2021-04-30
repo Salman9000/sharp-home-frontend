@@ -35,6 +35,8 @@ import Login from './component/Login';
 import LoadingScreen from './component/LoadingScreen';
 import HomeScreen from './component/HomeScreen';
 import ChartOne from './component/Chartone';
+import noRoom from './component/NoRoom';
+import noDevice from './component/NoDevice';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -49,6 +51,8 @@ const App = () => {
         <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Chartone" component={ChartOne} />
+        <Stack.Screen name="noRoom" component={noRoom} />
+        <Stack.Screen name="noDevice" component={noDevice} />
       </Stack.Navigator>
     </NavigationContainer>
     // <View style={[t.flex1, t.bgGray200]}>

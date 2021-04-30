@@ -16,42 +16,45 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = props => {
-  const [email, setEmail] = useState('loading');
   const [rooms, setRooms] = useState([]);
 
   const validToken = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      console.log(token);
+      // console.log(token);
       return token;
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getRooms = async () => {
+  const getRooms = async props => {
     const token = await validToken();
-    console.log('hello');
-    console.log(token, 'myotken');
+    // console.log('hello');
     try {
       let config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
+      // console.log(config.headers.Authorization);
       const response = await axios.get(
         'http://192.168.1.122:3000/v1/rooms',
         config,
       );
-      console.log(response.data.docs);
+      // console.log(response.data.docs);
       setRooms(response.data.docs);
+      if (rooms) {
+        // console.log('exists');
+        props.navigation.replace('noRoom');
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getRooms();
+    getRooms(props);
   }, []);
 
   const addDeviceButton = () => {};
@@ -59,7 +62,7 @@ const HomeScreen = props => {
     <View style={styles.scroll}>
       <Header title="Welcome" />
       {rooms.map(item => (
-        <Text>{item.description}</Text>
+        <Text key={item.id}>desc: {item.description}</Text>
       ))}
       <ScrollView>
         {/* <TouchableOpacity
