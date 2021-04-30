@@ -8,41 +8,61 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Storage from './Storage';
 import Header from './Header';
 import Footer from './Footer';
+import {getActionFromState} from '@react-navigation/core';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = props => {
   const [email, setEmail] = useState('loading');
-  //    const Boiler = async ()=>{
-  //       const token = await AsyncStorage.getItem("token")
-  //     fetch('http://10.0.2.2:3000/',{
-  //     headers:new Headers({
-  //       Authorization:"Bearer "+token
-  //     })
-  //     }).then(res=>res.json())
-  //     .then(data=>{
-  //       console.log(data)
-  //       setEmail(data.email)
-  //     }
-  //     )
-  //    }
-  // useEffect(()=>{
-  //    Boiler()
-  // },[])
+  const [rooms, setRooms] = useState([]);
 
-  const logout = props => {
-    AsyncStorage.removeItem('token').then(() => {
-      props.navigation.replace('Login');
-    });
+  const validToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      console.log(token);
+      return token;
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const getRooms = async () => {
+    const token = await validToken();
+    console.log('hello');
+    console.log(token, 'myotken');
+    try {
+      let config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.get(
+        'http://192.168.1.122:3000/v1/rooms',
+        config,
+      );
+      console.log(response.data.docs);
+      setRooms(response.data.docs);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getRooms();
+  }, []);
 
   const addDeviceButton = () => {};
   return (
     <View style={styles.scroll}>
       <Header title="Welcome" />
+      {rooms.map(item => (
+        <Text>{item.description}</Text>
+      ))}
       <ScrollView>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             addDeviceButton();
           }}
@@ -54,7 +74,7 @@ const HomeScreen = props => {
           style={{marginLeft: 18, marginRight: 18, marginTop: 18}}
           onPress={() => logout(props)}>
           logout
-        </Button>
+        </Button> */}
       </ScrollView>
       <Footer nav={props} />
     </View>

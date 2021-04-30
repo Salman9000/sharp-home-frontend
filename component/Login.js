@@ -33,8 +33,17 @@ const Login = props => {
 
     axios
       .post(`http://192.168.1.122:3000/v1/auth/login`, {
-        email: email,
-        password: password,
+        email: 'rasheedaabbas@gmail.com',
+        password: 'rashi123',
+      })
+      .then(function (response) {
+        AsyncStorage.setItem('token', response.data.tokens.access.token);
+        // Storage.storeToken(response.data.tokens.access.token);
+        // console.log(AsyncStorage.getItem('token'));
+        // console.log();
+        // console.log('reached');
+        props.navigation.replace('home');
+        // console.log();
       })
       .catch(function (error) {
         console.log(
@@ -42,13 +51,6 @@ const Login = props => {
             error.message,
         );
         // ADD THIS THROW error
-      })
-      .then(function (response) {
-        AsyncStorage.setItem('token', response.data.tokens.access.token);
-        Storage.storeToken(response.data.tokens.access.token);
-        // console.log(response.data.tokens.access.token);
-        props.navigation.replace('home');
-        // console.log();
       });
   };
 
