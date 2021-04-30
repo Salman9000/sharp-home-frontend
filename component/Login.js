@@ -19,21 +19,22 @@ import Header from './Header';
 const axios = require('axios');
 import Storage from './Storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const Login = ({navigation}) => {
+const Login = props => {
   const [email, setEmail] = useState('');
   const [password, setpassword] = useState('');
   const onChangeText = text => setText(text);
 
-  const hasErrors = () => {
+  const hasErrors = ({navigation}) => {
     return !text.includes('@');
   };
 
-  const Enterhouse = (email, password) => {
+  const Enterhouse = (email, password, props) => {
     // console.log(email, password);
+
     axios
-      .post(`http://${getIp}/v1/auth/login`, {
-        email: 'salmanhanif33@gmail.com',
-        password: 'salman33',
+      .post(`http://192.168.1.122:3000/v1/auth/login`, {
+        email: email,
+        password: password,
       })
       .catch(function (error) {
         console.log(
@@ -44,9 +45,9 @@ const Login = ({navigation}) => {
       })
       .then(function (response) {
         AsyncStorage.setItem('token', response.data.tokens.access.token);
-        // Storage.storeToken(response.data.tokens.access.token);
+        Storage.storeToken(response.data.tokens.access.token);
         // console.log(response.data.tokens.access.token);
-        navigation.replace('home');
+        props.navigation.replace('home');
         // console.log();
       });
   };
@@ -83,7 +84,7 @@ const Login = ({navigation}) => {
           <Button
             style={styles.button1}
             mode="contained"
-            onPress={() => Enterhouse(email, password)}>
+            onPress={() => Enterhouse(email, password, props)}>
             Enter The House
           </Button>
 

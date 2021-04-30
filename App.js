@@ -35,6 +35,7 @@ import Login from './component/Login';
 import LoadingScreen from './component/LoadingScreen';
 import HomeScreen from './component/HomeScreen';
 import ChartOne from './component/Chartone';
+
 const Stack = createStackNavigator();
 const App = () => {
   return (

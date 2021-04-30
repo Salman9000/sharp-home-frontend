@@ -6,9 +6,11 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from './Header';
+import Footer from './Footer';
 
 const HomeScreen = props => {
   const [email, setEmail] = useState('loading');
@@ -37,21 +39,24 @@ const HomeScreen = props => {
 
   const addDeviceButton = () => {};
   return (
-    <View styles={styles.screen}>
+    <View style={styles.scroll}>
       <Header title="Welcome" />
-      <TouchableOpacity
-        onPress={() => {
-          addDeviceButton();
-        }}
-        style={styles.addDeviceButton}>
-        <Text>I'm a button</Text>
-      </TouchableOpacity>
-      <Button
-        mode="contained"
-        style={{marginLeft: 18, marginRight: 18, marginTop: 18}}
-        onPress={() => logout(props)}>
-        logout
-      </Button>
+      <ScrollView>
+        <TouchableOpacity
+          onPress={() => {
+            addDeviceButton();
+          }}
+          style={styles.addDeviceButton}>
+          <Text>I'm a button</Text>
+        </TouchableOpacity>
+        <Button
+          mode="contained"
+          style={{marginLeft: 18, marginRight: 18, marginTop: 18}}
+          onPress={() => logout(props)}>
+          logout
+        </Button>
+      </ScrollView>
+      <Footer nav={props} />
     </View>
   );
 };
@@ -67,5 +72,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 80,
     backgroundColor: 'lightblue',
+  },
+  scroll: {
+    flex: 1,
   },
 });
