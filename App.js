@@ -6,28 +6,9 @@
  * @flow strict-local
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {t} from 'react-native-tailwindcss';
 import 'react-native-gesture-handler';
-
-// import Header from './component/Header';
-// import {v4 as uuidv4} from 'uuid';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-  FlatList,
-  Alert,
-} from 'react-native';
-
-import Header from './component/Header';
-import ListItem from './component/ListItem';
-import AddItem from './component/AddItem';
-
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Signup from './component/Signup';
@@ -39,25 +20,51 @@ import noRoom from './component/NoRoom';
 import addRoom from './component/AddRoom';
 import noDevice from './component/NoDevice';
 import addDevice from './component/AddDevice';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Stack = createStackNavigator();
+
 const App = () => {
+  // AsyncStorage.clear().then(console.log('cleared'));
+  const [token, setToken] = useState(null);
+  useEffect(() => {
+    AsyncStorage.getItem('token').then(value => {
+      setToken(value);
+    });
+  }, []);
+
+  console.log(token);
+
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}>
-        <Stack.Screen name="loading" component={LoadingScreen} />
-        <Stack.Screen name="home" component={HomeScreen} />
-        <Stack.Screen name="Signup" component={Signup} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Chartone" component={ChartOne} />
-        <Stack.Screen name="noRoom" component={noRoom} />
-        <Stack.Screen name="noDevice" component={noDevice} />
-        <Stack.Screen name="addRoom" component={addRoom} />
-        <Stack.Screen name="addDevice" component={addDevice} />
-      </Stack.Navigator>
+      {token == null ? (
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}>
+          <Stack.Screen name="Login">
+            {props => <Login {...props} setToken={setToken} />}
+          </Stack.Screen>
+        </Stack.Navigator>
+      ) : (
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}>
+          {/* <Stack.Screen name="loading" component={LoadingScreen} /> */}
+          <Stack.Screen name="home">
+            {props => <HomeScreen {...props} token={token} />}
+          </Stack.Screen>
+          <Stack.Screen name="Signup" component={Signup} />
+          <Stack.Screen name="Login">
+            {props => <Login {...props} setToken={setToken} />}
+          </Stack.Screen>
+          <Stack.Screen name="Chartone" component={ChartOne} />
+          <Stack.Screen name="noRoom" component={noRoom} />
+          <Stack.Screen name="noDevice" component={noDevice} />
+          <Stack.Screen name="addRoom" component={addRoom} />
+          <Stack.Screen name="addDevice" component={addDevice} />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
     // <View style={[t.flex1, t.bgGray200]}>
 

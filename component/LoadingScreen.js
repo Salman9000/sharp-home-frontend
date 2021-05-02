@@ -9,9 +9,10 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoadingScreen = props => {
+  console.log('mewo');
   const detectLogin = async () => {
     const token = await AsyncStorage.getItem('token');
-    // console.log(token);
+    console.log(token);
     if (token) {
       props.navigation.replace('home');
     } else {

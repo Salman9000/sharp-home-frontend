@@ -19,43 +19,28 @@ import Header from './Header';
 const axios = require('axios');
 import Storage from './Storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {BASE_URL} from '@env';
+
 const Login = props => {
   const [email, setEmail] = useState('');
   const [password, setpassword] = useState('');
   const onChangeText = text => setText(text);
-
-  const hasErrors = ({navigation}) => {
-    return !text.includes('@');
-  };
-
-  const Enterhouse = (email, password, props) => {
-     console.log(email, password);
-
-    axios
-      .post(`http://192.168.1.122:3000/v1/auth/login`, {
+  console.log('this is null');
+  const Enterhouse = async (email, password, props) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/v1/auth/login`, {
         email: 'test@test.com',
         password: 'test1234',
-        // email: 'test2@test.com',
-        // password: 'test1234',
-        // email: 'rasheedaabbas@gmail.com',
-        // password: 'rashi123',
-      })
-      .then(function (response) {
-        AsyncStorage.setItem('token', response.data.tokens.access.token);
-        // Storage.storeToken(response.data.tokens.access.token);
-        // console.log(AsyncStorage.getItem('token'));
-        // console.log();
-       console.log('reached');
-        props.navigation.replace('home');
-        // console.log();
-      })
-      .catch(function (error) {
-        console.log(
-          'There has been a problem with your fetch operation: ' +
-            error.message,
-        );
-        // ADD THIS THROW error
       });
+      // console.log(response.data.tokens.access.token);
+      AsyncStorage.setItem('token', response.data.tokens.access.token);
+      props.setToken(response.data.tokens.access.token);
+      props.navigation.replace('home');
+    } catch (error) {
+      console.log(
+        'There has been a problem with your fetch operation: ' + error.message,
+      );
+    }
   };
 
   return (
@@ -77,7 +62,7 @@ const Login = props => {
           </View>
           <View style={styles.inputView}>
             <TextInput
-            Type= 'outlined'
+              Type="outlined"
               style={styles.TextInput}
               value={password}
               placeholder="Password"

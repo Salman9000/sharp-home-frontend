@@ -14,35 +14,17 @@ import Footer from './Footer';
 import {getActionFromState} from '@react-navigation/core';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import instance from '../helper';
+import {BASE_URL} from '@env';
 
 const HomeScreen = props => {
   const [rooms, setRooms] = useState([]);
   const [devices, setDevices] = useState([]);
+  const token = props.token;
 
-  const validToken = async () => {
+  const getRooms = async () => {
     try {
-      const token = await AsyncStorage.getItem('token');
-      return token;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getRooms = async props => {
-    const token = await validToken();
-    if (token === null) {
-      props.navigation.replace('Login');
-    }
-    try {
-      let config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const response = await axios.get(
-        'http://192.168.18.6:3000/v1/rooms',
-        config,
-      );
+      const response = await instance(token).get('/v1/rooms'); //
       setRooms(response.data.docs);
       if (response.data.docs.length === 0) {
         props.navigation.replace('noRoom');
@@ -53,21 +35,9 @@ const HomeScreen = props => {
     }
   };
 
-  const getDevices = async props => {
-    const token = await validToken();
-    if (token === null) {
-      props.navigation.replace('Login');
-    }
+  const getDevices = async () => {
     try {
-      let config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const response = await axios.get(
-        'http://192.168.1.122:3000/v1/devices',
-        config,
-      );
+      const response = await instance(token).get('/v1/devices');
       setDevices(response.data.docs);
       if (response.data.docs.length === 0) {
         props.navigation.replace('noDevice');
@@ -78,7 +48,8 @@ const HomeScreen = props => {
   };
 
   useEffect(() => {
-    getRooms(props).then(getDevices(props));
+    getRooms();
+    getDevices();
   }, []);
 
   const addDeviceButton = () => {};
