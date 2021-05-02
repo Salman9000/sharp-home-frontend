@@ -25,7 +25,7 @@ const Login = props => {
   const [email, setEmail] = useState('');
   const [password, setpassword] = useState('');
   const onChangeText = text => setText(text);
-  console.log('this is null');
+  console.log('we are in login page');
   const Enterhouse = async (email, password, props) => {
     try {
       const response = await axios.post(`${BASE_URL}/v1/auth/login`, {

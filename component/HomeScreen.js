@@ -17,7 +17,8 @@ const HomeScreen = props => {
   const [rooms, setRooms] = useState([]);
   const [devices, setDevices] = useState([]);
   const token = props.token;
-
+  console.log(token, 'ASDASDASD');
+  console.log('AJDNASJKDNJAK');
   const getRooms = async () => {
     try {
       const response = await instance(token).get('/v1/rooms'); //
