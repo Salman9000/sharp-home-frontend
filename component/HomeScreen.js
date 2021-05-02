@@ -17,11 +17,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = props => {
   const [rooms, setRooms] = useState([]);
+  const [devices, setDevices] = useState([]);
 
   const validToken = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      // console.log(token);
       return token;
     } catch (error) {
       console.log(error);
@@ -30,23 +30,47 @@ const HomeScreen = props => {
 
   const getRooms = async props => {
     const token = await validToken();
-    // console.log('hello');
+    if (token === null) {
+      props.navigation.replace('Login');
+    }
     try {
       let config = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       };
-      // console.log(config.headers.Authorization);
       const response = await axios.get(
         'http://192.168.1.122:3000/v1/rooms',
         config,
       );
-      // console.log(response.data.docs);
       setRooms(response.data.docs);
-      if (rooms) {
-        // console.log('exists');
+      if (response.data.docs.length === 0) {
         props.navigation.replace('noRoom');
+      }
+      return 1;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getDevices = async props => {
+    const token = await validToken();
+    if (token === null) {
+      props.navigation.replace('Login');
+    }
+    try {
+      let config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.get(
+        'http://192.168.1.122:3000/v1/devices',
+        config,
+      );
+      setDevices(response.data.docs);
+      if (response.data.docs.length === 0) {
+        props.navigation.replace('noDevice');
       }
     } catch (error) {
       console.log(error);
@@ -54,7 +78,7 @@ const HomeScreen = props => {
   };
 
   useEffect(() => {
-    getRooms(props);
+    getRooms(props).then(getDevices(props));
   }, []);
 
   const addDeviceButton = () => {};

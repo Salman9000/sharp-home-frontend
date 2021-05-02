@@ -38,6 +38,7 @@ import ChartOne from './component/Chartone';
 import noRoom from './component/NoRoom';
 import addRoom from './component/AddRoom';
 import noDevice from './component/NoDevice';
+import addDevice from './component/AddDevice';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -55,6 +56,7 @@ const App = () => {
         <Stack.Screen name="noRoom" component={noRoom} />
         <Stack.Screen name="noDevice" component={noDevice} />
         <Stack.Screen name="addRoom" component={addRoom} />
+        <Stack.Screen name="addDevice" component={addDevice} />
       </Stack.Navigator>
     </NavigationContainer>
     // <View style={[t.flex1, t.bgGray200]}>

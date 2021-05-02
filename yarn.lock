@@ -6246,6 +6246,11 @@
     "prop-types" "^15.5.8"
     "tween-functions" "^1.0.1"
 
+"react-native-dropdown-picker@^5.0.0":
+  "integrity" "sha512-UvdNPaucO5rlokUYmpxkmYJmoa7rXqguGagVAVvaJoajdVdN3aFsx42ixF9ytsnvPoa6Ln48UI3KRyPxpj55dw=="
+  "resolved" "https://registry.npmjs.org/react-native-dropdown-picker/-/react-native-dropdown-picker-5.0.0.tgz"
+  "version" "5.0.0"
+
 "react-native-easy-grid@0.2.2":
   "integrity" "sha512-MlYrNIldnEMKn6TVatQN1P64GoVlwGIuz+8ncdfJ0Wq/xtzUkQwlil8Uksyp7MhKfENE09MQnGNcba6Mx3oSAA=="
   "resolved" "https://registry.npmjs.org/react-native-easy-grid/-/react-native-easy-grid-0.2.2.tgz"
@@ -6276,7 +6281,12 @@
   "resolved" "https://registry.npmjs.org/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.1.tgz"
   "version" "1.3.1"
 
-"react-native-paper@^4.7.2":
+"react-native-paper-dropdown@^1.0.2":
+  "integrity" "sha512-R7QHJe111dRdueZh8JMYNDpERGCoelr/FgaDFidDVLJpFLNSjbbKG6U2aQ2ITeW+U3YRc4WDZ2sZnmyZ15O1zg=="
+  "resolved" "https://registry.npmjs.org/react-native-paper-dropdown/-/react-native-paper-dropdown-1.0.2.tgz"
+  "version" "1.0.2"
+
+"react-native-paper@*", "react-native-paper@^4.7.2":
   "integrity" "sha512-MOcDWjBOaknEpQgdm4fIOsRFIt4PJlMCgWlLk4kIe8Wv99/M0JIoxWABkAf4Lj5BuJgXjXdwr0DA/lhGY1BRoQ=="
   "resolved" "https://registry.npmjs.org/react-native-paper/-/react-native-paper-4.7.2.tgz"
   "version" "4.7.2"

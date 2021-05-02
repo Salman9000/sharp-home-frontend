@@ -35,6 +35,10 @@ const Login = props => {
       .post(`http://192.168.1.122:3000/v1/auth/login`, {
         email: 'test@test.com',
         password: 'test1234',
+        // email: 'test2@test.com',
+        // password: 'test1234',
+        // email: 'rasheedaabbas@gmail.com',
+        // password: 'rashi123',
       })
       .then(function (response) {
         AsyncStorage.setItem('token', response.data.tokens.access.token);
