@@ -15,6 +15,9 @@ const Footer = props => {
       navigation.replace('Login');
     });
   };
+  const chartOne = navigation => {
+    navigation.replace('Chartone');
+  };
 
   return (
     <F>
@@ -23,7 +26,12 @@ const Footer = props => {
           <Icon name="home" />
           <Text>Home</Text>
         </Button>
-        <Button vertical active>
+        <Button
+          vertical
+          active
+          onPress={() => {
+            chartOne(props.nav.navigation);
+          }}>
           <Entypo name="bar-graph" style={styles.barIcon} />
           <Text>Analytics</Text>
         </Button>

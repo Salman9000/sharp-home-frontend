@@ -40,7 +40,7 @@ const HomeScreen = props => {
         },
       };
       const response = await axios.get(
-        'http://192.168.1.122:3000/v1/rooms',
+        'http://192.168.18.6:3000/v1/rooms',
         config,
       );
       setRooms(response.data.docs);

@@ -29,7 +29,7 @@ const Login = props => {
   };
 
   const Enterhouse = (email, password, props) => {
-    // console.log(email, password);
+     console.log(email, password);
 
     axios
       .post(`http://192.168.1.122:3000/v1/auth/login`, {
@@ -45,7 +45,7 @@ const Login = props => {
         // Storage.storeToken(response.data.tokens.access.token);
         // console.log(AsyncStorage.getItem('token'));
         // console.log();
-        // console.log('reached');
+       console.log('reached');
         props.navigation.replace('home');
         // console.log();
       })
@@ -77,6 +77,7 @@ const Login = props => {
           </View>
           <View style={styles.inputView}>
             <TextInput
+            Type= 'outlined'
               style={styles.TextInput}
               value={password}
               placeholder="Password"
