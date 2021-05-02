@@ -30,35 +30,37 @@ const AddDevice = props => {
     }
   };
 
-  const getRooms = async props => {
-    const token = await validToken();
-    if (token === null) {
-      props.navigation.replace('Login');
-    }
-    try {
-      let config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      const response = await axios.get(
-        'http://192.168.1.122:3000/v1/rooms',
-        config,
-      );
-      setRooms(response.data.docs);
-      if (response.data.docs.length === 0) {
-        props.navigation.replace('noRoom');
-      }
-      return 1;
-    } catch (error) {
-      console.log(error);
-    }
+  // const getRooms = async props => {
+  //   const token = await validToken();
+  //   if (token === null) {
+  //     props.navigation.replace('Login');
+  //   }
+  //   try {
+  //     let config = {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     };
+  //     const response = await axios.get(
+  //       'http://192.168.1.122:3000/v1/rooms',
+  //       config,
+  //     );
+  //     setRooms(response.data.docs);
+  //     if (response.data.docs.length === 0) {
+  //       props.navigation.replace('noRoom');
+  //     }
+  //     return 1;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getRooms(props);
+  // }, []);
+  const chooseRoom = props => {
+    props.navigation.replace('chooseRoom');
   };
-
-  useEffect(() => {
-    getRooms(props);
-  }, []);
-
   const addDevice = async props => {
     console.log('pressed');
     const token = await validToken();
@@ -154,16 +156,15 @@ const AddDevice = props => {
               onChangeText={desc => setRating(rating)}
             />
           </View>
-          <View style={styles.inputView}>
-            <DropDownPicker
-              items={roomList}
-              placeholder="Select a Room"
-              defaultValue={rooms}
-              itemStyle={{
-                justifyContent: 'flex-start',
-              }}
-              onChangeItem={item => roomSelect(rooms)}
-            />
+          <View style={styles.otherboxes2}>
+            <Button
+              style={styles.button1}
+              mode="contained"
+              onPress={() => {
+                chooseRoom(props);
+              }}>
+              Choose Room
+            </Button>
           </View>
         </View>
         <View style={styles.otherboxes2}>

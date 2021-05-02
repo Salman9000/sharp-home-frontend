@@ -13,14 +13,15 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Signup from './component/Signup';
 import Login from './component/Login';
-import LoadingScreen from './component/LoadingScreen';
 import HomeScreen from './component/HomeScreen';
 import ChartOne from './component/Chartone';
-import noRoom from './component/NoRoom';
-import addRoom from './component/AddRoom';
-import noDevice from './component/NoDevice';
-import addDevice from './component/AddDevice';
+import NoRoom from './component/NoRoom';
+import AddRoom from './component/AddRoom';
+import NoDevice from './component/NoDevice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AddDevice from './component/AddDevice';
+import ChooseRoom from './component/ChooseRoom';
+
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -63,15 +64,30 @@ const App = () => {
             <Stack.Screen name="home">
               {props => <HomeScreen {...props} token={token} />}
             </Stack.Screen>
-            <Stack.Screen name="Signup" component={Signup} />
+            <Stack.Screen name="Signup">
+              {props => <Signup {...props} token={token} />}
+            </Stack.Screen>
             <Stack.Screen name="Login">
               {props => <Login {...props} setToken={setToken} />}
             </Stack.Screen>
-            <Stack.Screen name="Chartone" component={ChartOne} />
-            <Stack.Screen name="noRoom" component={noRoom} />
-            <Stack.Screen name="noDevice" component={noDevice} />
-            <Stack.Screen name="addRoom" component={addRoom} />
-            <Stack.Screen name="addDevice" component={addDevice} />
+            <Stack.Screen name="Chartone">
+              {props => <ChartOne {...props} setToken={setToken} />}
+            </Stack.Screen>
+            <Stack.Screen name="noRoom">
+              {props => <NoRoom {...props} setToken={setToken} />}
+            </Stack.Screen>
+            <Stack.Screen name="noDevice">
+              {props => <NoDevice {...props} setToken={setToken} />}
+            </Stack.Screen>
+            <Stack.Screen name="addRoom">
+              {props => <AddRoom {...props} setToken={setToken} />}
+            </Stack.Screen>
+            <Stack.Screen name="addDevice">
+              {props => <AddDevice {...props} setToken={setToken} />}
+            </Stack.Screen>
+            <Stack.Screen name="chooseRoom">
+              {props => <ChooseRoom {...props} setToken={setToken} />}
+            </Stack.Screen>
           </Stack.Navigator>
         )}
       </NavigationContainer>
