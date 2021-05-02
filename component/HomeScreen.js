@@ -1,19 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {Button, TextInput} from 'react-native-paper';
+// import {Button, TextInput} from 'react-native-paper';
 import {
   View,
   ActivityIndicator,
-  Text,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
 } from 'react-native';
-import Storage from './Storage';
+import {Button, Text, Icon} from 'native-base';
 import Header from './Header';
 import Footer from './Footer';
-import {getActionFromState} from '@react-navigation/core';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import instance from '../helper';
 import {BASE_URL} from '@env';
 
@@ -34,46 +30,46 @@ const HomeScreen = props => {
       console.log(error);
     }
   };
-
+  const graphOne = () => {
+    <Text>Hi</Text>;
+  };
   const getDevices = async () => {
     try {
       const response = await instance(token).get('/v1/devices');
       setDevices(response.data.docs);
-      if (response.data.docs.length === 0) {
-        props.navigation.replace('noDevice');
-      }
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getRooms();
+    // getRooms();
     getDevices();
   }, []);
 
-  const addDeviceButton = () => {};
+  const addDeviceButtonPressed = props => {
+    props.navigation.replace('addDevice');
+  };
   return (
     <View style={styles.scroll}>
       <Header title="Welcome" />
-      {rooms.map(item => (
-        <Text key={item.id}>desc: {item.description}</Text>
-      ))}
-      <ScrollView>
-        {/* <TouchableOpacity
-          onPress={() => {
-            addDeviceButton();
-          }}
-          style={styles.addDeviceButton}>
-          <Text>I'm a button</Text>
-        </TouchableOpacity>
-        <Button
-          mode="contained"
-          style={{marginLeft: 18, marginRight: 18, marginTop: 18}}
-          onPress={() => logout(props)}>
-          logout
-        </Button> */}
-      </ScrollView>
+      <View style={styles.scrollv}>
+        {devices.length <= 0 ? (
+          <>
+            <Text style={styles.text}>No Devices</Text>
+            <Text style={styles.text}>Found</Text>
+            <Button
+              style={styles.iconContainer}
+              onPress={() => addDeviceButtonPressed(props)}>
+              <Icon name="add" style={styles.icon} />
+            </Button>
+          </>
+        ) : (
+          <>
+            <graphOne />
+          </>
+        )}
+      </View>
       <Footer nav={props} />
     </View>
   );
@@ -93,5 +89,30 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flex: 1,
+  },
+
+  scrollv: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconContainer: {
+    width: 80,
+    height: 80,
+    //   justifyContent: 'center',
+    //   alignItems: 'center',
+    borderRadius: 80,
+    backgroundColor: '#1e90ff',
+    padding: 7,
+    alignSelf: 'flex-end',
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+  },
+  icon: {
+    fontSize: 40,
+  },
+  text: {
+    fontSize: 40,
   },
 });
