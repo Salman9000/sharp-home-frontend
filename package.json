@@ -10,6 +10,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@freakycoder/react-native-bounceable": "^0.2.4",
+    "@paraboly/react-native-card": "^1.0.3",
     "@react-native-async-storage/async-storage": "^1.15.3",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/native": "^5.9.4",
@@ -21,6 +23,7 @@
     "react-native-chart-kit": "^6.11.0",
     "react-native-dotenv": "^2.5.5",
     "react-native-dropdown-picker": "^5.0.0",
+    "react-native-dynamic-vector-icons": "^1.1.4",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-get-random-values": "^1.6.0",
     "react-native-paper": "^4.7.2",

@@ -784,6 +784,11 @@
     "minimatch" "^3.0.4"
     "strip-json-comments" "^3.1.1"
 
+"@freakycoder/react-native-bounceable@^0.2.4", "@freakycoder/react-native-bounceable@>= 0.2.4":
+  "integrity" "sha512-Gw9TuO65oCzYYz78RV6OtUjfdbYPdt2RIrDt441oo3JV8++aW9485z9GCqrqxNi1qCO8gC18iNkFLfBMhazZpA=="
+  "resolved" "https://registry.npmjs.org/@freakycoder/react-native-bounceable/-/react-native-bounceable-0.2.4.tgz"
+  "version" "0.2.4"
+
 "@hapi/hoek@^9.0.0":
   "integrity" "sha512-CAEbWH7OIur6jEOzaai83jq3FmKmv4PmX1JYfs9IrYcGEVI/lyL1EXJGCj7eFVJ0bg5QR8LMxBlEtA+xKiLpFw=="
   "resolved" "https://registry.npmjs.org/@hapi/hoek/-/hoek-9.1.1.tgz"
@@ -989,6 +994,11 @@
     "@types/node" "*"
     "@types/yargs" "^15.0.0"
     "chalk" "^4.0.0"
+
+"@paraboly/react-native-card@^1.0.3":
+  "integrity" "sha512-/Zj1vW8K91MXV3xGsXcuNLcF/V8dIRwQAYX16idjh2GQ4oyBADeQ2oiiXOHM1Yi/TUaCRO5QHQ0EDJbDPEPwkw=="
+  "resolved" "https://registry.npmjs.org/@paraboly/react-native-card/-/react-native-card-1.0.3.tgz"
+  "version" "1.0.3"
 
 "@react-native-async-storage/async-storage@^1.15.3":
   "integrity" "sha512-pC0MS6UBuv/YiVAxtzi7CgUed8oCQNYMtGt0yb/I9fI/BWTiJK5cj4YtW2XtL95K5IuvPX/6uGWaouZ8KqXwdg=="
@@ -6258,6 +6268,11 @@
   "resolved" "https://registry.npmjs.org/react-native-dropdown-picker/-/react-native-dropdown-picker-5.0.0.tgz"
   "version" "5.0.0"
 
+"react-native-dynamic-vector-icons@^1.1.4", "react-native-dynamic-vector-icons@>= 1.1.4":
+  "integrity" "sha512-c+uxIphgMlJnjluleJw3nzww3UGVg/STUoRBmbFEFzy/LwQXOJHYJXsdsLRu4I1FcV7jK4A/8BMZBO4fFqFPTw=="
+  "resolved" "https://registry.npmjs.org/react-native-dynamic-vector-icons/-/react-native-dynamic-vector-icons-1.1.4.tgz"
+  "version" "1.1.4"
+
 "react-native-easy-grid@0.2.2":
   "integrity" "sha512-MlYrNIldnEMKn6TVatQN1P64GoVlwGIuz+8ncdfJ0Wq/xtzUkQwlil8Uksyp7MhKfENE09MQnGNcba6Mx3oSAA=="
   "resolved" "https://registry.npmjs.org/react-native-easy-grid/-/react-native-easy-grid-0.2.2.tgz"
@@ -6351,7 +6366,7 @@
     "prop-types" "^15.7.2"
     "yargs" "^15.0.2"
 
-"react-native-vector-icons@^8.1.0":
+"react-native-vector-icons@^8.1.0", "react-native-vector-icons@>= 6.x.x", "react-native-vector-icons@>= 7.1.0":
   "integrity" "sha512-sHIdBB6Y0dHaot2fMXgy5J/hhCn5YuyN7SKDNFgPzL8KA1oF2/v7mgYMavnK7LIIs2dJoGnDANKf61dsU+TZlg=="
   "resolved" "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-8.1.0.tgz"
   "version" "8.1.0"
@@ -6405,7 +6420,7 @@
     "whatwg-fetch" "^3.0.0"
     "ws" "^6.1.4"
 
-"react-native@*", "react-native@^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || 1000.0.0", "react-native@^0.64.0", "react-native@>= 0.50.0", "react-native@>=0.35", "react-native@>=0.38.0", "react-native@>=0.43.0", "react-native@>=0.50.0", "react-native@>=0.56.0", "react-native@>=0.57", "react-native@>=0.60", "react-native@>=0.63.0", "react-native@>=0.64.0-rc.0 || 0.0.0-*", "react-native@0.64.0":
+"react-native@*", "react-native@^0.60.6 || ^0.61.5 || ^0.62.2 || ^0.63.2 || ^0.64.0 || 1000.0.0", "react-native@^0.64.0", "react-native@>= 0.50.0", "react-native@>= 0.55.x", "react-native@>=0.35", "react-native@>=0.38.0", "react-native@>=0.43.0", "react-native@>=0.50.0", "react-native@>=0.56.0", "react-native@>=0.57", "react-native@>=0.60", "react-native@>=0.63.0", "react-native@>=0.64.0-rc.0 || 0.0.0-*", "react-native@0.64.0":
   "integrity" "sha512-8dhSHBthgGwAjU+OjqUEA49229ThPMQH7URH0u8L0xoQFCnZO2sZ9Wc6KcbxI0x9KSmjCMFFZqRe3w3QsRv64g=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.64.0.tgz"
   "version" "0.64.0"
@@ -6474,7 +6489,7 @@
     "raf" "^3.1.0"
     "tween-functions" "^1.0.1"
 
-"react@*", "react@> 16.7.0", "react@>=16.0", "react@>=16.0.0-alpha.3", "react@>=16.4.1", "react@>=16.8.3", "react@16 || 17", "react@17.0.1":
+"react@*", "react@> 16.7.0", "react@>= 16.x.x", "react@>=16.0", "react@>=16.0.0-alpha.3", "react@>=16.4.1", "react@>=16.8.3", "react@16 || 17", "react@17.0.1":
   "integrity" "sha512-lG9c9UuMHdcAexXtigOZLX8exLWkW0Ku29qPRU8uhF2R9BN96dLCt0psvzPLlHc5OWkgymP3qwTRgbnw5BKx3w=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.1.tgz"
   "version" "17.0.1"
