@@ -41,11 +41,21 @@ const ChooseRoom = props => {
   const getRooms = async () => {
     try {
       const response = await instance(token).get(`${BASE_URL}/v1/rooms`); //
-      console.log(response.data.docs);
+      console.log(response.data.docs[0].description);
+      const room = response.data.docs[0];
+      setRooms([
+        {
+          id: room.id,
+          name: room.name,
+          desc: room.description,
+          count: room.deviceCount,
+        },
+      ]);
       if (response.data.docs.length === 0) {
         //  props.navigation.replace('noRoom');
         console.log('no rooms');
       }
+
       return 1;
     } catch (error) {
       console.log(error);
@@ -84,11 +94,14 @@ const ChooseRoom = props => {
     },
     roomName: {
       fontWeight: 'bold',
-      fontSize: 40,
+      fontSize: 32,
     },
     deviceCount: {
       fontWeight: '400',
       fontSize: 15,
+    },
+    desc: {
+      fontSize: 24,
     },
   });
 
@@ -111,7 +124,7 @@ const ChooseRoom = props => {
               </CardItem>
               <CardItem style={styles.cardItem}>
                 <Left>
-                  <Text>{item.desc}</Text>
+                  <Text style={styles.desc}>{item.desc}</Text>
                 </Left>
               </CardItem>
             </Card>

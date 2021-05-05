@@ -21,12 +21,12 @@ const AddRoom = props => {
       //   console.log(token);
       return token;
     } catch (error) {
-      console.log(error);
+      console.log('validToken in AddRoom ' + error);
     }
   };
 
   const addRoom = async props => {
-    console.log('pressed');
+    // console.log('pressed');
     const token = await validToken();
     // console.log('hello');
     try {
@@ -47,7 +47,7 @@ const AddRoom = props => {
       props.navigation.replace('home');
       //   console.log(response);
     } catch (error) {
-      console.log(error);
+      console.log('addRoom in AddRoom ' + error);
     }
   };
 

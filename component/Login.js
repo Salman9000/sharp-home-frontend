@@ -30,6 +30,10 @@ const Login = props => {
       const response = await axios.post(`${BASE_URL}/v1/auth/login`, {
         email: 'test2@test.com',
         password: 'test1234',
+        // email: 'test@test.com',
+        // password: 'test1234',
+        // email: 'rasheedaabbas@gmail.com',
+        // password: 'rashi123',
       });
       // console.log(response.data.tokens.access.token);
       await AsyncStorage.setItem('token', response.data.tokens.access.token);
@@ -37,7 +41,8 @@ const Login = props => {
       props.navigation.replace('home');
     } catch (error) {
       console.log(
-        'There has been a problem with your fetch operation: ' + error.message,
+        'There has been a problem with your fetch operation in enterhouse login: ' +
+          error.message,
       );
     }
   };

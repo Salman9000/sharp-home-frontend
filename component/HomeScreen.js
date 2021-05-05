@@ -18,18 +18,6 @@ const HomeScreen = props => {
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
   const token = props.token;
-  const getRooms = async () => {
-    try {
-      const response = await instance(token).get('/v1/rooms'); //
-      setRooms(response.data.docs);
-      if (response.data.docs.length === 0) {
-        props.navigation.replace('noRoom');
-      }
-      return 1;
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const LoadingScreen = () => (
     <View style={styles.loading}>
@@ -37,7 +25,7 @@ const HomeScreen = props => {
     </View>
   );
   useEffect(() => {
-    const getDevices = () => {
+    const getDevices = async () => {
       instance(token)
         .get('/v1/devices')
         .then(value => {

@@ -10,7 +10,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 
-const ChartOne = () => {
+const ChartOne = props => {
   const [button1, setButton1] = useState(false);
   const [button2, setButton2] = useState(true);
   const [button3, setButton3] = useState(false);
@@ -107,59 +107,62 @@ const ChartOne = () => {
     });
   };
   return (
-    <ScrollView>
+    <View style={styles.container1}>
       <Header title="Dashboard" />
-      <Title style={{alignSelf: 'center'}}>Total House Consumption</Title>
-      <View style={styles.buttonView}>
-        <Button
-          style={button1 ? styles.buttonOn : styles.buttonOff}
-          mode={button1 ? 'contained' : 'text'}
-          onPress={() => pressButton1()}>
-          Today
-        </Button>
-        <Button
-          style={button2 ? styles.buttonOn : styles.buttonOff}
-          mode={button2 ? 'contained' : 'text'}
-          onPress={() => pressButton2()}>
-          7d
-        </Button>
-        <Button
-          style={button3 ? styles.buttonOn : styles.buttonOff}
-          mode={button3 ? 'contained' : 'text'}
-          onPress={() => pressButton3()}>
-          1month
-        </Button>
-      </View>
-      <LineChart
-        data={graphData}
-        width={Dimensions.get('window').width} // from react-native
-        height={220}
-        yAxisLabel="$"
-        yAxisSuffix="k"
-        yAxisInterval={1} // optional, defaults to 1
-        chartConfig={{
-          backgroundColor: '#e26a00',
-          backgroundGradientFrom: '#fb8c00',
-          backgroundGradientTo: '#ffa726',
-          decimalPlaces: 2, // optional, defaults to 2dp
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          style: {
+      <ScrollView style={styles.container2}>
+        <Title style={{alignSelf: 'center'}}>Total House Consumption</Title>
+        <View style={styles.buttonView}>
+          <Button
+            style={button1 ? styles.buttonOn : styles.buttonOff}
+            mode={button1 ? 'contained' : 'text'}
+            onPress={() => pressButton1()}>
+            Today
+          </Button>
+          <Button
+            style={button2 ? styles.buttonOn : styles.buttonOff}
+            mode={button2 ? 'contained' : 'text'}
+            onPress={() => pressButton2()}>
+            7d
+          </Button>
+          <Button
+            style={button3 ? styles.buttonOn : styles.buttonOff}
+            mode={button3 ? 'contained' : 'text'}
+            onPress={() => pressButton3()}>
+            1month
+          </Button>
+        </View>
+        <LineChart
+          data={graphData}
+          width={Dimensions.get('window').width} // from react-native
+          height={220}
+          yAxisLabel="$"
+          yAxisSuffix="k"
+          yAxisInterval={1} // optional, defaults to 1
+          chartConfig={{
+            backgroundColor: '#e26a00',
+            backgroundGradientFrom: '#fb8c00',
+            backgroundGradientTo: '#ffa726',
+            decimalPlaces: 2, // optional, defaults to 2dp
+            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            style: {
+              borderRadius: 16,
+            },
+            propsForDots: {
+              r: '6',
+              strokeWidth: '2',
+              stroke: '#ffa726',
+            },
+          }}
+          bezier
+          style={{
+            marginVertical: 8,
             borderRadius: 16,
-          },
-          propsForDots: {
-            r: '6',
-            strokeWidth: '2',
-            stroke: '#ffa726',
-          },
-        }}
-        bezier
-        style={{
-          marginVertical: 8,
-          borderRadius: 16,
-        }}
-      />
-    </ScrollView>
+          }}
+        />
+      </ScrollView>
+      <Footer nav={props} />
+    </View>
   );
 };
 
@@ -179,5 +182,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
   },
   buttonOff: {},
+  container1: {
+    flex: 1,
+  },
+  container2: {
+    flex: 1,
+    width: wp('95%'),
+    margin: 10,
+  },
 });
 export default ChartOne;
