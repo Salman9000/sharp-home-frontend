@@ -13,12 +13,8 @@ const axios = require('axios');
 import DropDownPicker from 'react-native-dropdown-picker';
 
 const AddDevice = props => {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [rooms, setRooms] = useState([{}]);
   const [name, setName] = useState('');
   const [rating, setRating] = useState('');
-  const [roomList, setRoomList] = useState([{}]);
 
   const validToken = async () => {
     try {
@@ -30,60 +26,14 @@ const AddDevice = props => {
     }
   };
 
-  // const getRooms = async props => {
-  //   const token = await validToken();
-  //   if (token === null) {
-  //     props.navigation.replace('Login');
-  //   }
-  //   try {
-  //     let config = {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     };
-  //     const response = await axios.get(
-  //       'http://192.168.1.122:3000/v1/rooms',
-  //       config,
-  //     );
-  //     setRooms(response.data.docs);
-  //     if (response.data.docs.length === 0) {
-  //       props.navigation.replace('noRoom');
-  //     }
-  //     return 1;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getRooms(props);
-  // }, []);
   const chooseRoom = props => {
-    props.navigation.replace('chooseRoom');
-  };
-  const addDevice = async props => {
-    console.log('pressed');
-    const token = await validToken();
-    // console.log('hello');
-    try {
-      let config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      //   console.log(config.headers.Authorization);
-      // const response = await axios.post(
-      //   'http://192.168.1.122:3000/v1/rooms',
-      //   {
-      //     name: name,
-      //     description: desc,
-      //   },
-      //   config,
-      // );
-      props.navigation.replace('home');
-      //   console.log(response);
-    } catch (error) {
-      console.log(error);
+    if (name.length === 0 || rating.length === 0) {
+      alert('Name and Rating are compulsory!');
+    } else {
+      props.navigation.navigate('chooseRoom', {
+        deviceName: name,
+        deviceRating: rating,
+      });
     }
   };
 
@@ -153,18 +103,8 @@ const AddDevice = props => {
               value={rating}
               placeholder="Power Rating in kWh"
               placeholderTextColor="#ffffff"
-              onChangeText={desc => setRating(rating)}
+              onChangeText={rating => setRating(rating)}
             />
-          </View>
-          <View style={styles.otherboxes2}>
-            <Button
-              style={styles.button1}
-              mode="contained"
-              onPress={() => {
-                chooseRoom(props);
-              }}>
-              Choose Room
-            </Button>
           </View>
         </View>
         <View style={styles.otherboxes2}>
@@ -172,9 +112,9 @@ const AddDevice = props => {
             style={styles.button1}
             mode="contained"
             onPress={() => {
-              addDevice(props);
+              chooseRoom(props);
             }}>
-            Add Device
+            Choose Room
           </Button>
         </View>
       </View>

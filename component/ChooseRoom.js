@@ -1,55 +1,60 @@
 import React from 'react';
-import {useState, setState} from 'react';
-import {View, Text, StyleSheet, TextInput} from 'react-native';
+import {useState, setState, useEffect} from 'react';
+import {View, StyleSheet, ScrollView} from 'react-native';
 import Header from './Header';
 import Footer from './Footer';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Button} from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 const axios = require('axios');
+import {Card, CardItem, Body, Text, Left, Right} from 'native-base';
+import {BASE_URL} from '@env';
+import instance from '../helper';
 
 const ChooseRoom = props => {
-  const [name, setName] = useState('');
-  const [desc, setDesc] = useState('');
+  const {deviceName, deviceRating} = props.route.params;
+  const token = props.token;
+  const [rooms, setRooms] = useState([
+    {
+      id: 1,
+      name: 1,
+      desc: 'Lorem ipsum dolor sit amet, everti rationibus his cu',
+      count: 1,
+    },
 
-  const validToken = async () => {
+    {
+      id: 2,
+      name: 2,
+      desc: 'Lorem ipsum dolor sit amet, everti rationibus his ',
+      count: 2,
+    },
+
+    {
+      id: 3,
+      name: 3,
+      desc: 'Lorem ipsum dolor sit amet, everti rationibus hi',
+      count: 3,
+    },
+  ]);
+
+  const getRooms = async () => {
     try {
-      const token = await AsyncStorage.getItem('token');
-      //   console.log(token);
-      return token;
+      const response = await instance(token).get(`${BASE_URL}/v1/rooms`); //
+      console.log(response.data.docs);
+      if (response.data.docs.length === 0) {
+        //  props.navigation.replace('noRoom');
+        console.log('no rooms');
+      }
+      return 1;
     } catch (error) {
       console.log(error);
     }
   };
 
-  const addRoom = async props => {
-    console.log('pressed');
-    const token = await validToken();
-    // console.log('hello');
-    try {
-      let config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      //   console.log(config.headers.Authorization);
-      const response = await axios.post(
-        'http://192.168.1.122:3000/v1/rooms',
-        {
-          name: name,
-          description: desc,
-        },
-        config,
-      );
-      props.navigation.replace('home');
-      //   console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  useEffect(() => {
+    getRooms();
+  }, []);
 
   const styles = StyleSheet.create({
     container1: {
@@ -57,14 +62,17 @@ const ChooseRoom = props => {
     },
     container2: {
       flex: 1,
-      alignItems: 'center',
+      width: wp('95%'),
+      margin: 10,
     },
-    inputView: {
-      backgroundColor: '#003f5c',
+    cardItem: {
       width: wp('90%'),
-      height: 50,
-      marginBottom: 20,
-      alignItems: 'center',
+      height: 120,
+
+      //   alignItems: 'center',
+    },
+    card: {
+      marginTop: 20,
     },
     TextInput: {
       height: 50,
@@ -74,32 +82,42 @@ const ChooseRoom = props => {
       alignItems: 'flex-start',
       paddingLeft: 20,
     },
-    otherboxes: {
-      height: hp('50%'),
-      width: wp('90%'),
-      marginTop: 50,
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      justifyContent: 'center',
+    roomName: {
+      fontWeight: 'bold',
+      fontSize: 40,
     },
-    otherboxes2: {
-      height: hp('20%'),
-      width: wp('100%'),
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    button1: {
-      width: '80%',
-      height: 50,
-      justifyContent: 'center',
-      backgroundColor: 'green',
+    deviceCount: {
+      fontWeight: '400',
+      fontSize: 15,
     },
   });
 
   return (
     <View style={styles.container1}>
       <Header title="Choose a Room" />
-      <View style={styles.container2}>Choose Room</View>
+      <ScrollView style={styles.container2}>
+        {rooms.map(item => (
+          <View key={item.id}>
+            <Card style={styles.card}>
+              <CardItem header>
+                <Left>
+                  <Text style={styles.roomName}>{item.name}</Text>
+                </Left>
+                <Right>
+                  <Text style={styles.deviceCount}>
+                    Devices in Room: {item.count}
+                  </Text>
+                </Right>
+              </CardItem>
+              <CardItem style={styles.cardItem}>
+                <Left>
+                  <Text>{item.desc}</Text>
+                </Left>
+              </CardItem>
+            </Card>
+          </View>
+        ))}
+      </ScrollView>
       <Footer nav={props} />
     </View>
   );

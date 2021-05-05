@@ -65,22 +65,22 @@ const App = () => {
               {props => <Login {...props} setToken={setToken} />}
             </Stack.Screen>
             <Stack.Screen name="Chartone">
-              {props => <ChartOne {...props} setToken={setToken} />}
+              {props => <ChartOne {...props} token={token} />}
             </Stack.Screen>
             <Stack.Screen name="noRoom">
-              {props => <NoRoom {...props} setToken={setToken} />}
+              {props => <NoRoom {...props} token={token} />}
             </Stack.Screen>
             <Stack.Screen name="noDevice">
-              {props => <NoDevice {...props} setToken={setToken} />}
+              {props => <NoDevice {...props} token={token} />}
             </Stack.Screen>
             <Stack.Screen name="addRoom">
-              {props => <AddRoom {...props} setToken={setToken} />}
+              {props => <AddRoom {...props} token={token} />}
             </Stack.Screen>
             <Stack.Screen name="addDevice">
-              {props => <AddDevice {...props} setToken={setToken} />}
+              {props => <AddDevice {...props} token={token} />}
             </Stack.Screen>
             <Stack.Screen name="chooseRoom">
-              {props => <ChooseRoom {...props} setToken={setToken} />}
+              {props => <ChooseRoom {...props} token={token} />}
             </Stack.Screen>
           </Stack.Navigator>
         )}
