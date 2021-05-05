@@ -60,3 +60,7 @@ buck-out/
 
 ios/
 __tests__
+
+
+# Environment varibales
+.env*
