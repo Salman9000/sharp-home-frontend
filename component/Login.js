@@ -25,15 +25,14 @@ const Login = props => {
   const [email, setEmail] = useState('');
   const [password, setpassword] = useState('');
   const onChangeText = text => setText(text);
-  console.log('we are in login page');
   const Enterhouse = async (email, password, props) => {
     try {
       const response = await axios.post(`${BASE_URL}/v1/auth/login`, {
-        email: 'test@test.com',
+        email: 'test2@test.com',
         password: 'test1234',
       });
       // console.log(response.data.tokens.access.token);
-      AsyncStorage.setItem('token', response.data.tokens.access.token);
+      await AsyncStorage.setItem('token', response.data.tokens.access.token);
       props.setToken(response.data.tokens.access.token);
       props.navigation.replace('home');
     } catch (error) {

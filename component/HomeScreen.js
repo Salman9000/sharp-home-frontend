@@ -16,9 +16,8 @@ import {BASE_URL} from '@env';
 const HomeScreen = props => {
   const [rooms, setRooms] = useState([]);
   const [devices, setDevices] = useState([]);
+  const [loading, setLoading] = useState(true);
   const token = props.token;
-  console.log(token, 'ASDASDASD');
-  console.log('AJDNASJKDNJAK');
   const getRooms = async () => {
     try {
       const response = await instance(token).get('/v1/rooms'); //
@@ -31,20 +30,21 @@ const HomeScreen = props => {
       console.log(error);
     }
   };
-  const graphOne = () => {
-    <Text>Hi</Text>;
-  };
-  const getDevices = async () => {
-    try {
-      const response = await instance(token).get('/v1/devices');
-      setDevices(response.data.docs);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
+  const LoadingScreen = () => (
+    <View style={styles.loading}>
+      <ActivityIndicator size="large" color="blue" />
+    </View>
+  );
   useEffect(() => {
-    // getRooms();
+    const getDevices = () => {
+      instance(token)
+        .get('/v1/devices')
+        .then(value => {
+          setDevices(value.data.docs);
+          setLoading(false);
+        });
+    };
     getDevices();
   }, []);
 
@@ -55,7 +55,9 @@ const HomeScreen = props => {
     <View style={styles.scroll}>
       <Header title="Welcome" />
       <View style={styles.scrollv}>
-        {devices.length <= 0 ? (
+        {loading ? (
+          <LoadingScreen />
+        ) : devices.length <= 0 ? (
           <>
             <Text style={styles.text}>No Devices</Text>
             <Text style={styles.text}>Found</Text>
@@ -67,7 +69,7 @@ const HomeScreen = props => {
           </>
         ) : (
           <>
-            <graphOne />
+            <Text>Meow</Text>
           </>
         )}
       </View>
@@ -115,5 +117,10 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 40,
+  },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -28,19 +28,13 @@ const App = () => {
   // AsyncStorage.clear().then(console.log('cleared'));
   const [token, setToken] = useState(null);
   const [TokenSet, isTokenSet] = useState(false);
-  const getToken = () => {
+
+  useEffect(() => {
     AsyncStorage.getItem('token').then(value => {
       setToken(value);
       isTokenSet(true);
     });
-  };
-
-  // useEffect(() => {
-  //   getToken();
-  // }, [TokenSet]);
-  getToken();
-  console.log(token, 'token value');
-  console.log(TokenSet, 'token boolean');
+  }, []);
   if (!TokenSet) {
     return null;
   } else {
