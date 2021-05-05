@@ -43,14 +43,20 @@ const ChooseRoom = props => {
       const response = await instance(token).get(`${BASE_URL}/v1/rooms`); //
       console.log(response.data.docs[0].description);
       const room = response.data.docs[0];
-      setRooms([
-        {
-          id: room.id,
-          name: room.name,
-          desc: room.description,
-          count: room.deviceCount,
-        },
-      ]);
+      for (let i = 0; i < response.data.docs.length; i++) {
+        if (rooms.length < 1) {
+          setRooms([
+            {
+              id: room.id,
+              name: room.name,
+              desc: room.description,
+              count: room.deviceCount,
+            },
+          ]);
+        } else {
+        }
+      }
+
       if (response.data.docs.length === 0) {
         //  props.navigation.replace('noRoom');
         console.log('no rooms');
