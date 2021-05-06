@@ -12,17 +12,20 @@ const Footer = props => {
 
   const logout = navigation => {
     AsyncStorage.removeItem('token').then(() => {
-      navigation.replace('Login');
+      navigation.navigate('Login');
     });
   };
   const chartOne = navigation => {
-    navigation.replace('Chartone');
+    navigation.navigate('Chartone');
   };
 
   return (
     <F>
       <FooterTab>
-        <Button vertical active>
+        <Button
+          vertical
+          active
+          onPress={() => props.nav.navigation.navigate('home')}>
           <Icon name="home" />
           <Text>Home</Text>
         </Button>
@@ -39,7 +42,10 @@ const Footer = props => {
           vertical
           active
           onPress={() => {
-            props.nav.navigation.navigate('chooseRoom', props);
+            props.nav.navigation.navigate('chooseRoom', {
+              deviceName: '',
+              deviceRating: 0,
+            });
           }}>
           <Icon active name="navigate" />
           <Text>Devices</Text>

@@ -30,10 +30,14 @@ const Login = props => {
       const response = await axios.post(`${BASE_URL}/v1/auth/login`, {
         email: 'test2@test.com',
         password: 'test1234',
+        // email: 'test3@test.com',
+        // password: 'test1234',
         // email: 'test@test.com',
         // password: 'test1234',
         // email: 'rasheedaabbas@gmail.com',
         // password: 'rashi123',
+        // email: email,
+        // password: password,
       });
       // console.log(response.data.tokens.access.token);
       await AsyncStorage.setItem('token', response.data.tokens.access.token);

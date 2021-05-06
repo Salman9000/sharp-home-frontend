@@ -12,6 +12,7 @@ import Header from './Header';
 import Footer from './Footer';
 import instance from '../helper';
 import {BASE_URL} from '@env';
+import {template} from '@babel/core';
 
 const HomeScreen = props => {
   const [rooms, setRooms] = useState([]);
@@ -24,15 +25,37 @@ const HomeScreen = props => {
       <ActivityIndicator size="large" color="blue" />
     </View>
   );
+
+  const getDevices = async () => {
+    instance(token)
+      .get('/v1/devices')
+      .then(value => {
+        for (let i = 0; i < value.data.docs.length; i++) {
+          let dev = value.data.docs[i];
+          if (devices.length < 1) {
+            setDevices([
+              {
+                id: dev.id,
+                name: dev.name,
+              },
+            ]);
+          } else {
+            setDevices([
+              ...devices,
+              {
+                id: dev.id,
+                name: dev.name,
+              },
+            ]);
+          }
+        }
+        // console.log(devices[0]);
+        // setDevices(value.data.docs);
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
-    const getDevices = async () => {
-      instance(token)
-        .get('/v1/devices')
-        .then(value => {
-          setDevices(value.data.docs);
-          setLoading(false);
-        });
-    };
     getDevices();
   }, []);
 
@@ -57,7 +80,15 @@ const HomeScreen = props => {
           </>
         ) : (
           <>
-            <Text>Meow</Text>
+            <View>
+              {devices.map(item => {
+                return (
+                  <View key={item.id}>
+                    <Text>{item.name}</Text>
+                  </View>
+                );
+              })}
+            </View>
           </>
         )}
       </View>

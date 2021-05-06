@@ -10,41 +10,28 @@ import {
 import {Button} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const axios = require('axios');
+import instance from '../helper';
+import {BASE_URL} from '@env';
 
 const AddRoom = props => {
   const [name, setName] = useState('');
   const [desc, setDesc] = useState('');
-
-  const validToken = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      //   console.log(token);
-      return token;
-    } catch (error) {
-      console.log('validToken in AddRoom ' + error);
-    }
-  };
+  const token = props.token;
 
   const addRoom = async props => {
     // console.log('pressed');
-    const token = await validToken();
+    // const token = await validToken();
     // console.log('hello');
     try {
-      let config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      //   console.log(config.headers.Authorization);
-      const response = await axios.post(
-        'http://192.168.1.122:3000/v1/rooms',
-        {
-          name: name,
-          description: desc,
-        },
-        config,
-      );
-      props.navigation.replace('home');
+      const response = await instance(token).post(`${BASE_URL}/v1/rooms`, {
+        name: name,
+        description: desc,
+      });
+
+      props.navigation.navigate('chooseRoom', {
+        deviceName: props.deviceName,
+        deviceRating: props.deviceRating,
+      });
       //   console.log(response);
     } catch (error) {
       console.log('addRoom in AddRoom ' + error);
