@@ -71,7 +71,7 @@ const ApplianceChart = props => {
     // console.log(value.data.result7days);
   };
   useEffect(() => {
-    getGraphs('7Days');
+    // getGraphs('7Days');
   }, []);
 
   const pressButton1 = () => {
@@ -79,28 +79,28 @@ const ApplianceChart = props => {
     setButton2(false);
     setButton3(false);
     setButton4(false);
-    getGraphs('Today');
+    // getGraphs('Today');
   };
   const pressButton2 = () => {
     setButton1(false);
     setButton2(true);
     setButton3(false);
     setButton4(false);
-    getGraphs('7Days');
+    // getGraphs('7Days');
   };
   const pressButton3 = () => {
     setButton1(false);
     setButton2(false);
     setButton3(true);
     setButton4(false);
-    getGraphs('1Month');
+    // getGraphs('1Month');
   };
   const pressButton4 = () => {
     setButton1(false);
     setButton2(false);
     setButton3(false);
     setButton4(true);
-    getGraphs('Yesterday');
+    // getGraphs('Yesterday');
   };
   return (
     <View>
