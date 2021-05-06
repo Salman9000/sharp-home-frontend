@@ -10,8 +10,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import instance from '../helper';
-import ApplianceChart from './ApplianceChart';
-const ChartOne = props => {
+
+const ApplianceChart = props => {
   const token = props.token;
   const [button1, setButton1] = useState(false);
   const [button2, setButton2] = useState(true);
@@ -42,8 +42,9 @@ const ChartOne = props => {
       },
     ],
   });
+
   const getGraphs = async type => {
-    const value = await instance(token).get(`/v1/activity/` + type);
+    const value = await instance(token).get(`/v1/activity/Get` + type);
 
     console.log(value.data);
     if (type === '1Month') {
@@ -102,8 +103,8 @@ const ChartOne = props => {
     getGraphs('Yesterday');
   };
   return (
-    <ScrollView style={styles.container2}>
-      <Title style={{alignSelf: 'center'}}>Total House Consumption</Title>
+    <View>
+      <Title style={{alignSelf: 'center'}}>Appliance Consumption</Title>
       <View style={styles.buttonView}>
         <Button
           style={button1 ? styles.buttonOn : styles.buttonOff}
@@ -130,45 +131,9 @@ const ChartOne = props => {
           Yesterday
         </Button>
       </View>
-      <View>
-        <Text>Overall Consumption {consumption}</Text>
-      </View>
-      <ScrollView horizontal={true}>
-        <LineChart
-          data={graphData}
-          width={wp('150%')} // from react-native
-          height={hp('40%')}
-          yAxisLabel=""
-          yAxisSuffix="KW"
-          yAxisInterval={1} // optional, defaults to 1
-          chartConfig={{
-            backgroundColor: '#4050B5',
-            backgroundGradientFrom: '#4050B5',
-            backgroundGradientTo: '#4050C4',
-            decimalPlaces: 2, // optional, defaults to 2dp
-            color: (opacity = 0.5) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-            propsForDots: {
-              r: '6',
-              strokeWidth: '2',
-              stroke: '#ffa726',
-            },
-          }}
-          bezier
-          style={{
-            marginVertical: 8,
-            borderRadius: 20,
-          }}
-        />
-      </ScrollView>
-      <ApplianceChart {...props} token={token} />
-    </ScrollView>
+    </View>
   );
 };
-
 const styles = StyleSheet.create({
   buttonView: {
     alignItems: 'center',
@@ -194,4 +159,5 @@ const styles = StyleSheet.create({
     margin: 10,
   },
 });
-export default ChartOne;
+
+export default ApplianceChart;

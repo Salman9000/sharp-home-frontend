@@ -13,7 +13,8 @@ import Footer from './Footer';
 import instance from '../helper';
 import {BASE_URL} from '@env';
 import {template} from '@babel/core';
-
+import ChartOne from './Chartone';
+import ApplianceChart from './ApplianceChart';
 const HomeScreen = props => {
   const [rooms, setRooms] = useState([]);
   const [devices, setDevices] = useState([]);
@@ -80,7 +81,11 @@ const HomeScreen = props => {
           </>
         ) : (
           <>
-            <View>
+            {/* <View> */}
+            <ChartOne {...props} token={token} />
+
+            {/* </View> */}
+            {/* <View>
               {devices.map(item => {
                 return (
                   <View key={item.id}>
@@ -88,7 +93,7 @@ const HomeScreen = props => {
                   </View>
                 );
               })}
-            </View>
+            // </ScrollView> */}
           </>
         )}
       </View>
