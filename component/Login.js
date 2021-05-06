@@ -28,10 +28,10 @@ const Login = props => {
   const Enterhouse = async (email, password, props) => {
     try {
       const response = await axios.post(`${BASE_URL}/v1/auth/login`, {
-        email: 'test2@test.com',
-        password: 'test1234',
-        // email: 'test3@test.com',
+        // email: 'test2@test.com',
         // password: 'test1234',
+        email: 'test3@test.com',
+        password: 'test1234',
         // email: 'test@test.com',
         // password: 'test1234',
         // email: 'rasheedaabbas@gmail.com',

@@ -40,6 +40,7 @@ const ChooseRoom = props => {
     props.navigation.navigate('confirmDeviceDetails', {
       deviceName: deviceName,
       deviceRating: deviceRating,
+      roomId: id,
     });
   };
 
