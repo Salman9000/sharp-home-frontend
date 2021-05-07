@@ -35,7 +35,7 @@ const ViewDevices = props => {
   const [consumptions, setConsumptions] = useState([]);
 
   const cardPressed = id => {
-    console.log(id);
+    // console.log(id);
     getConsumptions();
   };
 
@@ -43,66 +43,24 @@ const ViewDevices = props => {
     try {
       instance(token)
         .get('/v1/devices/getConsumptions')
-        .then(res => {
-          console.log(res.data.result.docs[0]);
-          for (let i = 0; i < res.data.result.docs.length; i++) {
-            let cons = res.data.result.docs[0].total;
-            console.log('cons ' + cons);
-            if (consumptions.length < 1) {
-              setConsumptions([cons]);
-            }
-            console.log(consumptions);
+        .then(response => {
+          let tempList = [];
+          //   console.log(response.data.result.docs[0]);
+          for (let i = 0; i < response.data.result.docs.length; i++) {
+            tempList.push({
+              id: response.data.result.docs[i].dev[0]._id,
+              name: response.data.result.docs[i].dev[0].name,
+              consumption: response.data.result.docs[i].total.toFixed(2),
+            });
           }
-          //   return res.data.result.docs('total');
-          //   return res.data.result.docs[0];
+          setDevices(tempList);
         });
     } catch (error) {
       console.log('error in viewdevices getconsumption:' + error);
     }
+    setLoading(false);
   };
 
-  const getDevices = async () => {
-    try {
-      instance(token)
-        .get('/v1/devices')
-        .then(value => {
-          for (let i = 0; i < value.data.docs.length; i++) {
-            let dev = value.data.docs[i];
-            // console.log(getConsumption(dev.id));
-            if (devices.length < 1) {
-              setDevices([
-                {
-                  id: dev.id,
-                  name: dev.name,
-                  count: i,
-                  //   consumption: getConsumption(dev.id),
-                },
-              ]);
-            } else {
-              setDevices([
-                ...devices,
-                {
-                  id: dev.id,
-                  name: dev.name,
-                  count: i,
-                  //   consumption: getConsumption(dev.id),
-                },
-              ]);
-            }
-          }
-          // console.log(devices[0]);
-          // setDevices(value.data.docs);
-          setLoading(false);
-          if (value.data.docs.length === 0) {
-            //  props.navigation.replace('noRoom');
-            console.log('no devices');
-          }
-        });
-      return 1;
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const LoadingScreen = () => (
     <View style={styles.loading}>
       <ActivityIndicator size="large" color="blue" />
@@ -114,8 +72,7 @@ const ViewDevices = props => {
   };
 
   useEffect(() => {
-    getDevices();
-    // getConsumption(devices[0].id);
+    getConsumptions();
   }, []);
 
   const styles = StyleSheet.create({
@@ -169,7 +126,7 @@ const ViewDevices = props => {
       fontSize: 40,
     },
     text: {
-      fontSize: 40,
+      fontSize: 36,
     },
     iconContainer: {
       width: 80,
@@ -211,30 +168,23 @@ const ViewDevices = props => {
           <>
             <ScrollView style={styles.container2}>
               {devices.map(item => (
-                <View key={item.id}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      cardPressed(item.id);
-                    }}>
-                    <Card style={styles.card} pointerEvents="none">
-                      <CardItem header>
-                        <Left>
-                          <Text style={styles.roomName}>{item.name}</Text>
-                        </Left>
-                        <Right>
-                          <Text style={styles.deviceCount}>
-                            Total Consumption of Device:{' '}
-                          </Text>
-                        </Right>
-                      </CardItem>
-                      {/* <CardItem style={styles.cardItem}>
+                <Card key={item.id} style={styles.card} pointerEvents="none">
+                  <CardItem header>
+                    <Left>
+                      <Text style={styles.roomName}>{item.name}</Text>
+                    </Left>
+                    <Right>
+                      <Text style={styles.deviceCount}>
+                        Total Consumption of Device: {item.consumption}
+                      </Text>
+                    </Right>
+                  </CardItem>
+                  {/* <CardItem style={styles.cardItem}>
                         <Left>
                           <Text style={styles.desc}>{item.desc}</Text>
                         </Left>
                       </CardItem> */}
-                    </Card>
-                  </TouchableOpacity>
-                </View>
+                </Card>
               ))}
               <Button
                 style={styles.button}
