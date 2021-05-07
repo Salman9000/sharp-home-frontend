@@ -22,6 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AddDevice from './component/AddDevice';
 import ChooseRoom from './component/ChooseRoom';
 import ConfirmDeviceDetails from './component/ConfirmDeviceDetails';
+import ViewDevices from './component/ViewDevices';
 
 const Stack = createStackNavigator();
 
@@ -85,6 +86,9 @@ const App = () => {
             </Stack.Screen>
             <Stack.Screen name="confirmDeviceDetails">
               {props => <ConfirmDeviceDetails {...props} token={token} />}
+            </Stack.Screen>
+            <Stack.Screen name="viewDevices">
+              {props => <ViewDevices {...props} token={token} />}
             </Stack.Screen>
           </Stack.Navigator>
         )}
