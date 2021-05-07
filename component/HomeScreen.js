@@ -10,6 +10,7 @@ import {
 import {Button, Text, Icon} from 'native-base';
 import Header from './Header';
 import Footer from './Footer';
+import Loading from './Loading';
 import instance from '../helper';
 import {BASE_URL} from '@env';
 import {template} from '@babel/core';
@@ -20,12 +21,6 @@ const HomeScreen = props => {
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
   const token = props.token;
-
-  const LoadingScreen = () => (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color="blue" />
-    </View>
-  );
 
   const getDevices = async () => {
     instance(token)
@@ -68,7 +63,7 @@ const HomeScreen = props => {
       <Header title="Welcome" />
       <View style={styles.scrollv}>
         {loading ? (
-          <LoadingScreen />
+          <Loading />
         ) : devices.length <= 0 ? (
           <>
             <Text style={styles.text}>No Devices</Text>
@@ -141,10 +136,5 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 40,
-  },
-  loading: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
