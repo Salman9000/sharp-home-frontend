@@ -274,8 +274,6 @@ const ChartOne = props => {
             })}
         </ScrollView>
       )}
-
-      <ApplianceChart {...props} token={token} />
     </ScrollView>
   );
 };

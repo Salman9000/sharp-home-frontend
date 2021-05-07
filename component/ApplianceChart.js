@@ -44,15 +44,18 @@ const ApplianceChart = props => {
   });
 
   const getGraphs = async type => {
-    const value = await instance(token).get(`/v1/activity/Get` + type);
+    const value = await instance(token).get(
+      `/v1/devices/getDeviceConsumptionBy` + type,
+    );
 
     console.log(value.data);
     if (type === '1Month') {
+      console.log(value.data);
       setGraphData({
         labels: value.data.result1Month.inputArray.labels,
-        datasets: [value.data.result1Month.inputArray.datasets],
+        datasets: value.data.result1Month.inputArray.datasets,
       });
-      setConsumption(value.data.result1Month.overallConsumption);
+      // setConsumption(value.data.result1Month.overallConsumption);
     } else if (type === '7Days') {
       setGraphData({
         labels: value.data.result7Days.inputArray.labels,
@@ -71,7 +74,7 @@ const ApplianceChart = props => {
     // console.log(value.data.result7days);
   };
   useEffect(() => {
-    // getGraphs('7Days');
+    getGraphs('1Month');
   }, []);
 
   const pressButton1 = () => {
@@ -93,7 +96,7 @@ const ApplianceChart = props => {
     setButton2(false);
     setButton3(true);
     setButton4(false);
-    // getGraphs('1Month');
+    getGraphs('1Month');
   };
   const pressButton4 = () => {
     setButton1(false);
@@ -131,6 +134,37 @@ const ApplianceChart = props => {
           Yesterday
         </Button>
       </View>
+      <ScrollView horizontal={true}>
+        <LineChart
+          data={graphData}
+          width={wp('150%')} // from react-native
+          height={hp('40%')}
+          yAxisLabel=""
+          yAxisSuffix="KW"
+          yAxisInterval={1} // optional, defaults to 1
+          chartConfig={{
+            backgroundColor: '#4050B5',
+            backgroundGradientFrom: '#4050B5',
+            backgroundGradientTo: '#4050C4',
+            decimalPlaces: 2, // optional, defaults to 2dp
+            color: (opacity = 0.5) => `rgba(255, 255, 255, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            style: {
+              borderRadius: 16,
+            },
+            propsForDots: {
+              r: '6',
+              strokeWidth: '2',
+              stroke: '#ffa726',
+            },
+          }}
+          bezier
+          style={{
+            marginVertical: 8,
+            borderRadius: 20,
+          }}
+        />
+      </ScrollView>
     </View>
   );
 };
