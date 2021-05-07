@@ -102,7 +102,7 @@ const ChartOne = props => {
     getGraphs('Yesterday');
   };
   return (
-    <ScrollView style={styles.container2}>
+    <View style={styles.container2}>
       <Title style={{alignSelf: 'center'}}>Total House Consumption</Title>
       <View style={styles.buttonView}>
         <Button
@@ -164,8 +164,7 @@ const ChartOne = props => {
           }}
         />
       </ScrollView>
-      <ApplianceChart {...props} token={token} />
-    </ScrollView>
+    </View>
   );
 };
 
@@ -190,8 +189,8 @@ const styles = StyleSheet.create({
   },
   container2: {
     flex: 1,
-    width: wp('95%'),
-    margin: 10,
+    width: wp('100%'),
+    // margin: 10,
   },
 });
 export default ChartOne;
