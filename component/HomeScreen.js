@@ -81,10 +81,10 @@ const HomeScreen = props => {
           </>
         ) : (
           <>
-            {/* <View> */}
-            <ChartOne {...props} token={token} />
-
-            {/* </View> */}
+            <ScrollView>
+              <ChartOne {...props} token={token} />
+              <ApplianceChart {...props} token={token} />
+            </ScrollView>
             {/* <View>
               {devices.map(item => {
                 return (
