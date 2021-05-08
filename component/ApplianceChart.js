@@ -4,185 +4,239 @@ import {Searchbar, Title, Button} from 'react-native-paper';
 import Header from './Header';
 import Footer from './Footer';
 import {LineChart} from 'react-native-chart-kit';
-import {Dimensions, StyleSheet, Text, View, ScrollView} from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  RefreshControl,
+} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import instance from '../helper';
+import Loading from './Loading';
 
 const ApplianceChart = props => {
   const token = props.token;
-  const [button1, setButton1] = useState(false);
-  const [button2, setButton2] = useState(true);
-  const [button3, setButton3] = useState(false);
-  const [button4, setButton4] = useState(false);
-  const [consumption, setConsumption] = useState(0);
-  const [graphData, setGraphData] = useState({
-    labels: [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ],
-    datasets: [
-      {
-        data: [
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-          Math.random() * 100,
-        ],
-        color: (opacity = 1) => `rgba(255,0,0,${opacity})`,
-      },
-    ],
-    legend: ['OneLine'],
-  });
-
-  const getGraphs = async type => {
-    const value = await instance(token).get(
-      `/v1/devices/getDeviceConsumptionBy` + type,
-    );
-    for (var i in value.data.result7Days.inputArray.datasets) {
-      value.data.result7Days.inputArray.datasets[i].color = colorArray[i];
-    }
-
-    console.log(value.data);
-    if (type === '1Month') {
-      console.log(value.data);
-      setGraphData({
-        labels: value.data.result1Month.inputArray.labels,
-        datasets: value.data.result1Month.inputArray.datasets,
-        legend: value.data.result1Month.deviceName,
-      });
-      // setConsumption(value.data.result1Month.overallConsumption);
-    } else if (type === '7Days') {
-      console.log(value.data.result7Days.inputArray.datasets[0]);
-      setGraphData({
-        labels: value.data.result7Days.inputArray.labels,
-        datasets: value.data.result7Days.inputArray.datasets,
-        legend: value.data.result7Days.deviceName,
-      });
-
-      setButton2(true);
-      // console.log(value.data.result7Days.overallConsumption);
-      // setConsumption(value.data.result7Days.overallConsumption);
-    } else if (type === 'OneDay/Yesterday' || type === 'OneDay/Today') {
-      setGraphData({
-        labels: value.data.resultOneDay.inputArray.labels,
-        datasets: value.data.resultOneDay.inputArray.datasets,
-        legend: value.data.resultOneDay.deviceName,
-      });
-      // setConsumption(value.data.resultOneDay.overallConsumption);
-    }
-    // console.log(value.data.result7days);
-  };
-  const color = () => {
-    return (opacity = 1) => `rgba(255,0,0,${opacity})`;
-  };
-  useEffect(() => {
-    console.log(graphData.datasets[0]);
-    getGraphs('7Days');
-  }, []);
+  const [loading, setLoading] = useState(true);
+  const [buttonArray, setButtonArray] = useState([
+    {name: '1 Month', api: '1month', id: 0, selected: false, data: null},
+    {name: '7 days', api: '7days', id: 1, selected: false, data: null},
+    {
+      name: 'Yesterday',
+      api: 'OneDay/yesterday',
+      id: 2,
+      selected: false,
+      data: null,
+    },
+    {name: 'Today', api: 'OneDay/today', id: 3, selected: true, data: null},
+  ]);
+  const [currentGraph, setCurrentGraph] = useState(3);
+  const [refreshing, setRefreshing] = useState(false);
   const colorArray = [
     (opacity = 1) => `rgba(255,0,0,${opacity})`,
     (opacity = 1) => `rgba(0,0,102, ${opacity})`,
     (opacity = 1) => `rgba(0,102,0, ${opacity})`,
   ];
-  const pressButton1 = () => {
-    setButton1(true);
-    setButton2(false);
-    setButton3(false);
-    setButton4(false);
-    getGraphs('OneDay/Today');
+  const wait = timeout => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
   };
-  const pressButton2 = () => {
-    setButton1(false);
-    setButton2(true);
-    setButton3(false);
-    setButton4(false);
-    getGraphs('7Days');
+  const onRefresh = React.useCallback(() => {
+    setLoading(true);
+    setRefreshing(true);
+    setButtonArray(
+      buttonArray.map((element, i) => {
+        element.data = null;
+        element.selected = false;
+        if (i == 3) {
+          element.selected = true;
+        }
+        return element;
+      }),
+    );
+    getGraphs('OneDay/today').then(() => setRefreshing(false));
+  }, []);
+
+  const getGraphs = async type => {
+    switch (type) {
+      case 'OneDay/today':
+        if (!buttonArray[3].data) {
+          setLoading(true);
+          const value = await instance(token).get(
+            `/v1/devices/getDeviceConsumptionBy` + type,
+          );
+          for (var i in value.data.resultConsumption.inputArray.datasets) {
+            value.data.resultConsumption.inputArray.datasets[i].color =
+              colorArray[i];
+          }
+          gData = {
+            labels: value.data.resultConsumption.inputArray.labels,
+            datasets: value.data.resultConsumption.inputArray.datasets,
+            legend: value.data.resultConsumption.deviceName,
+          };
+          updateGraph(3, gData);
+          setLoading(false);
+        }
+        break;
+      case '7days':
+        if (!buttonArray[1].data) {
+          setLoading(true);
+          const value = await instance(token).get(
+            `/v1/devices/getDeviceConsumptionBy` + type,
+          );
+          for (var i in value.data.resultConsumption.inputArray.datasets) {
+            value.data.resultConsumption.inputArray.datasets[i].color =
+              colorArray[i];
+          }
+          gData = {
+            labels: value.data.resultConsumption.inputArray.labels,
+            datasets: value.data.resultConsumption.inputArray.datasets,
+            legend: value.data.resultConsumption.deviceName,
+          };
+          updateGraph(1, gData);
+          setLoading(false);
+        }
+        break;
+      case '1month':
+        if (!buttonArray[0].data) {
+          setLoading(true);
+          const value = await instance(token).get(
+            `/v1/devices/getDeviceConsumptionBy` + type,
+          );
+          for (var i in value.data.resultConsumption.inputArray.datasets) {
+            value.data.resultConsumption.inputArray.datasets[i].color =
+              colorArray[i];
+          }
+          gData = {
+            labels: value.data.resultConsumption.inputArray.labels,
+            datasets: value.data.resultConsumption.inputArray.datasets,
+            legend: value.data.resultConsumption.deviceName,
+          };
+          updateGraph(0, gData);
+
+          setLoading(false);
+        }
+      case 'OneDay/yesterday':
+        if (!buttonArray[2].data) {
+          setLoading(true);
+          const value = await instance(token).get(
+            `/v1/devices/getDeviceConsumptionBy` + type,
+          );
+          for (var i in value.data.resultConsumption.inputArray.datasets) {
+            value.data.resultConsumption.inputArray.datasets[i].color =
+              colorArray[i];
+          }
+          gData = {
+            labels: value.data.resultConsumption.inputArray.labels,
+            datasets: value.data.resultConsumption.inputArray.datasets,
+            legend: value.data.resultConsumption.deviceName,
+          };
+          updateGraph(2, gData);
+
+          setLoading(false);
+        }
+    }
   };
-  const pressButton3 = () => {
-    setButton1(false);
-    setButton2(false);
-    setButton3(true);
-    setButton4(false);
-    getGraphs('1Month');
+  const color = () => {
+    return (opacity = 1) => `rgba(255,0,0,${opacity})`;
   };
-  const pressButton4 = () => {
-    setButton1(false);
-    setButton2(false);
-    setButton3(false);
-    setButton4(true);
-    getGraphs('OneDay/Yesterday');
+  useEffect(() => {
+    // console.log(graphData.datasets[0]);
+    getGraphs('OneDay/today');
+  }, []);
+
+  const buttonPress = (id, name) => {
+    console.log('btn pressed', id, name);
+    setCurrentGraph(id);
+    setButtonArray(
+      buttonArray.map(value => {
+        {
+          value.id == id ? (value.selected = true) : (value.selected = false);
+        }
+        return value;
+      }),
+    );
+    getGraphs(name);
+  };
+
+  const updateGraph = (id, graphDataButton) => {
+    console.log(graphDataButton);
+    setButtonArray(
+      buttonArray.map(value => {
+        {
+          value.id == id && (value.data = graphDataButton);
+        }
+        return value;
+      }),
+    );
+    setLoading(false);
   };
   return (
     <View>
       <Title style={{alignSelf: 'center'}}>Appliance Consumption</Title>
       <View style={styles.buttonView}>
-        <Button
-          style={button1 ? styles.buttonOn : styles.buttonOff}
-          mode={button1 ? 'contained' : 'text'}
-          onPress={() => pressButton1()}>
-          Today
-        </Button>
-        <Button
-          style={button2 ? styles.buttonOn : styles.buttonOff}
-          mode={button2 ? 'contained' : 'text'}
-          onPress={() => pressButton2()}>
-          7 Days
-        </Button>
-        <Button
-          style={button3 ? styles.buttonOn : styles.buttonOff}
-          mode={button3 ? 'contained' : 'text'}
-          onPress={() => pressButton3()}>
-          1 month
-        </Button>
-        <Button
-          style={button4 ? styles.buttonOn : styles.buttonOff}
-          mode={button4 ? 'contained' : 'text'}
-          onPress={() => pressButton4()}>
-          Yesterday
-        </Button>
+        {buttonArray &&
+          buttonArray.map((btn, index) => {
+            return (
+              <Button
+                key={index}
+                style={!btn.selected ? styles.buttonOff : styles.buttonOn}
+                mode={!btn.selected ? 'text' : 'contained'}
+                onPress={() => {
+                  buttonPress(btn.id, btn.api);
+                }}>
+                {btn.name}
+              </Button>
+            );
+          })}
       </View>
-      <ScrollView horizontal={true}>
-        <LineChart
-          bezier
-          data={graphData}
-          width={wp('150%')} // from react-native
-          height={hp('40%')}
-          yAxisLabel=""
-          yAxisSuffix="KW"
-          yAxisInterval={1} // optional, defaults to 1
-          chartConfig={{
-            backgroundColor: '#4050B5',
-            backgroundGradientFrom: '#4050B5',
-            backgroundGradientTo: '#4050C4',
-            decimalPlaces: 2, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-            propsForDots: {
-              r: '6',
-              strokeWidth: '2',
-              stroke: '#ffa726',
-            },
-          }}
-          style={{
-            marginVertical: 8,
-            borderRadius: 20,
-          }}
-        />
-      </ScrollView>
+      {loading ? (
+        <Loading />
+      ) : (
+        <ScrollView horizontal={true}>
+          {buttonArray
+            .filter(value => value.selected == true)
+            .map((element, index) => {
+              if (element.data)
+                return (
+                  <LineChart
+                    data={element.data}
+                    key={index}
+                    width={wp('150%')} // from react-native
+                    height={hp('40%')}
+                    yAxisLabel=""
+                    yAxisSuffix="KW"
+                    yAxisInterval={1} // optional, defaults to 1
+                    chartConfig={{
+                      backgroundColor: '#4050B5',
+                      backgroundGradientFrom: '#4050B5',
+                      backgroundGradientTo: '#4050C4',
+                      decimalPlaces: 2, // optional, defaults to 2dp
+                      color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                      labelColor: (opacity = 1) =>
+                        `rgba(255, 255, 255, ${opacity})`,
+                      style: {
+                        borderRadius: 16,
+                      },
+                      propsForDots: {
+                        r: '6',
+                        strokeWidth: '2',
+                        stroke: '#ffa726',
+                      },
+                    }}
+                    bezier
+                    style={{
+                      marginVertical: 8,
+                      borderRadius: 20,
+                    }}
+                  />
+                );
+            })}
+        </ScrollView>
+      )}
     </View>
   );
 };
