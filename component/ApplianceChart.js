@@ -39,14 +39,19 @@ const ApplianceChart = props => {
           Math.random() * 100,
           Math.random() * 100,
         ],
+        color: (opacity = 1) => `rgba(255,0,0,${opacity})`,
       },
     ],
+    legend: ['OneLine'],
   });
 
   const getGraphs = async type => {
     const value = await instance(token).get(
       `/v1/devices/getDeviceConsumptionBy` + type,
     );
+    for (var i in value.data.result7Days.inputArray.datasets) {
+      value.data.result7Days.inputArray.datasets[i].color = colorArray[i];
+    }
 
     console.log(value.data);
     if (type === '1Month') {
@@ -54,42 +59,55 @@ const ApplianceChart = props => {
       setGraphData({
         labels: value.data.result1Month.inputArray.labels,
         datasets: value.data.result1Month.inputArray.datasets,
+        legend: value.data.result1Month.deviceName,
       });
       // setConsumption(value.data.result1Month.overallConsumption);
     } else if (type === '7Days') {
+      console.log(value.data.result7Days.inputArray.datasets[0]);
       setGraphData({
         labels: value.data.result7Days.inputArray.labels,
-        datasets: [value.data.result7Days.inputArray.datasets],
+        datasets: value.data.result7Days.inputArray.datasets,
+        legend: value.data.result7Days.deviceName,
       });
+
       setButton2(true);
       // console.log(value.data.result7Days.overallConsumption);
-      setConsumption(value.data.result7Days.overallConsumption);
-    } else if (type === 'Yesterday' || type === 'Today') {
+      // setConsumption(value.data.result7Days.overallConsumption);
+    } else if (type === 'OneDay/Yesterday' || type === 'OneDay/Today') {
       setGraphData({
         labels: value.data.resultOneDay.inputArray.labels,
-        datasets: [value.data.resultOneDay.inputArray.datasets],
+        datasets: value.data.resultOneDay.inputArray.datasets,
+        legend: value.data.resultOneDay.deviceName,
       });
-      setConsumption(value.data.resultOneDay.overallConsumption);
+      // setConsumption(value.data.resultOneDay.overallConsumption);
     }
     // console.log(value.data.result7days);
   };
+  const color = () => {
+    return (opacity = 1) => `rgba(255,0,0,${opacity})`;
+  };
   useEffect(() => {
-    getGraphs('1Month');
+    console.log(graphData.datasets[0]);
+    getGraphs('7Days');
   }, []);
-
+  const colorArray = [
+    (opacity = 1) => `rgba(255,0,0,${opacity})`,
+    (opacity = 1) => `rgba(0,0,102, ${opacity})`,
+    (opacity = 1) => `rgba(0,102,0, ${opacity})`,
+  ];
   const pressButton1 = () => {
     setButton1(true);
     setButton2(false);
     setButton3(false);
     setButton4(false);
-    // getGraphs('Today');
+    getGraphs('OneDay/Today');
   };
   const pressButton2 = () => {
     setButton1(false);
     setButton2(true);
     setButton3(false);
     setButton4(false);
-    // getGraphs('7Days');
+    getGraphs('7Days');
   };
   const pressButton3 = () => {
     setButton1(false);
@@ -103,7 +121,7 @@ const ApplianceChart = props => {
     setButton2(false);
     setButton3(false);
     setButton4(true);
-    // getGraphs('Yesterday');
+    getGraphs('OneDay/Yesterday');
   };
   return (
     <View>
@@ -136,6 +154,7 @@ const ApplianceChart = props => {
       </View>
       <ScrollView horizontal={true}>
         <LineChart
+          bezier
           data={graphData}
           width={wp('150%')} // from react-native
           height={hp('40%')}
@@ -147,7 +166,7 @@ const ApplianceChart = props => {
             backgroundGradientFrom: '#4050B5',
             backgroundGradientTo: '#4050C4',
             decimalPlaces: 2, // optional, defaults to 2dp
-            color: (opacity = 0.5) => `rgba(255, 255, 255, ${opacity})`,
+            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
             labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
             style: {
               borderRadius: 16,
@@ -158,7 +177,6 @@ const ApplianceChart = props => {
               stroke: '#ffa726',
             },
           }}
-          bezier
           style={{
             marginVertical: 8,
             borderRadius: 20,
