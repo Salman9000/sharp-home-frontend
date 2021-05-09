@@ -38,51 +38,6 @@ const AddRoom = props => {
     }
   };
 
-  const styles = StyleSheet.create({
-    container1: {
-      flex: 1,
-    },
-    container2: {
-      flex: 1,
-      alignItems: 'center',
-    },
-    inputView: {
-      backgroundColor: '#003f5c',
-      width: wp('90%'),
-      height: 50,
-      marginBottom: 20,
-      alignItems: 'center',
-    },
-    TextInput: {
-      height: 50,
-      width: wp('90%'),
-      flex: 1,
-      fontSize: 20,
-      alignItems: 'flex-start',
-      paddingLeft: 20,
-    },
-    otherboxes: {
-      height: hp('50%'),
-      width: wp('90%'),
-      marginTop: 50,
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      justifyContent: 'center',
-    },
-    otherboxes2: {
-      height: hp('20%'),
-      width: wp('100%'),
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-    button1: {
-      width: '80%',
-      height: 50,
-      justifyContent: 'center',
-      backgroundColor: 'green',
-    },
-  });
-
   return (
     <View style={styles.container1}>
       <Header title="Add a Room" />
@@ -93,8 +48,9 @@ const AddRoom = props => {
               style={styles.TextInput}
               value={name}
               placeholder="Name"
-              selectionColor="white"
-              placeholderTextColor="#ffffff"
+              selectionColor="black"
+              placeholderTextColor="#AAA"
+              underlineColorAndroid="#D2D6DE"
               onChangeText={name => setName(name)}
             />
           </View>
@@ -103,7 +59,9 @@ const AddRoom = props => {
               style={styles.TextInput}
               value={desc}
               placeholder="Description"
-              placeholderTextColor="#ffffff"
+              selectionColor="black"
+              placeholderTextColor="#AAA"
+              underlineColorAndroid="#D2D6DE"
               onChangeText={desc => setDesc(desc)}
             />
           </View>
@@ -123,5 +81,52 @@ const AddRoom = props => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container1: {
+    flex: 1,
+    backgroundColor: '#F4F5F8',
+  },
+  container2: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  inputView: {
+    backgroundColor: '#003f5c',
+    width: wp('90%'),
+    height: 50,
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  TextInput: {
+    height: 50,
+    width: wp('90%'),
+    flex: 1,
+    fontSize: 18,
+    alignItems: 'flex-start',
+    paddingLeft: 20,
+    color: 'black',
+    backgroundColor: '#F4F5F8',
+  },
+  otherboxes: {
+    height: hp('50%'),
+    width: wp('90%'),
+    marginTop: 50,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  otherboxes2: {
+    height: hp('20%'),
+    width: wp('100%'),
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  button1: {
+    width: '80%',
+    height: 50,
+    justifyContent: 'center',
+  },
+});
 
 export default AddRoom;
