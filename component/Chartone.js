@@ -4,6 +4,7 @@ import {Searchbar, Title, Button} from 'react-native-paper';
 import Header from './Header';
 import Footer from './Footer';
 import {LineChart} from 'react-native-chart-kit';
+import FlashMessage, {showMessage} from 'react-native-flash-message';
 import {
   Dimensions,
   StyleSheet,
@@ -23,10 +24,10 @@ const ChartOne = props => {
   const token = props.token;
   const [loading, setLoading] = useState(true);
   const [buttonArray, setButtonArray] = useState([
-    {name: '1 Month', id: 0, selected: false, data: null},
-    {name: '7 days', id: 1, selected: false, data: null},
-    {name: 'Yesterday', id: 2, selected: false, data: null},
-    {name: 'Today', id: 3, selected: true, data: null},
+    {name: '1 Month', id: 0, selected: false, data: null, width: '100%'},
+    {name: '7 days', id: 1, selected: false, data: null, width: '100%'},
+    {name: 'Yesterday', id: 2, selected: false, data: null, width: '200%'},
+    {name: 'Today', id: 3, selected: true, data: null, width: '200%'},
   ]);
   const [currentGraph, setCurrentGraph] = useState(3);
   const [refreshing, setRefreshing] = useState(false);
@@ -83,11 +84,16 @@ const ChartOne = props => {
           //   labels: value.data.resultOneDay.inputArray.labels,
           //   datasets: [value.data.resultOneDay.inputArray.datasets],
           // });
-          gData = {
-            labels: value.data.resultOneDay.inputArray.labels,
-            datasets: [value.data.resultOneDay.inputArray.datasets],
-            consumption: value.data.resultOneDay.overallConsumption,
-          };
+          (value.data.resultOneDay.inputArray.datasets.color = (opacity = 1) =>
+            'rgba(0,255,255, 1)'),
+            (gData = {
+              labels: value.data.resultOneDay.inputArray.labels,
+              datasets: [value.data.resultOneDay.inputArray.datasets],
+              consumption: value.data.resultOneDay.overallConsumption,
+              startDate: value.data.startDate,
+              endDate: null,
+            });
+
           updateGraph(3, gData);
           // setConsumption(value.data.resultOneDay.overallConsumption);
           setLoading(false);
@@ -101,11 +107,15 @@ const ChartOne = props => {
           //   labels: value.data.result7Days.inputArray.labels,
           //   datasets: [value.data.result7Days.inputArray.datasets],
           // });
-          gData = {
-            labels: value.data.result7Days.inputArray.labels,
-            datasets: [value.data.result7Days.inputArray.datasets],
-            consumption: value.data.result7Days.overallConsumption,
-          };
+          (value.data.result7Days.inputArray.datasets.color = (opacity = 1) =>
+            'rgba(0,255,255, 1)'),
+            (gData = {
+              labels: value.data.result7Days.inputArray.labels,
+              datasets: [value.data.result7Days.inputArray.datasets],
+              consumption: value.data.result7Days.overallConsumption,
+              startDate: value.data.startDate,
+              endDate: value.data.endDate,
+            });
           // setGraphData(graphData7Day);
           console.log(gData);
           updateGraph(1, gData);
@@ -115,11 +125,15 @@ const ChartOne = props => {
         if (!buttonArray[0].data) {
           setLoading(true);
           const value = await instance(token).get(`/v1/activity/${type}`);
-          gData = {
-            labels: value.data.result1Month.inputArray.labels,
-            datasets: [value.data.result1Month.inputArray.datasets],
-            consumption: value.data.result1Month.overallConsumption,
-          };
+          (value.data.result1Month.inputArray.datasets.color = (opacity = 1) =>
+            'rgba(0,255,255, 1)'),
+            (gData = {
+              labels: value.data.result1Month.inputArray.labels,
+              datasets: [value.data.result1Month.inputArray.datasets],
+              consumption: value.data.result1Month.overallConsumption,
+              startDate: value.data.startDate,
+              endDate: value.data.endDate,
+            });
           updateGraph(0, gData);
           setLoading(false);
         }
@@ -132,12 +146,15 @@ const ChartOne = props => {
           //   labels: value.data.resultOneDay.inputArray.labels,
           //   datasets: [value.data.resultOneDay.inputArray.datasets],
           // });
-
-          gData = {
-            labels: value.data.resultOneDay.inputArray.labels,
-            datasets: [value.data.resultOneDay.inputArray.datasets],
-            consumption: value.data.resultOneDay.overallConsumption,
-          };
+          (value.data.resultOneDay.inputArray.datasets.color = (opacity = 1) =>
+            'rgba(0,255,255, 1)'),
+            (gData = {
+              labels: value.data.resultOneDay.inputArray.labels,
+              datasets: [value.data.resultOneDay.inputArray.datasets],
+              consumption: value.data.resultOneDay.overallConsumption,
+              startDate: value.data.startDate,
+              endDate: null,
+            });
           console.log(gData);
           updateGraph(2, gData);
           setLoading(false);
@@ -185,15 +202,19 @@ const ChartOne = props => {
           loading={loading}
         />
       }>
-      <Title style={{alignSelf: 'center'}}>Total House Consumption</Title>
+      <Title style={{alignSelf: 'center', color: 'white', marginBottom: 20}}>
+        Total House Consumption
+      </Title>
       <View style={styles.buttonView}>
         {buttonArray &&
           buttonArray.map((btn, index) => {
             return (
               <Button
+                color={'white'}
                 key={index}
                 style={!btn.selected ? styles.buttonOff : styles.buttonOn}
                 mode={!btn.selected ? 'text' : 'contained'}
+                dark={false}
                 onPress={() => {
                   buttonPress(
                     btn.id,
@@ -205,21 +226,91 @@ const ChartOne = props => {
             );
           })}
       </View>
+      {loading ? (
+        <Text></Text>
+      ) : (
+        buttonArray
+          .filter(value => value.selected == true)
+          .map((element, index) => {
+            console.log(element.data);
+            if (!element.data.endDate) {
+              return (
+                <Text
+                  style={{
+                    color: 'white',
+                    alignSelf: 'center',
+                    fontSize: 18,
+                    fontFamily: 'Roboto',
+                    fontWeight: 'bold',
+                    marginBottom: 10,
+                    marginTop: 10,
+                  }}>
+                  {element.data.startDate}
+                </Text>
+              );
+            } else {
+              return (
+                <Text
+                  style={{
+                    color: 'white',
+                    alignSelf: 'center',
+                    fontSize: 18,
+                    fontFamily: 'Roboto',
+                    fontWeight: 'bold',
+                    marginBottom: 10,
+                    marginTop: 10,
+                  }}>
+                  {element.data.endDate} - {element.data.startDate}
+                </Text>
+              );
+            }
+          })
+      )}
       <View>
         {loading ? (
-          <Loading />
+          <Text></Text>
         ) : (
           buttonArray
             .filter(value => value.selected == true)
             .map((element, index) => {
-              console.log(element.data);
+              console.log(element.data.startDate);
               return (
-                <Text key={index}>
-                  Overall Consumption {element.data.consumption}
-                </Text>
+                <Title
+                  key={index}
+                  style={{
+                    alignSelf: 'center',
+                    alignItems: 'center',
+                    color: 'white',
+                    marginVertical: 20,
+                    paddingTop: 5,
+                    height: 36,
+                    fontSize: 36,
+                    fontFamily: 'Roboto',
+                    fontWeight: 'bold',
+                  }}>
+                  {element.data.consumption}/Kw
+                </Title>
               );
             })
         )}
+        <FlashMessage
+          autoHide={false}
+          style={{
+            width: 150,
+            backgroundColor: '#3B6ACA',
+            borderRadius: 50,
+          }}
+          titleStyle={{
+            fontSize: 24,
+            paddingTop: 11,
+            alignSelf: 'center', // Centered horizontally
+            color: '#46D3E6',
+            fontFamily: 'Roboto',
+            fontWeight: 'bold',
+          }}
+          floating={true}
+          position="center"
+        />
       </View>
       {loading ? (
         <Loading />
@@ -233,8 +324,8 @@ const ChartOne = props => {
                   <LineChart
                     data={element.data}
                     key={index}
-                    width={wp('150%')} // from react-native
-                    height={hp('40%')}
+                    width={wp(element.width)} // from react-native
+                    height={hp('30%')}
                     yAxisLabel=""
                     withInnerLines={false}
                     withOuterLines={false}
@@ -246,15 +337,25 @@ const ChartOne = props => {
                     withInnerLines={false}
                     withOuterLines={false}
                     yAxisInterval={4} // optional, defaults to 1
+                    onDataPointClick={({value, getColor}) =>
+                      showMessage({
+                        message: `${value}/Kw`,
+                        backgroundColor: 'red',
+                      })
+                    }
                     chartConfig={{
-                      backgroundColor: '#4050B5',
-                      backgroundGradientFrom: '#4050B5',
-                      backgroundGradientTo: '#4050C4',
+                      backgroundColor: '#4048CC',
+                      backgroundGradientFrom: '#4048CC',
+                      backgroundGradientTo: '#4048CC',
+                      fillShadowGradientOpacity: 1,
+                      fillShadowGradient: '#79D2DE',
+                      strokeWidth: 3,
+                      // backgroundGradientFromOpacity: 0,
+                      // backgroundGradientToOpacity: 0,
                       decimalPlaces: 2, // optional, defaults to 2dp
-                      color: (opacity = 0.5) =>
-                        `rgba(255, 255, 255, ${opacity})`,
+                      color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                       labelColor: (opacity = 1) =>
-                        `rgba(255, 255, 255, ${opacity})`,
+                        `rgba(255,255,255, ${opacity})`,
                       style: {
                         borderRadius: 0,
                       },
@@ -263,11 +364,16 @@ const ChartOne = props => {
                         strokeWidth: '2',
                         // stroke: '#ffa726',
                       },
+                      propsForBackgroundLines: {
+                        stroke: '#ffffff',
+                      },
                     }}
                     bezier
                     style={{
                       borderBottomRightRadius: 15,
-                      paddingRight: 10,
+                      paddingRight: 0,
+                      paddingLeft: 0,
+                      // marginHorizontal: -20, //You can style here
                     }}
                   />
                 );
@@ -291,7 +397,7 @@ const styles = StyleSheet.create({
   },
   buttonOn: {
     borderRadius: 50,
-    backgroundColor: 'blue',
+    backgroundColor: '#575FDE',
   },
   buttonOff: {},
   container1: {
@@ -301,6 +407,9 @@ const styles = StyleSheet.create({
     flex: 1,
     // width: wp('95%'),
     margin: 0,
+    paddingBottom: 20,
+    backgroundColor: '#4048CC',
+    paddingTop: 20,
   },
 });
 export default ChartOne;

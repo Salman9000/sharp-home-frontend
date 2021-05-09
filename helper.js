@@ -3,7 +3,7 @@ import {BASE_URL} from '@env';
 
 const instance = token =>
   axios.create({
-    baseURL: `${BASE_URL}`,
+    baseURL: BASE_URL,
     headers: {Authorization: 'Bearer ' + token},
   });
 
