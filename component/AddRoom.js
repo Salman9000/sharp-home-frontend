@@ -23,7 +23,7 @@ const AddRoom = props => {
     // const token = await validToken();
     // console.log('hello');
     try {
-      const response = await instance(token).post(`${BASE_URL}/v1/rooms`, {
+      const response = await instance(token).post(`/v1/rooms`, {
         name: name,
         description: desc,
       });

@@ -46,7 +46,7 @@ const ChooseRoom = props => {
 
   const getRooms = async () => {
     try {
-      const response = await instance(token).get(`${BASE_URL}/v1/rooms`);
+      const response = await instance(token).get(`/v1/rooms`);
       //   console.log(response.data.docs.length);
       tempList = [];
       console.log(response.data.docs);
@@ -85,7 +85,7 @@ const ChooseRoom = props => {
         //  props.navigation.replace('noRoom');
         console.log('no rooms');
       }
-
+      setLoading(false);
       return 1;
     } catch (error) {
       console.log(error);
@@ -105,7 +105,7 @@ const ChooseRoom = props => {
   };
 
   useEffect(() => {
-    getRooms().then(setLoading(false));
+    getRooms();
   }, []);
 
   const styles = StyleSheet.create({
