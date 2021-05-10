@@ -193,7 +193,7 @@ const ChartOne = props => {
     setLoading(false);
   };
   return (
-    <ScrollView
+    <View
       style={styles.container2}
       refreshControl={
         <RefreshControl
@@ -236,6 +236,7 @@ const ChartOne = props => {
             if (!element.data.endDate) {
               return (
                 <Text
+                  key={index}
                   style={{
                     color: 'white',
                     alignSelf: 'center',
@@ -251,6 +252,7 @@ const ChartOne = props => {
             } else {
               return (
                 <Text
+                  key={index}
                   style={{
                     color: 'white',
                     alignSelf: 'center',
@@ -380,7 +382,7 @@ const ChartOne = props => {
             })}
         </ScrollView>
       )}
-    </ScrollView>
+    </View>
   );
 };
 

@@ -4,6 +4,7 @@ import {Searchbar, Title, Button} from 'react-native-paper';
 import Header from './Header';
 import Footer from './Footer';
 import {LineChart} from 'react-native-chart-kit';
+import FlashMessage, {showMessage} from 'react-native-flash-message';
 import {
   Dimensions,
   StyleSheet,
@@ -23,23 +24,49 @@ const ApplianceChart = props => {
   const token = props.token;
   const [loading, setLoading] = useState(true);
   const [buttonArray, setButtonArray] = useState([
-    {name: '1 Month', api: '1month', id: 0, selected: false, data: null},
-    {name: '7 days', api: '7days', id: 1, selected: false, data: null},
+    {
+      name: '1 Month',
+      api: '1month',
+      id: 0,
+      selected: false,
+      data: null,
+      width: '100%',
+      fillShadowGradient: '#79D2DE',
+    },
+    {
+      name: '7 days',
+      api: '7days',
+      id: 1,
+      selected: false,
+      data: null,
+      width: '100%',
+      fillShadowGradient: '#ffffff',
+    },
     {
       name: 'Yesterday',
       api: 'OneDay/yesterday',
       id: 2,
       selected: false,
       data: null,
+      width: '200%',
+      fillShadowGradient: '#4048CC',
     },
-    {name: 'Today', api: 'OneDay/today', id: 3, selected: true, data: null},
+    {
+      name: 'Today',
+      api: 'OneDay/today',
+      id: 3,
+      selected: true,
+      data: null,
+      width: '200%',
+      fillShadowGradient: '#4048CC',
+    },
   ]);
   const [currentGraph, setCurrentGraph] = useState(3);
   const [refreshing, setRefreshing] = useState(false);
   const colorArray = [
-    (opacity = 1) => `rgba(255,0,0,${opacity})`,
-    (opacity = 1) => `rgba(0,0,102, ${opacity})`,
-    (opacity = 1) => `rgba(0,102,0, ${opacity})`,
+    (opacity = 1) => `rgba(236,102,102,${opacity})`,
+    (opacity = 1) => `rgba(20,122,214, ${opacity})`,
+    // (opacity = 1) => `rgba(0,102,0, ${opacity})`,
   ];
   const wait = timeout => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -76,6 +103,8 @@ const ApplianceChart = props => {
             labels: value.data.resultConsumption.inputArray.labels,
             datasets: value.data.resultConsumption.inputArray.datasets,
             legend: value.data.resultConsumption.deviceName,
+            startDate: value.data.startDate,
+            endDate: null,
           };
           updateGraph(3, gData);
           setLoading(false);
@@ -95,6 +124,8 @@ const ApplianceChart = props => {
             labels: value.data.resultConsumption.inputArray.labels,
             datasets: value.data.resultConsumption.inputArray.datasets,
             legend: value.data.resultConsumption.deviceName,
+            startDate: value.data.startDate,
+            endDate: value.data.endDate,
           };
           updateGraph(1, gData);
           setLoading(false);
@@ -114,6 +145,8 @@ const ApplianceChart = props => {
             labels: value.data.resultConsumption.inputArray.labels,
             datasets: value.data.resultConsumption.inputArray.datasets,
             legend: value.data.resultConsumption.deviceName,
+            startDate: value.data.startDate,
+            endDate: value.data.endDate,
           };
           updateGraph(0, gData);
 
@@ -128,11 +161,16 @@ const ApplianceChart = props => {
           for (var i in value.data.resultConsumption.inputArray.datasets) {
             value.data.resultConsumption.inputArray.datasets[i].color =
               colorArray[i];
+            // value.data.resultConsumption.inputArray.datasets[i].svg = {
+            //   fill: ' rgba(236,102,102)',
+            // };
           }
           gData = {
             labels: value.data.resultConsumption.inputArray.labels,
             datasets: value.data.resultConsumption.inputArray.datasets,
             legend: value.data.resultConsumption.deviceName,
+            startDate: value.data.startDate,
+            endDate: null,
           };
           updateGraph(2, gData);
 
@@ -175,68 +213,138 @@ const ApplianceChart = props => {
     setLoading(false);
   };
   return (
-    <View>
-      <Title style={{alignSelf: 'center'}}>Appliance Consumption</Title>
-      <View style={styles.buttonView}>
-        {buttonArray &&
-          buttonArray.map((btn, index) => {
-            return (
-              <Button
-                key={index}
-                style={!btn.selected ? styles.buttonOff : styles.buttonOn}
-                mode={!btn.selected ? 'text' : 'contained'}
-                onPress={() => {
-                  buttonPress(btn.id, btn.api);
-                }}>
-                {btn.name}
-              </Button>
-            );
-          })}
-      </View>
-      {loading ? (
-        <Loading />
-      ) : (
-        <ScrollView horizontal={true}>
-          {buttonArray
+    <View style={{backgroundColor: '#4048CC'}}>
+      <View
+        style={{backgroundColor: 'white', borderRadius: 30, paddingTop: 30}}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            loading={loading}
+          />
+        }>
+        <Title style={{alignSelf: 'center'}}>Appliance Consumption</Title>
+        <View style={styles.buttonView}>
+          {buttonArray &&
+            buttonArray.map((btn, index) => {
+              return (
+                <Button
+                  key={index}
+                  color={'black'}
+                  style={!btn.selected ? styles.buttonOff : styles.buttonOn}
+                  mode={!btn.selected ? 'text' : 'contained'}
+                  onPress={() => {
+                    buttonPress(btn.id, btn.api);
+                  }}>
+                  {btn.name}
+                </Button>
+              );
+            })}
+        </View>
+        {loading ? (
+          <Text></Text>
+        ) : (
+          buttonArray
             .filter(value => value.selected == true)
             .map((element, index) => {
-              if (element.data)
+              console.log(element.data);
+              if (!element.data.endDate) {
                 return (
-                  <LineChart
-                    data={element.data}
+                  <Text
                     key={index}
-                    width={wp('150%')} // from react-native
-                    height={hp('40%')}
-                    yAxisLabel=""
-                    yAxisSuffix="KW"
-                    yAxisInterval={1} // optional, defaults to 1
-                    chartConfig={{
-                      backgroundColor: '#4050B5',
-                      backgroundGradientFrom: '#4050B5',
-                      backgroundGradientTo: '#4050C4',
-                      decimalPlaces: 2, // optional, defaults to 2dp
-                      color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                      labelColor: (opacity = 1) =>
-                        `rgba(255, 255, 255, ${opacity})`,
-                      style: {
-                        borderRadius: 16,
-                      },
-                      propsForDots: {
-                        r: '6',
-                        strokeWidth: '2',
-                        stroke: '#ffa726',
-                      },
-                    }}
-                    bezier
                     style={{
-                      marginVertical: 8,
-                      borderRadius: 20,
-                    }}
-                  />
+                      color: 'black',
+                      alignSelf: 'center',
+                      fontSize: 18,
+                      fontFamily: 'Roboto',
+                      fontWeight: 'bold',
+                      marginBottom: 10,
+                      marginTop: 10,
+                    }}>
+                    {element.data.startDate}
+                  </Text>
                 );
-            })}
-        </ScrollView>
-      )}
+              } else {
+                return (
+                  <Text
+                    key={index}
+                    style={{
+                      color: 'black',
+                      alignSelf: 'center',
+                      fontSize: 18,
+                      fontFamily: 'Roboto',
+                      fontWeight: 'bold',
+                      marginBottom: 10,
+                      marginTop: 10,
+                    }}>
+                    {element.data.endDate} - {element.data.startDate}
+                  </Text>
+                );
+              }
+            })
+        )}
+        {loading ? (
+          <Loading />
+        ) : (
+          <ScrollView horizontal={true}>
+            {buttonArray
+              .filter(value => value.selected == true)
+              .map((element, index) => {
+                if (element.data)
+                  return (
+                    <LineChart
+                      data={element.data}
+                      key={index}
+                      width={wp(element.width)} // from react-native
+                      height={hp('40%')}
+                      yAxisLabel=""
+                      withInnerLines={false}
+                      withOuterLines={false}
+                      withVerticalLines={false}
+                      withHorizontalLines={false}
+                      withHorizontalLabels={true}
+                      yAxisSuffix="/KW"
+                      yAxisInterval={4} // optional, defaults to 1
+                      onDataPointClick={({value, getColor}) =>
+                        showMessage({
+                          message: `${value}/Kw`,
+                          backgroundColor: 'red',
+                        })
+                      }
+                      chartConfig={{
+                        backgroundColor: '#4050B5',
+                        backgroundGradientFrom: '#4050B5',
+                        //  backgroundGradientTo: '#4050C4',
+                        fillShadowGradientOpacity: 1,
+                        fillShadowGradient: '#4048CC',
+                        strokeWidth: 6,
+                        backgroundGradientFromOpacity: 0,
+                        backgroundGradientToOpacity: 0,
+                        decimalPlaces: 2, // optional, defaults to 2dp
+                        color: (opacity = 255) => `rgba(208,91,84, ${opacity})`,
+                        labelColor: (opacity = 1) =>
+                          `rgba(0, 0, 0, ${opacity})`,
+                        style: {
+                          borderRadius: 0,
+                        },
+                        propsForDots: {
+                          r: '4',
+                          strokeWidth: '6',
+                          // stroke: '#ffa726',
+                        },
+                      }}
+                      bezier
+                      style={{
+                        marginVertical: 10,
+                        marginLeft: 10,
+                        // borderRadius: 20,
+                      }}
+                    />
+                  );
+              })}
+          </ScrollView>
+        )}
+      </View>
     </View>
   );
 };
@@ -253,7 +361,7 @@ const styles = StyleSheet.create({
   },
   buttonOn: {
     borderRadius: 50,
-    backgroundColor: 'blue',
+    backgroundColor: '#575FDE',
   },
   buttonOff: {},
   container1: {
