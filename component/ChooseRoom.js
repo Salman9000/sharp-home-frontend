@@ -48,29 +48,38 @@ const ChooseRoom = props => {
     try {
       const response = await instance(token).get(`${BASE_URL}/v1/rooms`);
       //   console.log(response.data.docs.length);
-      for (let i = 0; i < response.data.docs.length; i++) {
-        let room = response.data.docs[i];
-        if (rooms.length < 1) {
-          setRooms([
-            {
-              id: room.id,
-              name: room.name,
-              desc: room.description,
-              count: room.deviceCount,
-            },
-          ]);
-        } else {
-          setRooms([
-            ...rooms,
-            {
-              id: room.id,
-              name: room.name,
-              desc: room.description,
-              count: room.deviceCount,
-            },
-          ]);
-        }
-      }
+      tempList = [];
+      console.log(response.data.docs);
+      tempList = response.data.docs.map(value => ({
+        id: value.id,
+        name: value.name,
+        desc: value.description,
+        count: value.deviceCount,
+      }));
+      setRooms(tempList);
+      // for (let i = 0; i < response.data.docs.length; i++) {
+      //   let room = response.data.docs[i];
+      //   if (rooms.length < 1) {
+      //     setRooms([
+      //       {
+      //         id: room.id,
+      //         name: room.name,
+      //         desc: room.description,
+      //         count: room.deviceCount,
+      //       },
+      //     ]);
+      //   } else {
+      //     setRooms([
+      //       ...rooms,
+      //       {
+      //         id: room.id,
+      //         name: room.name,
+      //         desc: room.description,
+      //         count: room.deviceCount,
+      //       },
+      //     ]);
+      //   }
+      // }
 
       if (response.data.docs.length === 0) {
         //  props.navigation.replace('noRoom');
