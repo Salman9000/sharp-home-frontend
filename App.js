@@ -23,6 +23,10 @@ import AddDevice from './component/AddDevice';
 import ChooseRoom from './component/ChooseRoom';
 import ConfirmDeviceDetails from './component/ConfirmDeviceDetails';
 import ViewDevices from './component/ViewDevices';
+import VRChooseRoomAndDevice from './component/VRChooseRoomAndDevice';
+import SelectRoom from './component/SelectRoom';
+import SelectDevices from './component/SelectDevices';
+import VRrooms from './component/VRrooms';
 
 const Stack = createStackNavigator();
 
@@ -89,6 +93,18 @@ const App = () => {
             </Stack.Screen>
             <Stack.Screen name="viewDevices">
               {props => <ViewDevices {...props} token={token} />}
+            </Stack.Screen>
+            <Stack.Screen name="vrChooseRoomAndDevice">
+              {props => <VRChooseRoomAndDevice {...props} token={token} />}
+            </Stack.Screen>
+            <Stack.Screen name="selectRoom">
+              {props => <SelectRoom {...props} token={token} />}
+            </Stack.Screen>
+            <Stack.Screen name="selectDevice">
+              {props => <SelectDevices {...props} token={token} />}
+            </Stack.Screen>
+            <Stack.Screen name="vrRooms">
+              {props => <VRrooms {...props} token={token} />}
             </Stack.Screen>
           </Stack.Navigator>
         )}

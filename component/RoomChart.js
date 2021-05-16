@@ -4,6 +4,7 @@ import {Searchbar, Title, Button} from 'react-native-paper';
 import Header from './Header';
 import Footer from './Footer';
 import {LineChart} from 'react-native-chart-kit';
+import Icon2 from 'react-native-vector-icons/FontAwesome';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
 import {
   Dimensions,
@@ -20,8 +21,9 @@ import {
 import instance from '../helper';
 import ApplianceChart from './ApplianceChart';
 import Loading from './Loading';
-const ChartOne = props => {
+const RoomChart = props => {
   const token = props.token;
+  console.log('Im in roomchart');
   const [loading, setLoading] = useState(true);
   const [buttonArray, setButtonArray] = useState([
     {
@@ -85,7 +87,7 @@ const ChartOne = props => {
           setLoading(true);
           const value = await instance(token).get(`/v1/activity/${type}`);
           (value.data.resultOneDay.inputArray.datasets.color = (opacity = 1) =>
-            'rgba(0,255,255, 1)'),
+            'rgba(20,122,214,1)'),
             (gData = {
               labels: value.data.resultOneDay.inputArray.labels,
               datasets: [value.data.resultOneDay.inputArray.datasets],
@@ -188,15 +190,24 @@ const ChartOne = props => {
           loading={loading}
         />
       }>
-      <Title style={{alignSelf: 'center', color: 'white', marginBottom: 20}}>
-        Total House Consumption
-      </Title>
+      <View
+        style={{flex: 1, justifyContent: 'space-between', direction: 'row'}}>
+        <Title
+          style={{
+            alignSelf: 'center',
+            color: 'black',
+            marginBottom: 20,
+          }}>
+          Overal Room Consumption
+        </Title>
+        <Icon2 name="calendar" style={{fontSize: 22, marginLeft: 10}}></Icon2>
+      </View>
       <View style={styles.buttonView}>
         {buttonArray &&
           buttonArray.map((btn, index) => {
             return (
               <Button
-                color={'white'}
+                color={'black'}
                 key={index}
                 style={!btn.selected ? styles.buttonOff : styles.buttonOn}
                 mode={!btn.selected ? 'text' : 'contained'}
@@ -223,7 +234,7 @@ const ChartOne = props => {
                 <Text
                   key={index}
                   style={{
-                    color: 'white',
+                    color: 'black',
                     alignSelf: 'center',
                     fontSize: 18,
                     fontFamily: 'Roboto',
@@ -239,7 +250,7 @@ const ChartOne = props => {
                 <Text
                   key={index}
                   style={{
-                    color: 'white',
+                    color: 'black',
                     alignSelf: 'center',
                     fontSize: 18,
                     fontFamily: 'Roboto',
@@ -266,7 +277,7 @@ const ChartOne = props => {
                   style={{
                     alignSelf: 'center',
                     alignItems: 'center',
-                    color: 'white',
+                    color: 'black',
                     marginVertical: 20,
                     paddingTop: 5,
                     height: 36,
@@ -317,9 +328,9 @@ const ChartOne = props => {
                     withOuterLines={false}
                     withVerticalLines={false}
                     withHorizontalLines={false}
-                    withHorizontalLabels={false}
+                    withHorizontalLabels={true}
                     yAxisLabel=""
-                    yAxisSuffix=""
+                    yAxisSuffix="/KW"
                     withInnerLines={false}
                     withOuterLines={false}
                     yAxisInterval={4} // optional, defaults to 1
@@ -331,17 +342,17 @@ const ChartOne = props => {
                     }
                     chartConfig={{
                       // backgroundColor: 'red',
-                      backgroundGradientFrom: '#4048CC',
-                      backgroundGradientTo: '#4048CC',
+                      backgroundGradientFrom: 'white',
+                      backgroundGradientTo: 'white',
                       fillShadowGradientOpacity: 1,
                       fillShadowGradient: '#6493D1',
+                      useShadowColorFromDataset: true,
                       strokeWidth: 2,
                       // backgroundGradientFromOpacity: 0,
                       // backgroundGradientToOpacity: 0,
                       decimalPlaces: 2, // optional, defaults to 2dp
                       // color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                      labelColor: (opacity = 1) =>
-                        `rgba(255,255,255, ${opacity})`,
+                      labelColor: (opacity = 1) => `rgba(0,0,0, ${opacity})`,
                       style: {
                         borderRadius: 0,
                       },
@@ -357,8 +368,8 @@ const ChartOne = props => {
                     bezier
                     style={{
                       borderBottomRightRadius: 15,
-                      paddingRight: 0,
-                      paddingLeft: 0,
+                      //   paddingRight: 0,
+                      //   paddingLeft: 0,
                       // marginHorizontal: -20, //You can style here
                     }}
                   />
@@ -398,8 +409,8 @@ const styles = StyleSheet.create({
     // width: wp('95%'),
     margin: 0,
     paddingBottom: 20,
-    backgroundColor: '#4048CC',
+    backgroundColor: 'white',
     paddingTop: 20,
   },
 });
-export default ChartOne;
+export default RoomChart;

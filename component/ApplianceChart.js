@@ -25,8 +25,8 @@ const ApplianceChart = props => {
   const [loading, setLoading] = useState(true);
   const [buttonArray, setButtonArray] = useState([
     {
+      dName: '1m',
       name: '1 Month',
-      api: '1month',
       id: 0,
       selected: false,
       data: null,
@@ -34,8 +34,8 @@ const ApplianceChart = props => {
       fillShadowGradient: '#79D2DE',
     },
     {
+      dName: '7D',
       name: '7 days',
-      api: '7days',
       id: 1,
       selected: false,
       data: null,
@@ -43,8 +43,8 @@ const ApplianceChart = props => {
       fillShadowGradient: '#ffffff',
     },
     {
+      dName: 'Y',
       name: 'Yesterday',
-      api: 'OneDay/yesterday',
       id: 2,
       selected: false,
       data: null,
@@ -52,8 +52,8 @@ const ApplianceChart = props => {
       fillShadowGradient: '#4048CC',
     },
     {
+      dName: 'T',
       name: 'Today',
-      api: 'OneDay/today',
       id: 3,
       selected: true,
       data: null,
@@ -64,9 +64,11 @@ const ApplianceChart = props => {
   const [currentGraph, setCurrentGraph] = useState(3);
   const [refreshing, setRefreshing] = useState(false);
   const colorArray = [
-    (opacity = 1) => `rgba(236,102,102,${opacity})`,
-    (opacity = 1) => `rgba(20,122,214, ${opacity})`,
-    // (opacity = 1) => `rgba(0,102,0, ${opacity})`,
+    (opacity = 1) => `rgba(236,102,102,1)`,
+
+    (opacity = 1) => `rgba(20,122,214, 1)`,
+
+    (opacity = 1) => `rgba(0,102,0, 1)`,
   ];
   const wait = timeout => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -84,17 +86,15 @@ const ApplianceChart = props => {
         return element;
       }),
     );
-    getGraphs('OneDay/today').then(() => setRefreshing(false));
+    getGraphs('today').then(() => setRefreshing(false));
   }, []);
 
   const getGraphs = async type => {
     switch (type) {
-      case 'OneDay/today':
+      case 'today':
         if (!buttonArray[3].data) {
           setLoading(true);
-          const value = await instance(token).get(
-            `/v1/devices/getDeviceConsumptionBy` + type,
-          );
+          const value = await instance(token).get(`/v1/devices/oneday/${type}`);
           for (var i in value.data.resultConsumption.inputArray.datasets) {
             value.data.resultConsumption.inputArray.datasets[i].color =
               colorArray[i];
@@ -103,6 +103,8 @@ const ApplianceChart = props => {
             labels: value.data.resultConsumption.inputArray.labels,
             datasets: value.data.resultConsumption.inputArray.datasets,
             legend: value.data.resultConsumption.deviceName,
+            overallConsumptionByDevice:
+              value.data.resultConsumption.overallConsumptionByDevice,
             startDate: value.data.startDate,
             endDate: null,
           };
@@ -113,9 +115,7 @@ const ApplianceChart = props => {
       case '7days':
         if (!buttonArray[1].data) {
           setLoading(true);
-          const value = await instance(token).get(
-            `/v1/devices/getDeviceConsumptionBy` + type,
-          );
+          const value = await instance(token).get(`/v1/devices/${type}`);
           for (var i in value.data.resultConsumption.inputArray.datasets) {
             value.data.resultConsumption.inputArray.datasets[i].color =
               colorArray[i];
@@ -124,6 +124,8 @@ const ApplianceChart = props => {
             labels: value.data.resultConsumption.inputArray.labels,
             datasets: value.data.resultConsumption.inputArray.datasets,
             legend: value.data.resultConsumption.deviceName,
+            overallConsumptionByDevice:
+              value.data.resultConsumption.overallConsumptionByDevice,
             startDate: value.data.startDate,
             endDate: value.data.endDate,
           };
@@ -134,9 +136,7 @@ const ApplianceChart = props => {
       case '1month':
         if (!buttonArray[0].data) {
           setLoading(true);
-          const value = await instance(token).get(
-            `/v1/devices/getDeviceConsumptionBy` + type,
-          );
+          const value = await instance(token).get(`/v1/devices/${type}`);
           for (var i in value.data.resultConsumption.inputArray.datasets) {
             value.data.resultConsumption.inputArray.datasets[i].color =
               colorArray[i];
@@ -145,6 +145,8 @@ const ApplianceChart = props => {
             labels: value.data.resultConsumption.inputArray.labels,
             datasets: value.data.resultConsumption.inputArray.datasets,
             legend: value.data.resultConsumption.deviceName,
+            overallConsumptionByDevice:
+              value.data.resultConsumption.overallConsumptionByDevice,
             startDate: value.data.startDate,
             endDate: value.data.endDate,
           };
@@ -152,12 +154,10 @@ const ApplianceChart = props => {
 
           setLoading(false);
         }
-      case 'OneDay/yesterday':
+      case 'yesterday':
         if (!buttonArray[2].data) {
           setLoading(true);
-          const value = await instance(token).get(
-            `/v1/devices/getDeviceConsumptionBy` + type,
-          );
+          const value = await instance(token).get(`/v1/devices/oneday/${type}`);
           for (var i in value.data.resultConsumption.inputArray.datasets) {
             value.data.resultConsumption.inputArray.datasets[i].color =
               colorArray[i];
@@ -169,6 +169,8 @@ const ApplianceChart = props => {
             labels: value.data.resultConsumption.inputArray.labels,
             datasets: value.data.resultConsumption.inputArray.datasets,
             legend: value.data.resultConsumption.deviceName,
+            overallConsumptionByDevice:
+              value.data.resultConsumption.overallConsumptionByDevice,
             startDate: value.data.startDate,
             endDate: null,
           };
@@ -182,12 +184,10 @@ const ApplianceChart = props => {
     return (opacity = 1) => `rgba(255,0,0,${opacity})`;
   };
   useEffect(() => {
-    // console.log(graphData.datasets[0]);
-    getGraphs('OneDay/today');
+    getGraphs('today');
   }, []);
 
   const buttonPress = (id, name) => {
-    console.log('btn pressed', id, name);
     setCurrentGraph(id);
     setButtonArray(
       buttonArray.map(value => {
@@ -201,7 +201,6 @@ const ApplianceChart = props => {
   };
 
   const updateGraph = (id, graphDataButton) => {
-    console.log(graphDataButton);
     setButtonArray(
       buttonArray.map(value => {
         {
@@ -215,7 +214,12 @@ const ApplianceChart = props => {
   return (
     <View style={{backgroundColor: '#4048CC'}}>
       <View
-        style={{backgroundColor: 'white', borderRadius: 30, paddingTop: 30}}
+        style={{
+          backgroundColor: 'white',
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
+          paddingVertical: 30,
+        }}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -234,9 +238,12 @@ const ApplianceChart = props => {
                   style={!btn.selected ? styles.buttonOff : styles.buttonOn}
                   mode={!btn.selected ? 'text' : 'contained'}
                   onPress={() => {
-                    buttonPress(btn.id, btn.api);
+                    buttonPress(
+                      btn.id,
+                      btn.name.split(' ').join('').toLowerCase(),
+                    );
                   }}>
-                  {btn.name}
+                  {btn.dName}
                 </Button>
               );
             })}
@@ -247,7 +254,6 @@ const ApplianceChart = props => {
           buttonArray
             .filter(value => value.selected == true)
             .map((element, index) => {
-              console.log(element.data);
               if (!element.data.endDate) {
                 return (
                   <Text
@@ -312,25 +318,29 @@ const ApplianceChart = props => {
                         })
                       }
                       chartConfig={{
-                        backgroundColor: '#4050B5',
-                        backgroundGradientFrom: '#4050B5',
-                        //  backgroundGradientTo: '#4050C4',
+                        // backgroundColor: '#4050B5',
+                        backgroundGradientFrom: 'white',
+                        backgroundGradientTo: 'white',
                         fillShadowGradientOpacity: 1,
-                        fillShadowGradient: '#4048CC',
-                        strokeWidth: 6,
-                        backgroundGradientFromOpacity: 0,
-                        backgroundGradientToOpacity: 0,
+                        useShadowColorFromDataset: true,
+                        fillShadowGradient: 'red',
+                        strokeWidth: 1,
+                        // backgroundGradientFromOpacity: 0,
+                        // backgroundGradientToOpacity: 0,
                         decimalPlaces: 2, // optional, defaults to 2dp
-                        color: (opacity = 255) => `rgba(208,91,84, ${opacity})`,
+                        // color: (opacity = 255) => `rgba(208,91,84, ${opacity})`,
                         labelColor: (opacity = 1) =>
                           `rgba(0, 0, 0, ${opacity})`,
                         style: {
                           borderRadius: 0,
                         },
                         propsForDots: {
-                          r: '4',
-                          strokeWidth: '6',
+                          r: '0.1',
+                          strokeWidth: '1',
                           // stroke: '#ffa726',
+                        },
+                        propsForBackgroundLines: {
+                          stroke: '#ffffff',
                         },
                       }}
                       bezier
@@ -344,17 +354,76 @@ const ApplianceChart = props => {
               })}
           </ScrollView>
         )}
+        <View
+          style={{
+            borderBottomColor: 'black',
+            borderBottomWidth: 0.5,
+            marginHorizontal: 30,
+            marginBottom: 30,
+          }}
+        />
+        {loading ? (
+          <Loading />
+        ) : (
+          <View>
+            {buttonArray
+              .filter(value => value.selected == true)
+              .map((element, index) =>
+                element.data.overallConsumptionByDevice.map((element2, i) => {
+                  return (
+                    <View
+                      key={i}
+                      style={{
+                        backgroundColor: '#ECF0F9',
+                        // width: wp('100%'),
+                        marginHorizontal: 30,
+                        shadowColor: '#000',
+                        shadowOffset: {
+                          width: 0,
+                          height: 2,
+                        },
+                        shadowOpacity: 0.23,
+                        shadowRadius: 2.62,
+                        elevation: 4,
+                        borderRadius: 20,
+                        padding: 20,
+                        marginBottom: 30,
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: 'Robot',
+                          fontSize: 13,
+                          color: '#616161',
+                        }}>
+                        {element.data.legend[i]}
+                      </Text>
+                      <Text
+                        style={{
+                          fontFamily: 'Robot',
+                          fontSize: 22,
+                          fontWeight: 'bold',
+                          color: '#616161',
+                        }}>
+                        {element2}KW
+                      </Text>
+                    </View>
+                  );
+                }),
+              )}
+          </View>
+        )}
       </View>
     </View>
   );
 };
 const styles = StyleSheet.create({
   buttonView: {
-    alignItems: 'center',
+    // alignItems: 'center',
     flexDirection: 'row',
-    alignSelf: 'center',
+    justifyContent: 'space-between',
+    // alignSelf: 'center',
     borderRadius: 50,
-    marginHorizontal: 10,
+    marginHorizontal: 30,
   },
   button: {
     width: 20,
@@ -362,8 +431,11 @@ const styles = StyleSheet.create({
   buttonOn: {
     borderRadius: 50,
     backgroundColor: '#575FDE',
+    width: wp('20%'),
   },
-  buttonOff: {},
+  buttonOff: {
+    width: wp('20%'),
+  },
   container1: {
     flex: 1,
   },

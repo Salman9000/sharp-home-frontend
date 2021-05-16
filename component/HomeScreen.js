@@ -7,7 +7,8 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
-import {Button, Text, Icon} from 'native-base';
+import {Button as Button2, Text, Icon} from 'native-base';
+import {Button} from 'react-native-paper';
 import Header from './Header';
 import Footer from './Footer';
 import Loading from './Loading';
@@ -21,7 +22,7 @@ const HomeScreen = props => {
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
   const token = props.token;
-
+  console.log(token);
   const getDevices = async () => {
     instance(token)
       .get('/v1/devices')
@@ -55,9 +56,14 @@ const HomeScreen = props => {
     getDevices();
   }, []);
 
-  const addDeviceButtonPressed = props => {
+  const addDevice2Pressed = props => {
     props.navigation.replace('addDevice');
   };
+
+  const viewReport = props => {
+    props.navigation.replace('vrChooseRoomAndDevice');
+  };
+
   return (
     <View style={styles.scroll}>
       <Header title="Welcome" />
@@ -68,27 +74,33 @@ const HomeScreen = props => {
           <>
             <Text style={styles.text}>No Devices</Text>
             <Text style={styles.text}>Found</Text>
-            <Button
+            <Button2
               style={styles.iconContainer}
-              onPress={() => addDeviceButtonPressed(props)}>
+              onPress={() => addDevice2Pressed(props)}>
               <Icon name="add" style={styles.icon} />
-            </Button>
+            </Button2>
           </>
         ) : (
           <>
-            <ScrollView>
+            <ScrollView style={{backgroundColor: 'white'}}>
               <ChartOne {...props} token={token} />
               <ApplianceChart {...props} token={token} />
+              <Button
+                mode="contained"
+                uppercase={false}
+                style={{
+                  color: 'white',
+                  backgroundColor: '#42A4FE',
+                  marginHorizontal: 30,
+                  marginBottom: 30,
+                }}
+                contentStyle={{height: 50}}
+                labelStyle={{fontSize: 18, fontWeight: 'bold'}}
+                dark={true}
+                onPress={() => viewReport(props)}>
+                View More Reports
+              </Button>
             </ScrollView>
-            {/* <View>
-              {devices.map(item => {
-                return (
-                  <View key={item.id}>
-                    <Text>{item.name}</Text>
-                  </View>
-                );
-              })}
-            // </ScrollView> */}
           </>
         )}
       </View>
@@ -121,8 +133,6 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 80,
     height: 80,
-    //   justifyContent: 'center',
-    //   alignItems: 'center',
     borderRadius: 80,
     backgroundColor: '#1e90ff',
     padding: 7,

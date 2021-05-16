@@ -26,18 +26,18 @@ import {
 } from 'native-base';
 import {BASE_URL} from '@env';
 import instance from '../helper';
+import Loading from './Loading';
 
-const ChooseRoom = props => {
-  const {deviceName, deviceRating} = props.route.params;
+const SelectRoom = props => {
   const token = props.token;
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const cardPressed = id => {
-    props.navigation.navigate('confirmDeviceDetails', {
-      deviceName: deviceName,
-      deviceRating: deviceRating,
+  const cardPressed = (id, name) => {
+    props.navigation.navigate('vrChooseRoomAndDevice', {
       roomId: id,
+      roomName: name,
+      roomArray: rooms,
     });
   };
 
@@ -45,7 +45,6 @@ const ChooseRoom = props => {
     try {
       const response = await instance(token).get(`/v1/rooms`);
       tempList = [];
-      console.log(response.data.docs);
       tempList = response.data.docs.map(value => ({
         id: value.id,
         name: value.name,
@@ -53,49 +52,27 @@ const ChooseRoom = props => {
         count: value.deviceCount,
       }));
       setRooms(tempList);
-
-      if (response.data.docs.length === 0) {
-        console.log('no rooms');
-      }
       setLoading(false);
       return 1;
     } catch (error) {
       console.log(error);
     }
   };
-  const LoadingScreen = () => (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color="blue" />
-    </View>
-  );
-
-  const addRoomButtonPressed = props => {
-    props.navigation.replace('addRoom', {
-      deviceName: deviceName,
-      deviceRating: deviceRating,
-    });
-  };
-
   useEffect(() => {
-    getRooms();
+    if (props.route.params.roomArray.length > 0) {
+      setRooms(props.route.params.roomArray);
+      setLoading(false);
+    } else {
+      getRooms();
+    }
   }, []);
 
   return (
     <View style={styles.container1}>
-      <Header title="Choose a Room" />
+      <Header title="Select Room" />
       <>
         {loading ? (
-          <LoadingScreen />
-        ) : rooms.length < 1 ? (
-          <View style={styles.scrollv}>
-            <Text style={styles.text}>No Rooms</Text>
-            <Text style={styles.text}>Found</Text>
-            <Button
-              style={styles.iconContainer}
-              onPress={() => addRoomButtonPressed(props)}>
-              <Icon name="add" style={styles.icon} />
-            </Button>
-          </View>
+          <Loading />
         ) : (
           <>
             <ScrollView style={styles.container2}>
@@ -103,7 +80,7 @@ const ChooseRoom = props => {
                 <View key={item.id}>
                   <TouchableOpacity
                     onPress={() => {
-                      cardPressed(item.id);
+                      cardPressed(item.id, item.name);
                     }}>
                     <Card style={styles.card} pointerEvents="none">
                       <CardItem header>
@@ -125,11 +102,6 @@ const ChooseRoom = props => {
                   </TouchableOpacity>
                 </View>
               ))}
-              <Button
-                style={styles.button}
-                onPress={() => addRoomButtonPressed(props)}>
-                <Text>Add Room</Text>
-              </Button>
             </ScrollView>
           </>
         )}
@@ -210,4 +182,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChooseRoom;
+export default SelectRoom;
