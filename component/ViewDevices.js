@@ -76,7 +76,7 @@ const ViewDevices = props => {
   };
 
   const addDeviceButtonPressed = props => {
-    props.navigation.navigate('addDevice2');
+    props.navigation.navigate('addDevice');
   };
 
   useEffect(() => {
@@ -105,10 +105,11 @@ const ViewDevices = props => {
             <ScrollView style={styles.container2}>
               {devices.map(item => (
                 <TouchableOpacity
+                  key={item.id}
                   onPress={() => {
                     cardPressed(item.id);
                   }}>
-                  <Card key={item.id} style={styles.card} pointerEvents="none">
+                  <Card style={styles.card} pointerEvents="none">
                     <CardItem header>
                       <Left>
                         <Text style={styles.roomName}>{item.name}</Text>

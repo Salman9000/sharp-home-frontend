@@ -13,7 +13,7 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 
 const ConfirmDeviceDetails = props => {
   const token = props.token;
-  const {deviceName, deviceRating, roomId} = props.route.params;
+  const {deviceName, deviceRating, roomId, host, name} = props.route.params;
   const [roomName, setRoomName] = useState('');
 
   useEffect(() => {
@@ -22,9 +22,7 @@ const ConfirmDeviceDetails = props => {
 
   const getRoom = async roomId => {
     try {
-      const response = await instance(token).get(
-        `${BASE_URL}/v1/rooms/${roomId}`,
-      );
+      const response = await instance(token).get(`/v1/rooms/${roomId}`);
       console.log(response.data);
       setRoomName(response.data.name);
     } catch (err) {
@@ -37,10 +35,11 @@ const ConfirmDeviceDetails = props => {
 
   const addDevice = async props => {
     try {
-      const response = await instance(token).post(`${BASE_URL}/v1/devices`, {
+      const response = await instance(token).post(`/v1/devices`, {
         name: deviceName,
         powerRating: deviceRating,
         room: roomId,
+        host: host,
       });
       alert('room added');
       console.log(response.data);
@@ -100,6 +99,9 @@ const ConfirmDeviceDetails = props => {
           </View>
           <View style={styles.inputView}>
             <Text styles={styles.txt}>Room Name: {roomName}</Text>
+          </View>
+          <View style={styles.inputView}>
+            <Text styles={styles.txt}>Device Ip: {host}</Text>
           </View>
           <View style={styles.otherboxes2}>
             <Button

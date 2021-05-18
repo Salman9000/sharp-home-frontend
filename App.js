@@ -28,7 +28,7 @@ import VRChooseRoomAndDevice from './component/VRChooseRoomAndDevice';
 import SelectRoom from './component/SelectRoom';
 import SelectDevices from './component/SelectDevices';
 import VRrooms from './component/VRrooms';
-
+import NetworkDiscoverer from './component/NetworkDiscoverer';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -89,6 +89,9 @@ const App = () => {
             {/* <Stack.Screen name="addDevice2">
               {props => <AddDevice2 {...props} token={token} />}
             </Stack.Screen> */}
+            <Stack.Screen name="deviceDiscover">
+              {props => <NetworkDiscoverer {...props} token={token} />}
+            </Stack.Screen>
             <Stack.Screen name="chooseRoom">
               {props => <ChooseRoom {...props} token={token} />}
             </Stack.Screen>
