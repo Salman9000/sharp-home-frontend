@@ -20,6 +20,7 @@ import AddRoom from './component/AddRoom';
 import NoDevice from './component/NoDevice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AddDevice from './component/AddDevice';
+import AddDevice2 from './component/AddDevice2';
 import ChooseRoom from './component/ChooseRoom';
 import ConfirmDeviceDetails from './component/ConfirmDeviceDetails';
 import ViewDevices from './component/ViewDevices';
@@ -85,6 +86,9 @@ const App = () => {
             <Stack.Screen name="addDevice">
               {props => <AddDevice {...props} token={token} />}
             </Stack.Screen>
+            {/* <Stack.Screen name="addDevice2">
+              {props => <AddDevice2 {...props} token={token} />}
+            </Stack.Screen> */}
             <Stack.Screen name="chooseRoom">
               {props => <ChooseRoom {...props} token={token} />}
             </Stack.Screen>

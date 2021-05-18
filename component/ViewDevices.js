@@ -76,7 +76,7 @@ const ViewDevices = props => {
   };
 
   const addDeviceButtonPressed = props => {
-    props.navigation.navigate('addDevice');
+    props.navigation.navigate('addDevice2');
   };
 
   useEffect(() => {

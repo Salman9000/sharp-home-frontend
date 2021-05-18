@@ -21,8 +21,16 @@ import instance from '../helper';
 import Loading from './Loading';
 
 const ApplianceChart = props => {
-  const token = props.token;
   const [loading, setLoading] = useState(true);
+  const token = props.token;
+  const [deviceParams, setDeviceParams] = useState(
+    props.deviceParams ? props.deviceParams : '',
+  );
+  deviceParams && console.log(deviceParams.split('&').length);
+  const [deviceArray, setDeviceArray] = useState(props.deviceArray); //if throws error then split deviceParams by '&'
+  // setDeviceArray(props.deviceArray);
+  // console.log(deviceArray);
+  // setDeviceParams(props.deviceParams);
   const [buttonArray, setButtonArray] = useState([
     {
       dName: '1m',
@@ -94,7 +102,9 @@ const ApplianceChart = props => {
       case 'today':
         if (!buttonArray[3].data) {
           setLoading(true);
-          const value = await instance(token).get(`/v1/devices/oneday/${type}`);
+          const value = await instance(token).get(
+            `/v1/devices/oneday/${type}?${deviceParams}`,
+          );
           for (var i in value.data.resultConsumption.inputArray.datasets) {
             value.data.resultConsumption.inputArray.datasets[i].color =
               colorArray[i];
@@ -115,7 +125,9 @@ const ApplianceChart = props => {
       case '7days':
         if (!buttonArray[1].data) {
           setLoading(true);
-          const value = await instance(token).get(`/v1/devices/${type}`);
+          const value = await instance(token).get(
+            `/v1/devices/${type}?${deviceParams}`,
+          );
           for (var i in value.data.resultConsumption.inputArray.datasets) {
             value.data.resultConsumption.inputArray.datasets[i].color =
               colorArray[i];
@@ -136,7 +148,9 @@ const ApplianceChart = props => {
       case '1month':
         if (!buttonArray[0].data) {
           setLoading(true);
-          const value = await instance(token).get(`/v1/devices/${type}`);
+          const value = await instance(token).get(
+            `/v1/devices/${type}?${deviceParams}`,
+          );
           for (var i in value.data.resultConsumption.inputArray.datasets) {
             value.data.resultConsumption.inputArray.datasets[i].color =
               colorArray[i];
@@ -227,6 +241,11 @@ const ApplianceChart = props => {
             loading={loading}
           />
         }>
+        {deviceArray && (
+          <Text style={{alignSelf: 'center', fontSize: 18}}>
+            {deviceArray.length} Appliances found in this room
+          </Text>
+        )}
         <Title style={{alignSelf: 'center'}}>Appliance Consumption</Title>
         <View style={styles.buttonView}>
           {buttonArray &&

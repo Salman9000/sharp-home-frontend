@@ -24,8 +24,8 @@ const VRChooseRoomAndDevice = props => {
       name: props.route.params.roomName,
       id: props.route.params.roomId,
     });
+    devices.push(props.route.params.roomArray[0].devices);
     roomArray = props.route.params.roomArray;
-    console.log(rooms);
   }
   if (props.route.params?.deviceName) {
     devices.push({
@@ -50,7 +50,8 @@ const VRChooseRoomAndDevice = props => {
 
   const setRoomData = props => {
     props.navigation.navigate('vrRooms', {
-      deviceArray: deviceArray,
+      deviceArray: devices,
+      roomsArray: rooms,
     });
   };
 

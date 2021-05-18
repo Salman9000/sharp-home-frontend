@@ -19,37 +19,14 @@ import ChartOne from './Chartone';
 import ApplianceChart from './ApplianceChart';
 const HomeScreen = props => {
   const [rooms, setRooms] = useState([]);
-  const [devices, setDevices] = useState([]);
+  const [devices, setDevices] = useState(null);
   const [loading, setLoading] = useState(true);
   const token = props.token;
   console.log(token);
   const getDevices = async () => {
-    instance(token)
-      .get('/v1/devices')
-      .then(value => {
-        for (let i = 0; i < value.data.docs.length; i++) {
-          let dev = value.data.docs[i];
-          if (devices.length < 1) {
-            setDevices([
-              {
-                id: dev.id,
-                name: dev.name,
-              },
-            ]);
-          } else {
-            setDevices([
-              ...devices,
-              {
-                id: dev.id,
-                name: dev.name,
-              },
-            ]);
-          }
-        }
-        // console.log(devices[0]);
-        // setDevices(value.data.docs);
-        setLoading(false);
-      });
+    const response = await instance(token).get('/v1/devices');
+    setDevices(response.data);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -70,7 +47,7 @@ const HomeScreen = props => {
       <View style={styles.scrollv}>
         {loading ? (
           <Loading />
-        ) : devices.length <= 0 ? (
+        ) : !devices ? (
           <>
             <Text style={styles.text}>No Devices</Text>
             <Text style={styles.text}>Found</Text>

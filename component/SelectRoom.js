@@ -50,6 +50,7 @@ const SelectRoom = props => {
         name: value.name,
         desc: value.description,
         count: value.deviceCount,
+        devices: value.devices,
       }));
       setRooms(tempList);
       setLoading(false);

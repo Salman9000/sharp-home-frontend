@@ -18,8 +18,9 @@ import {template} from '@babel/core';
 import RoomChart from './RoomChart';
 import ApplianceChart from './ApplianceChart';
 const VRrooms = props => {
-  const [rooms, setRooms] = useState([]);
-  const [devices, setDevices] = useState([]);
+  // const [rooms, setRooms] = useState(props.route.params.roomArray);
+  const [deviceArray, setDeviceArray] = useState([]);
+  const [deviceParams, setDeviceParams] = useState('');
   const [loading, setLoading] = useState(true);
   const token = props.token;
   console.log('im in view report room');
@@ -32,30 +33,60 @@ const VRrooms = props => {
     props.navigation.replace('vrChooseRoomAndDevice');
   };
 
+  const getDevices = async () => {
+    setLoading(true);
+    const roomParams = props.route.params.roomsArray
+      .map((value, i) => {
+        return `room${i + 1}=${value.id}`;
+      })
+      .join('&');
+    const response = await instance(token).get(
+      `/v1/devices/rooms/?${roomParams}`,
+    );
+    setDeviceArray(response.data);
+    setDeviceParams(
+      response.data.map((value, i) => `device${i + 1}=${value}`).join('&'),
+    );
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getDevices();
+  }, []);
+
   return (
     <View style={styles.scroll}>
       <Header title="Room Report" />
       <View style={styles.scrollv}>
         <>
-          <ScrollView style={{backgroundColor: 'white'}}>
-            <RoomChart {...props} token={token} />
-            <ApplianceChart {...props} token={token} />
-            <Button
-              mode="contained"
-              uppercase={false}
-              style={{
-                color: 'white',
-                backgroundColor: '#42A4FE',
-                marginHorizontal: 30,
-                marginBottom: 30,
-              }}
-              contentStyle={{height: 50}}
-              labelStyle={{fontSize: 18, fontWeight: 'bold'}}
-              dark={true}
-              onPress={() => viewReport(props)}>
-              View More Reports
-            </Button>
-          </ScrollView>
+          {loading ? (
+            <Loading />
+          ) : (
+            <ScrollView style={{backgroundColor: 'white'}}>
+              <RoomChart {...props} token={token} deviceParams={deviceParams} />
+              <ApplianceChart
+                {...props}
+                token={token}
+                deviceParams={deviceParams}
+                deviceArray={deviceArray}
+              />
+              <Button
+                mode="contained"
+                uppercase={false}
+                style={{
+                  color: 'white',
+                  backgroundColor: '#42A4FE',
+                  marginHorizontal: 30,
+                  marginBottom: 30,
+                }}
+                contentStyle={{height: 50}}
+                labelStyle={{fontSize: 18, fontWeight: 'bold'}}
+                dark={true}
+                onPress={() => viewReport(props)}>
+                View More Reports
+              </Button>
+            </ScrollView>
+          )}
         </>
       </View>
       <Footer nav={props} />
