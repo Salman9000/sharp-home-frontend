@@ -34,7 +34,7 @@ const ChooseRoom = props => {
   const [loading, setLoading] = useState(true);
 
   const cardPressed = id => {
-    props.navigation.navigate('confirmDeviceDetails', {
+    props.navigation.navigate('deviceDiscover', {
       deviceName: deviceName,
       deviceRating: deviceRating,
       roomId: id,

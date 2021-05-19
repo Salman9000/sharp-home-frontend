@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, Text, Button} from 'react-native';
 import {IDevice} from './Device.interface';
-import NetworkDiscoverer from './NetworkDiscoverer';
+// import NetworkDiscoverer from './NetworkDiscoverer';
 
-const networkDiscoverer = new NetworkDiscoverer(40, [50001, 50002]);
+// const networkDiscoverer = new NetworkDiscoverer(40, [50001, 50002]);
 
 export default function AddDevice2() {
   const [results, setResults] = useState([]);

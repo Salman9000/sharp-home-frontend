@@ -1,114 +1,194 @@
-import FindLocalDevices from 'react-native-find-local-devices';
-import {DeviceEventEmitter} from 'react-native';
+import React, {Component} from 'react';
+import {
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  // Text,
+  SafeAreaView,
+  FlatList,
+  RefreshControl,
+} from 'react-native';
+import {
+  Card,
+  CardItem,
+  Body,
+  Text,
+  Left,
+  Right,
+  Button,
+  Icon,
+} from 'native-base';
+import {List, ListItem} from 'react-native-elements';
+import Zeroconf from 'react-native-zeroconf';
+import Footer from './Footer';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+// import SelectDevices from './SelectDevices';
 
-const NEW_DEVICE_FOUND = 'NEW_DEVICE_FOUND';
-const CHECK = 'CHECK';
-const NO_DEVICES = 'NO_DEVICES';
-const NO_PORTS = 'NO_PORTS';
-const RESULTS = 'RESULTS';
-const CONNECTION_ERROR = 'CONNECTION_ERROR';
+const zeroconf = new Zeroconf();
 
-class NetworkDiscoverer {
-  Timeout = 40;
-  Ports = [];
+export default class networkDiscoverer extends Component {
+  state = {
+    isScanning: false,
+    selectedService: null,
+    services: {},
+    deviceName: this.props.route.params.deviceName,
+    deviceRating: this.props.route.params.deviceRating,
+    roomId: this.props.route.params.roomId,
+  };
 
-  NewDeviceFoundSubscription = null;
-  ResultsSubscription = null;
-  CheckDeviceSubscription = null;
-  NoDevicesSubscription = null;
-  NoPortsSubscription = null;
-  ConnectionErrorSubscription = null;
+  componentDidMount() {
+    this.refreshData();
+    // const {deviceName, deviceRating, roomId} = this.props.route.params;
+    // console.log(deviceName, 'hh');
+    zeroconf.on('start', () => {
+      this.setState({isScanning: true});
+      console.log('[Start]');
+    });
 
-  constructor(timeout = 40, ports = []) {
-    this.Timeout = timeout;
-    this.Ports = ports;
+    zeroconf.on('stop', () => {
+      this.setState({isScanning: false});
+      console.log('[Stop]');
+    });
+
+    zeroconf.on('resolved', service => {
+      // console.log('[Resolve]', JSON.stringify(service, null, 2));
+
+      this.setState({
+        services: {
+          ...this.state.services,
+          [service.host]: service,
+        },
+      });
+    });
+
+    zeroconf.on('error', err => {
+      this.setState({isScanning: false});
+      console.log('[Error]', err);
+    });
   }
-
-  getLocalDevices = (
-    setResults,
-    setCheckingDevice,
-    setLoading,
-    setErrorMsg,
-    setNewDevice,
-    setDefault,
-  ) => {
-    this.NewDeviceFoundSubscription = DeviceEventEmitter.addListener(
-      NEW_DEVICE_FOUND,
-      device => {
-        if (device.ipAddress && device.port) {
-          console.log(device);
-          setNewDevice(device);
-        }
-      },
-    );
-
-    this.ResultsSubscription = DeviceEventEmitter.addListener(
-      RESULTS,
-      devices => {
-        setResults(devices);
-        setLoading(false);
-        this.cancelDiscovering(setDefault);
-      },
-    );
-
-    this.CheckDeviceSubscription = DeviceEventEmitter.addListener(
-      CHECK,
-      device => {
-        setCheckingDevice(device);
-      },
-    );
-
-    this.NoDevicesSubscription = DeviceEventEmitter.addListener(
-      NO_DEVICES,
-      () => {
-        setLoading(false);
-        setErrorMsg(NO_DEVICES);
-        this.cancelDiscovering(setDefault);
-      },
-    );
-
-    this.NoPortsSubscription = DeviceEventEmitter.addListener(NO_PORTS, () => {
-      setLoading(false);
-      setErrorMsg(NO_PORTS);
-      this.cancelDiscovering(setDefault);
-    });
-
-    this.ConnectionErrorSubscription = DeviceEventEmitter.addListener(
-      CONNECTION_ERROR,
-      error => {
-        // Handle error messages for each socket connection
-        // console.log(error.message);
-      },
-    );
-
-    FindLocalDevices.getLocalDevices({
-      timeout: this.Timeout,
-      ports: this.Ports,
+  SelectDevice = (host, name) => {
+    console.log(this.state.roomId);
+    this.props.navigation.navigate('confirmDeviceDetails', {
+      deviceName: this.state.deviceName,
+      deviceRating: this.state.deviceRating,
+      roomId: this.state.roomId,
+      host: host,
+      name: name,
     });
   };
 
-  cancelDiscovering = setDefault => {
-    FindLocalDevices.cancelDiscovering();
-    if (this.NewDeviceFoundSubscription) {
-      this.NewDeviceFoundSubscription.remove();
-    }
-    if (this.CheckDeviceSubscription) {
-      this.CheckDeviceSubscription.remove();
-    }
-    if (this.ResultsSubscription) {
-      this.ResultsSubscription.remove();
-    }
-    if (this.NoDevicesSubscription) {
-      this.NoDevicesSubscription.remove();
-    }
-    if (this.NoPortsSubscription) {
-      this.NoPortsSubscription.remove();
-    }
-    if (this.ConnectionErrorSubscription) {
-      this.ConnectionErrorSubscription.remove();
-    }
-    setDefault();
+  renderRow = ({item, index}) => {
+    const {name, fullName, host} = this.state.services[item];
+
+    return (
+      <TouchableOpacity
+        style={styles.list}
+        onPress={() => this.SelectDevice(host, name)}>
+        <Card style={styles.card} pointerEvents="none">
+          <CardItem header>
+            <Left>
+              <Text style={styles.roomName}>{name}</Text>
+            </Left>
+            <Right>
+              <Text style={styles.deviceCount}> {host}</Text>
+            </Right>
+          </CardItem>
+        </Card>
+        {/* <ListItem title={name} subtitle={fullName} /> */}
+      </TouchableOpacity>
+    );
   };
+
+  refreshData = () => {
+    const {isScanning} = this.state;
+    if (isScanning) {
+      return;
+    }
+
+    this.setState({services: []});
+
+    zeroconf.scan('http', 'tcp', 'local.');
+
+    clearTimeout(this.timeout);
+    this.timeout = setTimeout(() => {
+      zeroconf.stop();
+    }, 5000);
+  };
+
+  render() {
+    const {services, selectedService, isScanning} = this.state;
+    // console.log(selectedService, 'kkk');
+
+    const service = services[selectedService];
+
+    if (service) {
+      return (
+        <SafeAreaView style={styles.container}>
+          <TouchableOpacity
+            onPress={() => this.setState({selectedService: null})}>
+            <Text style={styles.closeButton}>{'CLOSE'}</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.json}>{JSON.stringify(services, null, 2)}</Text>
+        </SafeAreaView>
+      );
+    }
+
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.state}>
+          {isScanning ? 'Scanning for Devices' : 'Scanning Stopped'}
+        </Text>
+
+        <FlatList
+          data={Object.keys(services)}
+          renderItem={this.renderRow}
+          keyExtractor={key => key}
+          refreshControl={
+            <RefreshControl
+              refreshing={isScanning}
+              onRefresh={this.refreshData}
+              tintColor="skyblue"
+            />
+          }
+        />
+        <Footer nav={this.props} />
+      </SafeAreaView>
+    );
+  }
 }
 
-export default NetworkDiscoverer;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#DDDDDD',
+  },
+  closeButton: {
+    padding: 20,
+    textAlign: 'center',
+  },
+  card: {
+    marginTop: 20,
+  },
+  cardItem: {
+    width: wp('90%'),
+    height: 120,
+
+    //   alignItems: 'center',
+  },
+  json: {
+    padding: 10,
+  },
+  state: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 30,
+  },
+  list: {
+    color: 'black',
+    backgroundColor: '#DDDDDD',
+  },
+});
