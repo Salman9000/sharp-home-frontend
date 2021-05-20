@@ -25,7 +25,8 @@ const HomeScreen = props => {
   console.log(token);
   const getDevices = async () => {
     const response = await instance(token).get('/v1/devices');
-    setDevices(response.data);
+    console.log(response.data.docs, 'jjjj');
+    setDevices(response.data.docs);
     setLoading(false);
   };
 
@@ -47,7 +48,7 @@ const HomeScreen = props => {
       <View style={styles.scrollv}>
         {loading ? (
           <Loading />
-        ) : !devices ? (
+        ) : devices.length == 0 ? (
           <>
             <Text style={styles.text}>No Devices</Text>
             <Text style={styles.text}>Found</Text>

@@ -16,7 +16,12 @@ import {
 } from 'react-native-responsive-screen';
 import {HelperText, TextInput, Button} from 'react-native-paper';
 import Header from './Header';
-const Signup = ({navigation}) => {
+import instance from '../helper';
+const axios = require('axios');
+import {BASE_URL} from '@env';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const Signup = props => {
+  const [name, Setname] = useState('');
   const [Email, setEmail] = useState('');
   const [Password, setPassword] = useState('');
   const [Password2, setPassword2] = useState('');
@@ -24,6 +29,50 @@ const Signup = ({navigation}) => {
 
   const hasErrors = () => {
     return !text.includes('@');
+  };
+  const signup = async props => {
+    try {
+      if (
+        name.length == 0 ||
+        Email.length == 0 ||
+        Password.length == 0 ||
+        Password2.length == 0
+      ) {
+        alert('Please fill all details correctly');
+        // break;
+      } else if (
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+          Email,
+        )
+      ) {
+        if (Password.length < 8 || Password2.length < 8) {
+          alert('Passwords must be at least 8 characters');
+        } else if (Password != Password2) {
+          alert('Both passwords do not match');
+        } else {
+          console.log('jjj');
+          const response = await axios.post(`${BASE_URL}/v1/auth/register`, {
+            name: name,
+            email: Email,
+            password: Password,
+          });
+          await AsyncStorage.setItem(
+            'token',
+            response.data.tokens.access.token,
+          );
+          console.log(response.data.tokens.access.token, 'llll');
+          props.setToken(response.data.tokens.access.token);
+          props.navigation.replace('home');
+        }
+      } else {
+        alert('Email address not appropriate');
+      }
+    } catch (error) {
+      console.log(
+        'There has been a problem with your fetch operation in registering: ' +
+          error.message,
+      );
+    }
   };
 
   return (
@@ -33,6 +82,16 @@ const Signup = ({navigation}) => {
           <Text style={styles.Text}>Smart Home</Text>
         </View>
         <View style={styles.otherboxes}>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.TextInput}
+              value={name}
+              placeholder="Full Name"
+              selectionColor="white"
+              placeholderTextColor="#ffffff"
+              onChangeText={name => Setname(name)}
+            />
+          </View>
           <View style={styles.inputView}>
             <TextInput
               style={styles.TextInput}
@@ -69,14 +128,14 @@ const Signup = ({navigation}) => {
           <Button
             style={styles.button1}
             mode="contained"
-            onPress={() => Enterhouse(email, password)}>
+            onPress={() => signup(props)}>
             New Residence
           </Button>
 
           <Button
             style={styles.button2}
             mode="contained"
-            onPress={() => navigation.navigate('Login')}>
+            onPress={() => props.navigation.navigate('Login')}>
             Already Have a Residence
           </Button>
         </View>

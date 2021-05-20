@@ -91,7 +91,7 @@ const Login = props => {
           <Button
             style={styles.button2}
             mode="contained"
-            onPress={() => navigation.navigate('Signup')}>
+            onPress={() => props.navigation.navigate('Signup')}>
             New Residence
           </Button>
         </View>

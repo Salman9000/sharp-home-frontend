@@ -55,6 +55,9 @@ const App = () => {
             <Stack.Screen name="Login">
               {props => <Login {...props} setToken={setToken} />}
             </Stack.Screen>
+            <Stack.Screen name="Signup">
+              {props => <Signup {...props} setToken={setToken} />}
+            </Stack.Screen>
           </Stack.Navigator>
         ) : (
           <Stack.Navigator
@@ -66,7 +69,7 @@ const App = () => {
               {props => <HomeScreen {...props} token={token} />}
             </Stack.Screen>
             <Stack.Screen name="Signup">
-              {props => <Signup {...props} token={token} />}
+              {props => <Signup {...props} setToken={setToken} />}
             </Stack.Screen>
             <Stack.Screen name="Login">
               {props => <Login {...props} setToken={setToken} />}
