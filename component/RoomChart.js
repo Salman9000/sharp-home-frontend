@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {t} from 'react-native-tailwindcss';
 import {Searchbar, Title, Button} from 'react-native-paper';
-import Header from './Header';
-import Footer from './Footer';
 import {LineChart} from 'react-native-chart-kit';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
@@ -22,6 +20,10 @@ import instance from '../helper';
 import ApplianceChart from './ApplianceChart';
 import Loading from './Loading';
 const RoomChart = props => {
+  const [startDateParam, setStartDateParam] = useState(
+    props.route.params.startDate,
+  );
+  const [endDateParam, setEndDateParam] = useState(props.route.params.endDate);
   const token = props.token;
   const [loading, setLoading] = useState(true);
   const [deviceParams, setDeviceParams] = useState(props.deviceParams);
@@ -81,13 +83,20 @@ const RoomChart = props => {
   }, []);
 
   const getGraphs = async type => {
+    console.log('start ' + startDateParam);
     switch (type) {
       case 'today':
         if (!buttonArray[3].data) {
           setLoading(true);
-          const value = await instance(token).get(
-            `/v1/activity/${type}?${deviceParams}`,
-          );
+          if (startDateParam === null) {
+            const value = await instance(token).get(
+              `/v1/activity/${type}?${deviceParams}`,
+            );
+          } else {
+            const value = await instance(token).get(
+              `/v1/activity/${type}?${deviceParams}?startDate=${startDateParam}&endDate=${endDateParam}`,
+            );
+          }
           (value.data.resultOneDay.inputArray.datasets.color = (opacity = 1) =>
             'rgba(20,122,214,1)'),
             (gData = {
@@ -105,9 +114,15 @@ const RoomChart = props => {
       case '7days':
         if (!buttonArray[1].data) {
           setLoading(true);
-          const value = await instance(token).get(
-            `/v1/activity/${type}?${deviceParams}`,
-          );
+          if (startDateParam === null) {
+            const value = await instance(token).get(
+              `/v1/activity/${type}?${deviceParams}`,
+            );
+          } else {
+            const value = await instance(token).get(
+              `/v1/activity/${type}?${deviceParams}?startDate=${startDateParam}&endDate=${endDateParam}`,
+            );
+          }
           (value.data.result7Days.inputArray.datasets.color = (opacity = 1) =>
             'rgba(20,122,214,1)'),
             (gData = {
@@ -123,9 +138,15 @@ const RoomChart = props => {
       case '1month':
         if (!buttonArray[0].data) {
           setLoading(true);
-          const value = await instance(token).get(
-            `/v1/activity/${type}?${deviceParams}`,
-          );
+          if (startDateParam === null) {
+            const value = await instance(token).get(
+              `/v1/activity/${type}?${deviceParams}`,
+            );
+          } else {
+            const value = await instance(token).get(
+              `/v1/activity/${type}?${deviceParams}?startDate=${startDateParam}&endDate=${endDateParam}`,
+            );
+          }
           (value.data.result1Month.inputArray.datasets.color = (opacity = 1) =>
             'rgba(20,122,214,1)'),
             (gData = {
@@ -142,9 +163,15 @@ const RoomChart = props => {
       case 'yesterday':
         if (!buttonArray[2].data) {
           setLoading(true);
-          const value = await instance(token).get(
-            `/v1/activity/${type}?${deviceParams}`,
-          );
+          if (startDateParam === null) {
+            const value = await instance(token).get(
+              `/v1/activity/${type}?${deviceParams}`,
+            );
+          } else {
+            const value = await instance(token).get(
+              `/v1/activity/${type}?${deviceParams}?startDate=${startDateParam}&endDate=${endDateParam}`,
+            );
+          }
           (value.data.resultOneDay.inputArray.datasets.color = (opacity = 1) =>
             'rgba(20,122,214,1)'),
             (gData = {
@@ -206,9 +233,8 @@ const RoomChart = props => {
             color: 'black',
             marginBottom: 20,
           }}>
-          Overal Room Consumption
+          Overall Room Consumption
         </Title>
-        <Icon2 name="calendar" style={{fontSize: 22, marginLeft: 10}}></Icon2>
       </View>
       <View style={styles.buttonView}>
         {buttonArray &&

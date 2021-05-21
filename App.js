@@ -29,6 +29,7 @@ import SelectRoom from './component/SelectRoom';
 import SelectDevices from './component/SelectDevices';
 import VRrooms from './component/VRrooms';
 import NetworkDiscoverer from './component/NetworkDiscoverer';
+import ChooseDate from './component/ChooseDate';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -115,6 +116,9 @@ const App = () => {
             </Stack.Screen>
             <Stack.Screen name="vrRooms">
               {props => <VRrooms {...props} token={token} />}
+            </Stack.Screen>
+            <Stack.Screen name="chooseDate">
+              {props => <ChooseDate {...props} token={token} />}
             </Stack.Screen>
           </Stack.Navigator>
         )}

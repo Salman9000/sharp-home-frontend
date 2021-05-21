@@ -21,6 +21,8 @@ const VRrooms = props => {
   // const [rooms, setRooms] = useState(props.route.params.roomArray);
   const [deviceArray, setDeviceArray] = useState([]);
   const [deviceParams, setDeviceParams] = useState('');
+  const [startDate, setStartDate] = useState(props.route.params.startDate);
+  const [endDate, setendDate] = useState(props.route.params.endDate);
   const [loading, setLoading] = useState(true);
   const token = props.token;
   console.log('im in view report room');
@@ -52,6 +54,7 @@ const VRrooms = props => {
 
   useEffect(() => {
     getDevices();
+    console.log(startDate + ' ' + endDate);
   }, []);
 
   return (
@@ -63,7 +66,26 @@ const VRrooms = props => {
             <Loading />
           ) : (
             <ScrollView style={{backgroundColor: 'white'}}>
-              <RoomChart {...props} token={token} deviceParams={deviceParams} />
+              <View style={styles.buttonView1}>
+                <Button
+                  style={styles.button1}
+                  mode="contained"
+                  onPress={() => {
+                    props.navigation.replace('chooseDate', {
+                      deviceArray: props.route.params.deviceArray,
+                      roomsArray: props.route.params.roomsArray,
+                    });
+                  }}>
+                  Choose Dates
+                </Button>
+              </View>
+              <RoomChart
+                {...props}
+                token={token}
+                deviceParams={deviceParams}
+                startDate={startDate}
+                endDate={endDate}
+              />
               <ApplianceChart
                 {...props}
                 token={token}
@@ -97,6 +119,15 @@ const VRrooms = props => {
 export default VRrooms;
 
 const styles = StyleSheet.create({
+  buttonView1: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+    borderRadius: 50,
+    marginHorizontal: 30,
+    paddingTop: 10,
+  },
   addDeviceButton: {
     width: 80,
     height: 80,
