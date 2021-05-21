@@ -30,6 +30,7 @@ import SelectDevices from './component/SelectDevices';
 import VRrooms from './component/VRrooms';
 import NetworkDiscoverer from './component/NetworkDiscoverer';
 import ChooseDate from './component/ChooseDate';
+import CustomRoomChart from './component/CustomRoomChart';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -119,6 +120,9 @@ const App = () => {
             </Stack.Screen>
             <Stack.Screen name="chooseDate">
               {props => <ChooseDate {...props} token={token} />}
+            </Stack.Screen>
+            <Stack.Screen name="customRoomChart">
+              {props => <CustomRoomChart {...props} token={token} />}
             </Stack.Screen>
           </Stack.Navigator>
         )}

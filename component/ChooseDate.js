@@ -42,8 +42,8 @@ const ChooseDate = props => {
           labelStyle={{fontSize: 18}}
           dark={true}
           onPress={() => {
-            props.navigation.replace('vrRooms', {
-              deviceArray: props.route.params.deviceArray,
+            props.navigation.replace('customRoomChart', {
+              deviceParams: props.route.params.deviceParams,
               roomsArray: props.route.params.roomsArray,
               startDate: startDate.toISOString(),
               endDate: endDate.toISOString(),

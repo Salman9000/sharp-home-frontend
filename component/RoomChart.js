@@ -21,9 +21,11 @@ import ApplianceChart from './ApplianceChart';
 import Loading from './Loading';
 const RoomChart = props => {
   const [startDateParam, setStartDateParam] = useState(
-    props.route.params.startDate,
+    props.route.params.startDate || null,
   );
-  const [endDateParam, setEndDateParam] = useState(props.route.params.endDate);
+  const [endDateParam, setEndDateParam] = useState(
+    props.route.params.endDate || null,
+  );
   const token = props.token;
   const [loading, setLoading] = useState(true);
   const [deviceParams, setDeviceParams] = useState(props.deviceParams);
@@ -88,15 +90,11 @@ const RoomChart = props => {
       case 'today':
         if (!buttonArray[3].data) {
           setLoading(true);
-          if (startDateParam === null) {
-            const value = await instance(token).get(
-              `/v1/activity/${type}?${deviceParams}`,
-            );
-          } else {
-            const value = await instance(token).get(
-              `/v1/activity/${type}?${deviceParams}?startDate=${startDateParam}&endDate=${endDateParam}`,
-            );
-          }
+
+          const value = await instance(token).get(
+            `/v1/activity/${type}?${deviceParams}`,
+          );
+
           (value.data.resultOneDay.inputArray.datasets.color = (opacity = 1) =>
             'rgba(20,122,214,1)'),
             (gData = {
@@ -114,15 +112,11 @@ const RoomChart = props => {
       case '7days':
         if (!buttonArray[1].data) {
           setLoading(true);
-          if (startDateParam === null) {
-            const value = await instance(token).get(
-              `/v1/activity/${type}?${deviceParams}`,
-            );
-          } else {
-            const value = await instance(token).get(
-              `/v1/activity/${type}?${deviceParams}?startDate=${startDateParam}&endDate=${endDateParam}`,
-            );
-          }
+
+          const value = await instance(token).get(
+            `/v1/activity/${type}?${deviceParams}`,
+          );
+
           (value.data.result7Days.inputArray.datasets.color = (opacity = 1) =>
             'rgba(20,122,214,1)'),
             (gData = {
@@ -138,15 +132,11 @@ const RoomChart = props => {
       case '1month':
         if (!buttonArray[0].data) {
           setLoading(true);
-          if (startDateParam === null) {
-            const value = await instance(token).get(
-              `/v1/activity/${type}?${deviceParams}`,
-            );
-          } else {
-            const value = await instance(token).get(
-              `/v1/activity/${type}?${deviceParams}?startDate=${startDateParam}&endDate=${endDateParam}`,
-            );
-          }
+
+          const value = await instance(token).get(
+            `/v1/activity/${type}?${deviceParams}`,
+          );
+
           (value.data.result1Month.inputArray.datasets.color = (opacity = 1) =>
             'rgba(20,122,214,1)'),
             (gData = {
@@ -163,15 +153,11 @@ const RoomChart = props => {
       case 'yesterday':
         if (!buttonArray[2].data) {
           setLoading(true);
-          if (startDateParam === null) {
-            const value = await instance(token).get(
-              `/v1/activity/${type}?${deviceParams}`,
-            );
-          } else {
-            const value = await instance(token).get(
-              `/v1/activity/${type}?${deviceParams}?startDate=${startDateParam}&endDate=${endDateParam}`,
-            );
-          }
+
+          const value = await instance(token).get(
+            `/v1/activity/${type}?${deviceParams}`,
+          );
+
           (value.data.resultOneDay.inputArray.datasets.color = (opacity = 1) =>
             'rgba(20,122,214,1)'),
             (gData = {

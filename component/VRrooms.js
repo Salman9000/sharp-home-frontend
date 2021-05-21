@@ -72,7 +72,7 @@ const VRrooms = props => {
                   mode="contained"
                   onPress={() => {
                     props.navigation.replace('chooseDate', {
-                      deviceArray: props.route.params.deviceArray,
+                      deviceParams: deviceParams,
                       roomsArray: props.route.params.roomsArray,
                     });
                   }}>
