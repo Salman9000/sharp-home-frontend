@@ -62,9 +62,18 @@ const RoomChart = props => {
       data: null,
       width: '200%',
     },
+    {
+      dName: 'Custom',
+      name: 'custom',
+      id: 4,
+      selected: false,
+      data: null,
+      width: '200%',
+    },
   ]);
   const [currentGraph, setCurrentGraph] = useState(3);
   const [refreshing, setRefreshing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const wait = timeout => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   };
@@ -85,96 +94,124 @@ const RoomChart = props => {
   }, []);
 
   const getGraphs = async type => {
-    console.log('start ' + startDateParam);
-    switch (type) {
-      case 'today':
-        if (!buttonArray[3].data) {
-          setLoading(true);
+    try {
+      console.log('start ' + startDateParam);
+      switch (type) {
+        case 'today':
+          if (!buttonArray[3].data) {
+            setLoading(true);
 
-          const value = await instance(token).get(
-            `/v1/activity/${type}?${deviceParams}`,
-          );
+            const value = await instance(token).get(
+              `/v1/activity/${type}?${deviceParams}`,
+            );
 
-          (value.data.resultOneDay.inputArray.datasets.color = (opacity = 1) =>
-            'rgba(20,122,214,1)'),
-            (gData = {
-              labels: value.data.resultOneDay.inputArray.labels,
-              datasets: [value.data.resultOneDay.inputArray.datasets],
-              consumption: value.data.resultOneDay.overallConsumption,
-              startDate: value.data.startDate,
-              endDate: null,
-            });
+            (value.data.resultOneDay.inputArray.datasets.color = (
+              opacity = 1,
+            ) => 'rgba(20,122,214,1)'),
+              (gData = {
+                labels: value.data.resultOneDay.inputArray.labels,
+                datasets: [value.data.resultOneDay.inputArray.datasets],
+                consumption: value.data.resultOneDay.overallConsumption,
+                startDate: value.data.startDate,
+                endDate: null,
+              });
 
-          updateGraph(3, gData);
-          setLoading(false);
-        }
-        break;
-      case '7days':
-        if (!buttonArray[1].data) {
-          setLoading(true);
+            updateGraph(3, gData);
+            setLoading(false);
+          }
+          break;
+        case '7days':
+          if (!buttonArray[1].data) {
+            setLoading(true);
 
-          const value = await instance(token).get(
-            `/v1/activity/${type}?${deviceParams}`,
-          );
+            const value = await instance(token).get(
+              `/v1/activity/${type}?${deviceParams}`,
+            );
 
-          (value.data.result7Days.inputArray.datasets.color = (opacity = 1) =>
-            'rgba(20,122,214,1)'),
-            (gData = {
-              labels: value.data.result7Days.inputArray.labels,
-              datasets: [value.data.result7Days.inputArray.datasets],
-              consumption: value.data.result7Days.overallConsumption,
-              startDate: value.data.startDate,
-              endDate: value.data.endDate,
-            });
-          updateGraph(1, gData);
-        }
-        break;
-      case '1month':
-        if (!buttonArray[0].data) {
-          setLoading(true);
+            (value.data.result7Days.inputArray.datasets.color = (opacity = 1) =>
+              'rgba(20,122,214,1)'),
+              (gData = {
+                labels: value.data.result7Days.inputArray.labels,
+                datasets: [value.data.result7Days.inputArray.datasets],
+                consumption: value.data.result7Days.overallConsumption,
+                startDate: value.data.startDate,
+                endDate: value.data.endDate,
+              });
+            updateGraph(1, gData);
+          }
+          break;
+        case '1month':
+          if (!buttonArray[0].data) {
+            setLoading(true);
 
-          const value = await instance(token).get(
-            `/v1/activity/${type}?${deviceParams}`,
-          );
+            const value = await instance(token).get(
+              `/v1/activity/${type}?${deviceParams}`,
+            );
 
-          (value.data.result1Month.inputArray.datasets.color = (opacity = 1) =>
-            'rgba(20,122,214,1)'),
-            (gData = {
-              labels: value.data.result1Month.inputArray.labels,
-              datasets: [value.data.result1Month.inputArray.datasets],
-              consumption: value.data.result1Month.overallConsumption,
-              startDate: value.data.startDate,
-              endDate: value.data.endDate,
-            });
-          updateGraph(0, gData);
-          setLoading(false);
-        }
-        break;
-      case 'yesterday':
-        if (!buttonArray[2].data) {
-          setLoading(true);
+            (value.data.result1Month.inputArray.datasets.color = (
+              opacity = 1,
+            ) => 'rgba(20,122,214,1)'),
+              (gData = {
+                labels: value.data.result1Month.inputArray.labels,
+                datasets: [value.data.result1Month.inputArray.datasets],
+                consumption: value.data.result1Month.overallConsumption,
+                startDate: value.data.startDate,
+                endDate: value.data.endDate,
+              });
+            updateGraph(0, gData);
+            setLoading(false);
+          }
+          break;
+        case 'yesterday':
+          if (!buttonArray[2].data) {
+            setLoading(true);
 
-          const value = await instance(token).get(
-            `/v1/activity/${type}?${deviceParams}`,
-          );
+            const value = await instance(token).get(
+              `/v1/activity/${type}?${deviceParams}`,
+            );
 
-          (value.data.resultOneDay.inputArray.datasets.color = (opacity = 1) =>
-            'rgba(20,122,214,1)'),
-            (gData = {
-              labels: value.data.resultOneDay.inputArray.labels,
-              datasets: [value.data.resultOneDay.inputArray.datasets],
-              consumption: value.data.resultOneDay.overallConsumption,
-              startDate: value.data.startDate,
-              endDate: null,
-            });
-          updateGraph(2, gData);
-          setLoading(false);
-        }
-        break;
+            (value.data.resultOneDay.inputArray.datasets.color = (
+              opacity = 1,
+            ) => 'rgba(20,122,214,1)'),
+              (gData = {
+                labels: value.data.resultOneDay.inputArray.labels,
+                datasets: [value.data.resultOneDay.inputArray.datasets],
+                consumption: value.data.resultOneDay.overallConsumption,
+                startDate: value.data.startDate,
+                endDate: null,
+              });
+            updateGraph(2, gData);
+            setLoading(false);
+          }
+          break;
+        default:
+          if (!buttonArray[4].data) {
+            setLoading(true);
+            const value = await instance(token).get(
+              `/v1/activity/customActivity?${deviceParams}&startDate=${startDateParam}&endDate=${endDateParam}`,
+            );
+            (value.data.resultConsumption.inputArray.datasets.color = (
+              opacity = 1,
+            ) => 'rgba(20,122,214,1)'),
+              (gData = {
+                labels: value.data.resultConsumption.inputArray.labels,
+                datasets: [value.data.resultConsumption.inputArray.datasets],
+                consumption: value.data.resultConsumption.overallConsumption,
+                startDate: value.data.startDate,
+                endDate: value.data.endDate,
+              });
+            updateGraph(4, gData);
+            setLoading(false);
+          }
+      }
+    } catch (error) {
+      console.log(error, 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
+      setErrorMessage('No Data Found');
+      setLoading(false);
     }
   };
   useEffect(() => {
-    getGraphs('today');
+    startDateParam != null ? buttonPress(4, '') : getGraphs('today');
   }, []);
 
   const buttonPress = (id, name) => {
@@ -211,6 +248,21 @@ const RoomChart = props => {
           loading={loading}
         />
       }>
+      {startDateParam && (
+        <Title
+          style={{
+            alignSelf: 'center',
+            color: '#aaa',
+            marginBottom: 20,
+          }}
+          onPress={() => {
+            setStartDateParam(null);
+            setErrorMessage(null);
+            buttonPress(3, 'today');
+          }}>
+          x Clear Fitler
+        </Title>
+      )}
       <View
         style={{flex: 1, justifyContent: 'space-between', direction: 'row'}}>
         <Title
@@ -222,115 +274,147 @@ const RoomChart = props => {
           Overall Room Consumption
         </Title>
       </View>
-      <View style={styles.buttonView}>
-        {buttonArray &&
-          buttonArray.map((btn, index) => {
-            return (
+      {!errorMessage && (
+        <View>
+          {!startDateParam ? (
+            <View style={styles.buttonView}>
+              {buttonArray &&
+                buttonArray.slice(0, -1).map((btn, index) => {
+                  return (
+                    <Button
+                      color={'black'}
+                      key={index}
+                      style={!btn.selected ? styles.buttonOff : styles.buttonOn}
+                      mode={!btn.selected ? 'text' : 'contained'}
+                      dark={true}
+                      onPress={() => {
+                        buttonPress(
+                          btn.id,
+                          btn.name.split(' ').join('').toLowerCase(),
+                        );
+                      }}>
+                      {btn.dName}
+                    </Button>
+                  );
+                })}
+            </View>
+          ) : (
+            <View style={styles.buttonView}>
               <Button
                 color={'black'}
-                key={index}
-                style={!btn.selected ? styles.buttonOff : styles.buttonOn}
-                mode={!btn.selected ? 'text' : 'contained'}
+                style={
+                  !buttonArray[4].selected ? styles.buttonOff : styles.buttonOn
+                }
+                mode={!buttonArray[4].selected ? 'text' : 'contained'}
                 dark={true}
                 onPress={() => {
                   buttonPress(
-                    btn.id,
-                    btn.name.split(' ').join('').toLowerCase(),
+                    buttonArray[4].id,
+                    buttonArray[4].name.split(' ').join('').toLowerCase(),
                   );
                 }}>
-                {btn.dName}
+                {buttonArray[4].dName}
               </Button>
-            );
-          })}
-      </View>
-      {loading ? (
-        <Text></Text>
-      ) : (
-        buttonArray
-          .filter(value => value.selected == true)
-          .map((element, index) => {
-            if (!element.data.endDate) {
-              return (
-                <Text
-                  key={index}
-                  style={{
-                    color: 'black',
-                    alignSelf: 'center',
-                    fontSize: 18,
-                    fontFamily: 'Roboto',
-                    fontWeight: 'bold',
-                    marginBottom: 10,
-                    marginTop: 10,
-                  }}>
-                  {element.data.startDate}
-                </Text>
-              );
-            } else {
-              return (
-                <Text
-                  key={index}
-                  style={{
-                    color: 'black',
-                    alignSelf: 'center',
-                    fontSize: 18,
-                    fontFamily: 'Roboto',
-                    fontWeight: 'bold',
-                    marginBottom: 10,
-                    marginTop: 10,
-                  }}>
-                  {element.data.endDate} - {element.data.startDate}
-                </Text>
-              );
-            }
-          })
+            </View>
+          )}
+          {loading ? (
+            <Text></Text>
+          ) : (
+            buttonArray
+              .filter(value => value.selected == true)
+              .map((element, index) => {
+                if (!element.data.endDate) {
+                  return (
+                    <Text
+                      key={index}
+                      style={{
+                        color: 'black',
+                        alignSelf: 'center',
+                        fontSize: 18,
+                        fontFamily: 'Roboto',
+                        fontWeight: 'bold',
+                        marginBottom: 10,
+                        marginTop: 10,
+                      }}>
+                      {element.data.startDate}
+                    </Text>
+                  );
+                } else {
+                  return (
+                    <Text
+                      key={index}
+                      style={{
+                        color: 'black',
+                        alignSelf: 'center',
+                        fontSize: 18,
+                        fontFamily: 'Roboto',
+                        fontWeight: 'bold',
+                        marginBottom: 10,
+                        marginTop: 10,
+                      }}>
+                      {element.data.endDate} - {element.data.startDate}
+                    </Text>
+                  );
+                }
+              })
+          )}
+          <View>
+            {loading ? (
+              <Text></Text>
+            ) : (
+              buttonArray
+                .filter(value => value.selected == true)
+                .map((element, index) => {
+                  return (
+                    <Title
+                      key={index}
+                      style={{
+                        alignSelf: 'center',
+                        alignItems: 'center',
+                        color: 'black',
+                        marginVertical: 20,
+                        paddingTop: 5,
+                        height: 36,
+                        fontSize: 36,
+                        fontFamily: 'Roboto',
+                        fontWeight: 'bold',
+                      }}>
+                      {element.data.consumption}/Kw
+                    </Title>
+                  );
+                })
+            )}
+            <FlashMessage
+              autoHide={false}
+              style={{
+                width: 150,
+                backgroundColor: '#3B6ACA',
+                borderRadius: 50,
+              }}
+              titleStyle={{
+                fontSize: 24,
+                paddingTop: 11,
+                alignSelf: 'center', // Centered horizontally
+                color: '#46D3E6',
+                fontFamily: 'Roboto',
+                fontWeight: 'bold',
+              }}
+              floating={true}
+              position="center"
+            />
+          </View>
+        </View>
       )}
-      <View>
-        {loading ? (
-          <Text></Text>
-        ) : (
-          buttonArray
-            .filter(value => value.selected == true)
-            .map((element, index) => {
-              return (
-                <Title
-                  key={index}
-                  style={{
-                    alignSelf: 'center',
-                    alignItems: 'center',
-                    color: 'black',
-                    marginVertical: 20,
-                    paddingTop: 5,
-                    height: 36,
-                    fontSize: 36,
-                    fontFamily: 'Roboto',
-                    fontWeight: 'bold',
-                  }}>
-                  {element.data.consumption}/Kw
-                </Title>
-              );
-            })
-        )}
-        <FlashMessage
-          autoHide={false}
-          style={{
-            width: 150,
-            backgroundColor: '#3B6ACA',
-            borderRadius: 50,
-          }}
-          titleStyle={{
-            fontSize: 24,
-            paddingTop: 11,
-            alignSelf: 'center', // Centered horizontally
-            color: '#46D3E6',
-            fontFamily: 'Roboto',
-            fontWeight: 'bold',
-          }}
-          floating={true}
-          position="center"
-        />
-      </View>
       {loading ? (
         <Loading />
+      ) : errorMessage ? (
+        <Title
+          style={{
+            alignSelf: 'center',
+            color: 'black',
+          }}>
+          No Data Found
+        </Title>
       ) : (
         <ScrollView horizontal={true}>
           {buttonArray

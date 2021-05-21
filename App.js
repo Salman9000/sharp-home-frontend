@@ -121,9 +121,9 @@ const App = () => {
             <Stack.Screen name="chooseDate">
               {props => <ChooseDate {...props} token={token} />}
             </Stack.Screen>
-            <Stack.Screen name="customRoomChart">
+            {/* <Stack.Screen name="customRoomChart">
               {props => <CustomRoomChart {...props} token={token} />}
-            </Stack.Screen>
+            </Stack.Screen> */}
           </Stack.Navigator>
         )}
       </NavigationContainer>
