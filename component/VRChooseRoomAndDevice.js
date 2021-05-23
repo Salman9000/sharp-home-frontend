@@ -13,17 +13,19 @@ const axios = require('axios');
 import DropDownPicker from 'react-native-dropdown-picker';
 
 const VRChooseRoomAndDevice = props => {
+  let roomSelect = false;
+  let deviceSelect = false;
   rooms = [];
   roomArray = [];
+  // roomList = [];
 
   devices = [];
   deviceArray = [];
+  // deviceArray2 = [];
 
-  if (props.route.params?.roomName) {
-    rooms.push({
-      name: props.route.params.roomName,
-      id: props.route.params.roomId,
-    });
+  if (props.route.params?.roomList) {
+    rooms = props.route.params.roomList;
+    roomSelect = true;
     devices.push(props.route.params.roomArray[0].devices);
     roomArray = props.route.params.roomArray;
   }
@@ -32,6 +34,7 @@ const VRChooseRoomAndDevice = props => {
       name: props.route.params.deviceName,
       id: props.route.params.deviceId,
     });
+    deviceSelect = true;
     console.log(devices);
     deviceArray = props.route.params.deviceArray;
   }
@@ -49,9 +52,12 @@ const VRChooseRoomAndDevice = props => {
   };
 
   const setRoomData = props => {
+    console.log(devices, 'kkjh');
     props.navigation.navigate('vrRooms', {
       deviceArray: devices,
       roomsArray: rooms,
+      roomSelect: roomSelect,
+      deviceSelect: deviceSelect,
     });
   };
 
@@ -90,6 +96,11 @@ const VRChooseRoomAndDevice = props => {
                 style={{color: '#B2B7C6', fontSize: 22, fontFamily: 'Roboto'}}>
                 Select Devices
               </Text>
+            ) : roomSelect ? (
+              <Text
+                style={{color: '#B2B7C6', fontSize: 22, fontFamily: 'Roboto'}}>
+                All Devices are Selected
+              </Text>
             ) : (
               devices.map((value, i) => (
                 <Text
@@ -110,17 +121,21 @@ const VRChooseRoomAndDevice = props => {
           mode="contained"
           onPress={() => {
             selectRoom(props);
-          }}>
+          }}
+          disabled={deviceSelect}>
           Select Room
         </Button>
+
         <Button
           style={styles.button1}
           mode="contained"
           onPress={() => {
             selectDevices(props);
-          }}>
+          }}
+          disabled={roomSelect}>
           Select Devices
         </Button>
+
         <Button
           style={styles.button1}
           mode="contained"

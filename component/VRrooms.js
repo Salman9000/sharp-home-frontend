@@ -20,14 +20,18 @@ import ApplianceChart from './ApplianceChart';
 const VRrooms = props => {
   // const [rooms, setRooms] = useState(props.route.params.roomArray);
   const [deviceArray, setDeviceArray] = useState([]);
-  const [deviceParams, setDeviceParams] = useState('');
+  const [deviceParams, setDeviceParams] = useState(
+    props.route.params.deviceSelect ? props.route.params.deviceArray : '',
+  );
   const [startDate, setStartDate] = useState(
     props.route.params.startDate || null,
   );
-  const [endDate, setEndDate] = useState(props.route.params.endDate || null);
+  const [endDate, setendDate] = useState(props.route.params.endDate || null);
   const [loading, setLoading] = useState(true);
   const token = props.token;
-  // console.log('im in view report room');
+  const roomSelect = props.route.params.roomSelect;
+  const deviceSelect = props.route.params.deviceSelect;
+  console.log('im in view report room');
 
   const addDevice2Pressed = props => {
     props.navigation.replace('addDevice');
@@ -38,25 +42,37 @@ const VRrooms = props => {
   };
 
   const getDevices = async () => {
+    console.log(deviceParams, 'onsce');
     setLoading(true);
-    const roomParams = props.route.params.roomsArray
-      .map((value, i) => {
-        return `room${i + 1}=${value.id}`;
-      })
-      .join('&');
-    const response = await instance(token).get(
-      `/v1/devices/rooms/?${roomParams}`,
-    );
-    setDeviceArray(response.data);
-    setDeviceParams(
-      response.data.map((value, i) => `device${i + 1}=${value}`).join('&'),
-    );
+
+    if (deviceParams.length == 0) {
+      console.log(deviceParams, 'Rooms');
+      const roomParams = props.route.params.roomsArray
+        .map((value, i) => {
+          return `room${i + 1}=${value.id}`;
+        })
+        .join('&');
+      const response = await instance(token).get(
+        `/v1/devices/rooms/?${roomParams}`,
+      );
+      setDeviceArray(response.data);
+      setDeviceParams(
+        response.data.map((value, i) => `device${i + 1}=${value}`).join('&'),
+      );
+    } else {
+      setDeviceParams(
+        deviceParams.map((value, i) => `device${i + 1}=${value.id}`).join('&'),
+      );
+      console.log(deviceParams, 'device');
+    }
     setLoading(false);
   };
 
   useEffect(() => {
     getDevices();
     console.log('main ' + startDate + ' ' + endDate);
+    console.log(startDate + ' ' + endDate);
+    console.log(deviceParams, 'device Param2');
   }, []);
 
   return (
@@ -81,13 +97,24 @@ const VRrooms = props => {
                   Choose Dates
                 </Button>
               </View>
-              <RoomChart
+              {roomSelect ? (
+                <RoomChart
+                  {...props}
+                  token={token}
+                  deviceParams={deviceParams}
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+              ) : (
+                <View></View>
+              )}
+              {/* <RoomChart
                 {...props}
                 token={token}
                 deviceParams={deviceParams}
                 startDate={startDate}
                 endDate={endDate}
-              />
+              /> */}
               <ApplianceChart
                 {...props}
                 token={token}
@@ -95,6 +122,7 @@ const VRrooms = props => {
                 deviceArray={deviceArray}
                 startDate={startDate}
                 endDate={endDate}
+                deviceSelect={deviceSelect}
               />
               <Button
                 mode="contained"

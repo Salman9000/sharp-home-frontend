@@ -28,7 +28,7 @@ const ApplianceChart = props => {
   const [deviceParams, setDeviceParams] = useState(
     props.deviceParams ? props.deviceParams : '',
   );
-  deviceParams && console.log(deviceParams.split('&').length);
+  // deviceParams;
   const [deviceArray, setDeviceArray] = useState(props.deviceArray); //if throws error then split deviceParams by '&'
   // setDeviceArray(props.deviceArray);
   // console.log(deviceArray);
@@ -176,7 +176,7 @@ const ApplianceChart = props => {
           if (!buttonArray[2].data) {
             setLoading(true);
             const value = await instance(token).get(
-              `/v1/devices/oneday/${type}`,
+              `/v1/devices/oneday/${type}?${deviceParams}`,
             );
             for (var i in value.data.resultConsumption.inputArray.datasets) {
               value.data.resultConsumption.inputArray.datasets[i].color =
@@ -185,6 +185,7 @@ const ApplianceChart = props => {
               //   fill: ' rgba(236,102,102)',
               // };
             }
+
             gData = {
               labels: value.data.resultConsumption.inputArray.labels,
               datasets: value.data.resultConsumption.inputArray.datasets,
@@ -231,9 +232,21 @@ const ApplianceChart = props => {
     return (opacity = 1) => `rgba(255,0,0,${opacity})`;
   };
   useEffect(() => {
-    startDateParam != null ? buttonPress(4, '') : getGraphs('today');
+    // startDateParam != null ? buttonPress(4, '') : getGraphs('today');
     // getGraphs('today');
     // console.log('device ' + props.route.params.startDate);
+    console.log(props.deviceSelect);
+    if (props.deviceSelect) {
+      console.log('Im here');
+      // setDeviceParams(
+      //   props.deviceParams
+      //     .map((value, i) => `device${i + 1}=${value.id}`)
+      //     .join('&'),
+      // );
+    }
+    console.log(deviceParams, 'hh');
+    getGraphs('today');
+    console.log('kkk');
   }, []);
 
   const buttonPress = (id, name) => {

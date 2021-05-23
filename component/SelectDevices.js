@@ -31,6 +31,7 @@ import Loading from './Loading';
 const SelectDevices = props => {
   //   const {deviceName, deviceRating} = props.route.params;
   const token = props.token;
+  const [rooms, setRooms] = useState('');
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -64,6 +65,8 @@ const SelectDevices = props => {
   };
 
   useEffect(() => {
+    console.log(props.route.params.rooms, 'Yahay');
+
     if (props.route.params.deviceArray.length > 0) {
       setDevices(props.route.params.deviceArray);
       setLoading(false);

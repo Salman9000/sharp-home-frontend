@@ -50,7 +50,6 @@ const Signup = props => {
         } else if (Password != Password2) {
           alert('Both passwords do not match');
         } else {
-          console.log('jjj');
           const response = await axios.post(`${BASE_URL}/v1/auth/register`, {
             name: name,
             email: Email,
@@ -60,7 +59,6 @@ const Signup = props => {
             'token',
             response.data.tokens.access.token,
           );
-          console.log(response.data.tokens.access.token, 'llll');
           props.setToken(response.data.tokens.access.token);
           props.navigation.replace('home');
         }

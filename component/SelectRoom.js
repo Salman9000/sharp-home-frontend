@@ -1,5 +1,6 @@
 import React from 'react';
 import {useState, setState, useEffect} from 'react';
+// import {Button as Button2, Icon} from 'native-base';
 import {
   View,
   StyleSheet,
@@ -32,11 +33,12 @@ const SelectRoom = props => {
   const token = props.token;
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [roomList, setRoomList] = useState([]);
 
-  const cardPressed = (id, name) => {
+  const roomSelection = (id, name) => {
+    console.log(roomList);
     props.navigation.navigate('vrChooseRoomAndDevice', {
-      roomId: id,
-      roomName: name,
+      roomList: roomList,
       roomArray: rooms,
     });
   };
@@ -51,6 +53,7 @@ const SelectRoom = props => {
         desc: value.description,
         count: value.deviceCount,
         devices: value.devices,
+        highlight: false,
       }));
       setRooms(tempList);
       setLoading(false);
@@ -77,13 +80,30 @@ const SelectRoom = props => {
         ) : (
           <>
             <ScrollView style={styles.container2}>
-              {rooms.map(item => (
+              {rooms.map((item, i) => (
                 <View key={item.id}>
                   <TouchableOpacity
                     onPress={() => {
-                      cardPressed(item.id, item.name);
+                      if (!item.highlight) {
+                        let arr = [...rooms];
+                        arr[i].highlight = true;
+                        setRooms(arr);
+                        setRoomList(oldArray => [...oldArray, item]);
+                      } else {
+                        let arr = [...rooms];
+                        arr[i].highlight = false;
+                        setRooms(arr);
+
+                        setRoomList(
+                          roomList.filter(value => value.id !== item.id),
+                        );
+                      }
                     }}>
-                    <Card style={styles.card} pointerEvents="none">
+                    <Card
+                      style={
+                        item.highlight ? styles.cardHightlight : styles.card
+                      }
+                      pointerEvents="none">
                       <CardItem header>
                         <Left>
                           <Text style={styles.roomName}>{item.name}</Text>
@@ -103,6 +123,11 @@ const SelectRoom = props => {
                   </TouchableOpacity>
                 </View>
               ))}
+              <Button
+                style={styles.iconContainer}
+                onPress={() => roomSelection(props)}>
+                <Icon name="add" style={styles.icon} />
+              </Button>
             </ScrollView>
           </>
         )}
@@ -134,6 +159,10 @@ const styles = StyleSheet.create({
   },
   card: {
     marginTop: 20,
+  },
+  cardHightlight: {
+    marginTop: 20,
+    backgroundColor: 'red',
   },
   TextInput: {
     height: 50,
@@ -168,6 +197,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 80,
     height: 80,
+    position: 'fixed',
     borderRadius: 80,
     backgroundColor: '#1e90ff',
     padding: 7,
@@ -180,6 +210,17 @@ const styles = StyleSheet.create({
     marginTop: 15,
     alignSelf: 'center',
     width: wp('90%'),
+  },
+  iconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 80,
+    backgroundColor: '#1e90ff',
+    padding: 7,
+    alignSelf: 'flex-end',
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
   },
 });
 
