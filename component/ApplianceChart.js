@@ -23,6 +23,8 @@ import Loading from './Loading';
 const ApplianceChart = props => {
   const [loading, setLoading] = useState(true);
   const token = props.token;
+  const [startDateParam, setStartDateParam] = useState(props.startDate || null);
+  const [endDateParam, setEndDateParam] = useState(props.endDate || null);
   const [deviceParams, setDeviceParams] = useState(
     props.deviceParams ? props.deviceParams : '',
   );
@@ -78,6 +80,7 @@ const ApplianceChart = props => {
 
     (opacity = 1) => `rgba(0,102,0, 1)`,
   ];
+  const [errorMessage, setErrorMessage] = useState(null);
   const wait = timeout => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   };
@@ -98,107 +101,139 @@ const ApplianceChart = props => {
   }, []);
 
   const getGraphs = async type => {
-    switch (type) {
-      case 'today':
-        if (!buttonArray[3].data) {
-          setLoading(true);
-          const value = await instance(token).get(
-            `/v1/devices/oneday/${type}?${deviceParams}`,
-          );
-          for (var i in value.data.resultConsumption.inputArray.datasets) {
-            value.data.resultConsumption.inputArray.datasets[i].color =
-              colorArray[i];
+    try {
+      switch (type) {
+        case 'today':
+          if (!buttonArray[3].data) {
+            setLoading(true);
+            const value = await instance(token).get(
+              `/v1/devices/oneday/${type}?${deviceParams}`,
+            );
+            for (var i in value.data.resultConsumption.inputArray.datasets) {
+              value.data.resultConsumption.inputArray.datasets[i].color =
+                colorArray[i];
+            }
+            gData = {
+              labels: value.data.resultConsumption.inputArray.labels,
+              datasets: value.data.resultConsumption.inputArray.datasets,
+              legend: value.data.resultConsumption.deviceName,
+              overallConsumptionByDevice:
+                value.data.resultConsumption.overallConsumptionByDevice,
+              startDate: value.data.startDate,
+              endDate: null,
+            };
+            updateGraph(3, gData);
+            setLoading(false);
           }
-          gData = {
-            labels: value.data.resultConsumption.inputArray.labels,
-            datasets: value.data.resultConsumption.inputArray.datasets,
-            legend: value.data.resultConsumption.deviceName,
-            overallConsumptionByDevice:
-              value.data.resultConsumption.overallConsumptionByDevice,
-            startDate: value.data.startDate,
-            endDate: null,
-          };
-          updateGraph(3, gData);
-          setLoading(false);
-        }
-        break;
-      case '7days':
-        if (!buttonArray[1].data) {
-          setLoading(true);
-          const value = await instance(token).get(
-            `/v1/devices/${type}?${deviceParams}`,
-          );
-          for (var i in value.data.resultConsumption.inputArray.datasets) {
-            value.data.resultConsumption.inputArray.datasets[i].color =
-              colorArray[i];
+          break;
+        case '7days':
+          if (!buttonArray[1].data) {
+            setLoading(true);
+            const value = await instance(token).get(
+              `/v1/devices/${type}?${deviceParams}`,
+            );
+            for (var i in value.data.resultConsumption.inputArray.datasets) {
+              value.data.resultConsumption.inputArray.datasets[i].color =
+                colorArray[i];
+            }
+            gData = {
+              labels: value.data.resultConsumption.inputArray.labels,
+              datasets: value.data.resultConsumption.inputArray.datasets,
+              legend: value.data.resultConsumption.deviceName,
+              overallConsumptionByDevice:
+                value.data.resultConsumption.overallConsumptionByDevice,
+              startDate: value.data.startDate,
+              endDate: value.data.endDate,
+            };
+            updateGraph(1, gData);
+            setLoading(false);
           }
-          gData = {
-            labels: value.data.resultConsumption.inputArray.labels,
-            datasets: value.data.resultConsumption.inputArray.datasets,
-            legend: value.data.resultConsumption.deviceName,
-            overallConsumptionByDevice:
-              value.data.resultConsumption.overallConsumptionByDevice,
-            startDate: value.data.startDate,
-            endDate: value.data.endDate,
-          };
-          updateGraph(1, gData);
-          setLoading(false);
-        }
-        break;
-      case '1month':
-        if (!buttonArray[0].data) {
-          setLoading(true);
-          const value = await instance(token).get(
-            `/v1/devices/${type}?${deviceParams}`,
-          );
-          for (var i in value.data.resultConsumption.inputArray.datasets) {
-            value.data.resultConsumption.inputArray.datasets[i].color =
-              colorArray[i];
-          }
-          gData = {
-            labels: value.data.resultConsumption.inputArray.labels,
-            datasets: value.data.resultConsumption.inputArray.datasets,
-            legend: value.data.resultConsumption.deviceName,
-            overallConsumptionByDevice:
-              value.data.resultConsumption.overallConsumptionByDevice,
-            startDate: value.data.startDate,
-            endDate: value.data.endDate,
-          };
-          updateGraph(0, gData);
+          break;
+        case '1month':
+          if (!buttonArray[0].data) {
+            setLoading(true);
+            const value = await instance(token).get(
+              `/v1/devices/${type}?${deviceParams}`,
+            );
+            for (var i in value.data.resultConsumption.inputArray.datasets) {
+              value.data.resultConsumption.inputArray.datasets[i].color =
+                colorArray[i];
+            }
+            gData = {
+              labels: value.data.resultConsumption.inputArray.labels,
+              datasets: value.data.resultConsumption.inputArray.datasets,
+              legend: value.data.resultConsumption.deviceName,
+              overallConsumptionByDevice:
+                value.data.resultConsumption.overallConsumptionByDevice,
+              startDate: value.data.startDate,
+              endDate: value.data.endDate,
+            };
+            updateGraph(0, gData);
 
-          setLoading(false);
-        }
-      case 'yesterday':
-        if (!buttonArray[2].data) {
-          setLoading(true);
-          const value = await instance(token).get(`/v1/devices/oneday/${type}`);
-          for (var i in value.data.resultConsumption.inputArray.datasets) {
-            value.data.resultConsumption.inputArray.datasets[i].color =
-              colorArray[i];
-            // value.data.resultConsumption.inputArray.datasets[i].svg = {
-            //   fill: ' rgba(236,102,102)',
-            // };
+            setLoading(false);
           }
-          gData = {
-            labels: value.data.resultConsumption.inputArray.labels,
-            datasets: value.data.resultConsumption.inputArray.datasets,
-            legend: value.data.resultConsumption.deviceName,
-            overallConsumptionByDevice:
-              value.data.resultConsumption.overallConsumptionByDevice,
-            startDate: value.data.startDate,
-            endDate: null,
-          };
-          updateGraph(2, gData);
+        case 'yesterday':
+          if (!buttonArray[2].data) {
+            setLoading(true);
+            const value = await instance(token).get(
+              `/v1/devices/oneday/${type}`,
+            );
+            for (var i in value.data.resultConsumption.inputArray.datasets) {
+              value.data.resultConsumption.inputArray.datasets[i].color =
+                colorArray[i];
+              // value.data.resultConsumption.inputArray.datasets[i].svg = {
+              //   fill: ' rgba(236,102,102)',
+              // };
+            }
+            gData = {
+              labels: value.data.resultConsumption.inputArray.labels,
+              datasets: value.data.resultConsumption.inputArray.datasets,
+              legend: value.data.resultConsumption.deviceName,
+              overallConsumptionByDevice:
+                value.data.resultConsumption.overallConsumptionByDevice,
+              startDate: value.data.startDate,
+              endDate: null,
+            };
+            updateGraph(2, gData);
 
-          setLoading(false);
-        }
+            setLoading(false);
+          }
+          break;
+        default:
+          if (!buttonArray[4].data) {
+            setLoading(true);
+            const value = await instance(token).get(
+              `/v1/devices/customActivity?${deviceParams}&startDate=${startDateParam}&endDate=${endDateParam}`,
+            );
+            (value.data.resultConsumption.inputArray.datasets.color = (
+              opacity = 1,
+            ) => 'rgba(20,122,214,1)'),
+              (gData = {
+                labels: value.data.resultConsumption.inputArray.labels,
+                datasets: value.data.resultConsumption.inputArray.datasets,
+                legend: value.data.resultConsumption.deviceName,
+                overallConsumptionByDevice:
+                  value.data.resultConsumption.overallConsumptionByDevice,
+                startDate: value.data.startDate,
+                endDate: value.data.endDate,
+              });
+            updateGraph(4, gData);
+            setLoading(false);
+          }
+      }
+    } catch (err) {
+      console.log('app chart + ' + err);
+      setErrorMessage('No Data Found');
+      setLoading(false);
     }
   };
   const color = () => {
     return (opacity = 1) => `rgba(255,0,0,${opacity})`;
   };
   useEffect(() => {
-    getGraphs('today');
+    startDateParam != null ? buttonPress(4, '') : getGraphs('today');
+    // getGraphs('today');
+    // console.log('device ' + props.route.params.startDate);
   }, []);
 
   const buttonPress = (id, name) => {
@@ -241,6 +276,21 @@ const ApplianceChart = props => {
             loading={loading}
           />
         }>
+        {startDateParam && (
+          <Title
+            style={{
+              alignSelf: 'center',
+              color: '#aaa',
+              marginBottom: 20,
+            }}
+            onPress={() => {
+              setStartDateParam(null);
+              setErrorMessage(null);
+              buttonPress(3, 'today');
+            }}>
+            x Clear Filter
+          </Title>
+        )}
         {deviceArray && (
           <Text style={{alignSelf: 'center', fontSize: 18}}>
             {deviceArray.length} Appliances found in this room

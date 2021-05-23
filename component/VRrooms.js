@@ -21,11 +21,13 @@ const VRrooms = props => {
   // const [rooms, setRooms] = useState(props.route.params.roomArray);
   const [deviceArray, setDeviceArray] = useState([]);
   const [deviceParams, setDeviceParams] = useState('');
-  const [startDate, setStartDate] = useState(props.route.params.startDate);
-  const [endDate, setendDate] = useState(props.route.params.endDate);
+  const [startDate, setStartDate] = useState(
+    props.route.params.startDate || null,
+  );
+  const [endDate, setEndDate] = useState(props.route.params.endDate || null);
   const [loading, setLoading] = useState(true);
   const token = props.token;
-  console.log('im in view report room');
+  // console.log('im in view report room');
 
   const addDevice2Pressed = props => {
     props.navigation.replace('addDevice');
@@ -54,7 +56,7 @@ const VRrooms = props => {
 
   useEffect(() => {
     getDevices();
-    console.log(startDate + ' ' + endDate);
+    console.log('main ' + startDate + ' ' + endDate);
   }, []);
 
   return (
@@ -91,6 +93,8 @@ const VRrooms = props => {
                 token={token}
                 deviceParams={deviceParams}
                 deviceArray={deviceArray}
+                startDate={startDate}
+                endDate={endDate}
               />
               <Button
                 mode="contained"

@@ -17,7 +17,6 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import instance from '../helper';
-import ApplianceChart from './ApplianceChart';
 import Loading from './Loading';
 const RoomChart = props => {
   const [startDateParam, setStartDateParam] = useState(
@@ -211,6 +210,7 @@ const RoomChart = props => {
     }
   };
   useEffect(() => {
+    console.log('hello' + props.route.params.startDate);
     startDateParam != null ? buttonPress(4, '') : getGraphs('today');
   }, []);
 
@@ -260,7 +260,7 @@ const RoomChart = props => {
             setErrorMessage(null);
             buttonPress(3, 'today');
           }}>
-          x Clear Fitler
+          x Clear Filter
         </Title>
       )}
       <View
