@@ -92,6 +92,8 @@ const VRrooms = props => {
                     props.navigation.replace('chooseDate', {
                       deviceParams: deviceParams,
                       roomsArray: props.route.params.roomsArray,
+                      roomSelect: roomSelect,
+                      deviceSelect: deviceSelect,
                     });
                   }}>
                   Choose Dates

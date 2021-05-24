@@ -10,35 +10,36 @@ import {
 import {Button, TextInput} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const axios = require('axios');
+import {Button as Button2, Icon} from 'native-base';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 const VRChooseRoomAndDevice = props => {
   let roomSelect = false;
   let deviceSelect = false;
-  rooms = [];
-  roomArray = [];
+  const [roomList, setRoomList] = useState([]);
+  let rooms = [];
+  let roomArray = [];
   // roomList = [];
 
-  devices = [];
-  deviceArray = [];
+  let devices = [];
+  let deviceArray = [];
   // deviceArray2 = [];
-
-  if (props.route.params?.roomList) {
-    rooms = props.route.params.roomList;
-    roomSelect = true;
-    devices.push(props.route.params.roomArray[0].devices);
-    roomArray = props.route.params.roomArray;
-  }
-  if (props.route.params?.deviceName) {
-    devices.push({
-      name: props.route.params.deviceName,
-      id: props.route.params.deviceId,
-    });
-    deviceSelect = true;
-    console.log(devices);
-    deviceArray = props.route.params.deviceArray;
-  }
-
+  useEffect(() => {
+    if (props.route.params?.roomList) {
+      rooms = props.route.params.roomList;
+      setRoomList(props.route.params.roomList);
+      roomSelect = true;
+      devices.push(props.route.params.roomArray[0].devices);
+      roomArray = props.route.params.roomArray;
+      console.log(roomList, 'room2');
+    }
+    if (props.route.params?.deviceList) {
+      devices = props.route.params.deviceList;
+      deviceSelect = true;
+      console.log(devices);
+      deviceArray = props.route.params.deviceArray;
+    }
+  }, []);
   const selectRoom = props => {
     props.navigation.navigate('selectRoom', {
       roomArray: roomArray,
@@ -60,6 +61,15 @@ const VRChooseRoomAndDevice = props => {
       deviceSelect: deviceSelect,
     });
   };
+  const deleteRoom = (item, i) => {
+    // let arr = [...rooms];
+    // // arr[i].highlight = false;
+    // // setRooms(arr);
+    console.log(item);
+    rooms = rooms.filter(value => value.id !== item.id);
+    console.log(rooms, 'seconf');
+    setRoomList(rooms);
+  };
 
   return (
     <View style={styles.container1}>
@@ -68,22 +78,39 @@ const VRChooseRoomAndDevice = props => {
         <View style={styles.otherboxes}>
           <Text style={{fontWeight: 'bold'}}>Rooms</Text>
           <View>
-            {rooms.length < 1 ? (
+            {roomList.length < 1 ? (
               <Text
-                style={{color: '#B2B7C6', fontSize: 22, fontFamily: 'Roboto'}}>
+                style={{
+                  color: '#B2B7C6',
+                  fontSize: 22,
+                  fontFamily: 'Roboto',
+                }}>
                 Select Room
               </Text>
             ) : (
-              rooms.map((value, i) => (
-                <Text
-                  key={i}
-                  style={{
-                    color: '#B2B7C6',
-                    fontSize: 22,
-                    fontFamily: 'Roboto',
-                  }}>
-                  {value.name}
-                </Text>
+              roomList.map((value, i) => (
+                <View style={styles.inline}>
+                  <Text
+                    key={i}
+                    style={{
+                      color: '#B2B7C6',
+                      fontSize: 22,
+                      fontFamily: 'Roboto',
+                      width: '80%',
+                    }}>
+                    {value.name}
+                  </Text>
+                  {/* <Button2
+                    transparent
+                    iconRight
+                    style={{backgroundColor: 'red'}}> */}
+                  <Icon
+                    name="trash"
+                    onPress={() => deleteRoom(value, i)}
+                    style={styles.iconStyle}
+                  />
+                  {/* </Button2> */}
+                </View>
               ))
             )}
           </View>
@@ -103,15 +130,19 @@ const VRChooseRoomAndDevice = props => {
               </Text>
             ) : (
               devices.map((value, i) => (
-                <Text
-                  key={i}
-                  style={{
-                    color: '#B2B7C6',
-                    fontSize: 22,
-                    fontFamily: 'Roboto',
-                  }}>
-                  {value.name}
-                </Text>
+                <View style={styles.inline}>
+                  <Text
+                    key={i}
+                    style={{
+                      color: '#B2B7C6',
+                      fontSize: 22,
+                      fontFamily: 'Roboto',
+                      width: '90%',
+                    }}>
+                    {value.name}
+                  </Text>
+                  <Icon name="trash" style={styles.iconStyle} />
+                </View>
               ))
             )}
           </View>
@@ -159,6 +190,15 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 50,
     alignItems: 'center',
+  },
+  inline: {
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+  },
+  iconStyle: {
+    color: 'black',
+    // marginTop: 0,
+    // padding: 0,
   },
   inputView: {
     // backgroundColor: 'white',

@@ -34,11 +34,14 @@ const SelectDevices = props => {
   const [rooms, setRooms] = useState('');
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deviceList, setDeviceList] = useState([]);
 
-  const cardPressed = (id, name) => {
+  const deviceSelection = (id, name) => {
+    console.log(deviceList);
     props.navigation.navigate('vrChooseRoomAndDevice', {
-      deviceId: id,
-      deviceName: name,
+      // deviceId: id,
+      // deviceName: name,
+      deviceList: deviceList,
       deviceArray: devices,
     });
   };
@@ -51,6 +54,7 @@ const SelectDevices = props => {
         id: value.id,
         name: value.name,
         powerRating: value.powerRating,
+        highlight: false,
         // consumption: value.total.toFixed(2),
       }));
       setDevices(tempList);
@@ -84,30 +88,51 @@ const SelectDevices = props => {
         ) : (
           <>
             <ScrollView style={styles.container2}>
-              {devices.map(item => (
-                <TouchableOpacity
-                  onPress={() => {
-                    cardPressed(item.id, item.name);
-                  }}>
-                  <Card key={item.id} style={styles.card} pointerEvents="none">
-                    <CardItem header>
-                      <Left>
-                        <Text style={styles.roomName}>{item.name}</Text>
-                      </Left>
-                      <Right>
-                        <Text style={styles.deviceCount}>
-                          Power Rating: {item.powerRating} kWh
-                        </Text>
-                      </Right>
-                    </CardItem>
-                    {/* <CardItem style={styles.cardItem}>
+              {devices.map((item, i) => (
+                <View key={item.id}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (!item.highlight) {
+                        let arr = [...devices];
+                        arr[i].highlight = true;
+                        setDevices(arr);
+                        setDeviceList(oldArray => [...oldArray, item]);
+                      } else {
+                        let arr = [...devices];
+                        arr[i].highlight = false;
+                        setDevices(arr);
+                        setDeviceList(
+                          deviceList.filter(value => value.id !== item.id),
+                        );
+                      }
+                      // deviceSelection();
+                    }}
+                    style={item.highlight ? styles.cardHightlight : ''}>
+                    <Card style={styles.card} pointerEvents="none">
+                      <CardItem header>
+                        <Left>
+                          <Text style={styles.roomName}>{item.name}</Text>
+                        </Left>
+                        <Right>
+                          <Text style={styles.deviceCount}>
+                            Power Rating: {item.powerRating} kWh
+                          </Text>
+                        </Right>
+                      </CardItem>
+                      {/* <CardItem style={styles.cardItem}>
                         <Left>
                           <Text style={styles.desc}>{item.desc}</Text>
                         </Left>
                       </CardItem> */}
-                  </Card>
-                </TouchableOpacity>
+                    </Card>
+                  </TouchableOpacity>
+                </View>
               ))}
+              <Button
+                style={styles.iconContainer}
+                onPress={() => deviceSelection(props)}>
+                <Icon name="add" style={styles.icon} />
+              </Button>
               <Button
                 style={styles.button}
                 onPress={() => addDeviceButtonPressed(props)}>
@@ -144,6 +169,10 @@ const styles = StyleSheet.create({
   },
   card: {
     marginTop: 20,
+  },
+  cardHightlight: {
+    // marginTop: 20,
+    backgroundColor: 'red',
   },
   TextInput: {
     height: 50,

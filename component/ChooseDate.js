@@ -47,6 +47,8 @@ const ChooseDate = props => {
               roomsArray: props.route.params.roomsArray,
               startDate: startDate.toISOString(),
               endDate: endDate.toISOString(),
+              roomSelect: props.route.params.roomSelect,
+              deviceSelect: props.route.params.deviceSelect,
             });
           }}>
           Confirm Dates

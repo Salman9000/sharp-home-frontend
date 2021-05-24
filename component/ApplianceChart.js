@@ -304,11 +304,14 @@ const ApplianceChart = props => {
             x Clear Filter
           </Title>
         )}
-        {deviceArray && (
-          <Text style={{alignSelf: 'center', fontSize: 18}}>
-            {deviceArray.length} Appliances found in this room
-          </Text>
-        )}
+        {deviceArray &&
+          (props.deviceSelect ? (
+            <Text style={{alignSelf: 'center', fontSize: 18}}></Text>
+          ) : (
+            <Text style={{alignSelf: 'center', fontSize: 18}}>
+              {deviceArray.length} Appliances Selected
+            </Text>
+          ))}
         <Title style={{alignSelf: 'center'}}>Appliance Consumption</Title>
         <View style={styles.buttonView}>
           {buttonArray &&
