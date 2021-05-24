@@ -40,35 +40,27 @@ const ViewDevices = props => {
     // getConsumptions();
   };
 
-  const getConsumptions = async () => {
-    try {
-      const response = await instance(token).get('/v1/devices/getConsumptions');
-      tempList = [];
-      console.log(response.data.result.docs);
-      tempList = response.data.result.docs.map(value => ({
-        id: value.dev[0]._id,
-        name: value.dev[0].name,
-        consumption: value.total.toFixed(2),
-      }));
-      setDevices(tempList);
-    } catch (error) {
-      console.log('error in viewdevices getconsumption:' + error);
-    }
-    setLoading(false);
-  };
+  // const getConsumptions = async () => {
+  //   try {
+  //     const response = await instance(token).get('/v1/devices/getConsumptions');
+  //     tempList = [];
+  //     console.log(response.data.result.docs);
+  //     tempList = response.data.result.docs.map(value => ({
+  //       id: value.dev[0]._id,
+  //       name: value.dev[0].name,
+  //       consumption: value.total.toFixed(2),
+  //     }));
+  //     setDevices(tempList);
+  //   } catch (error) {
+  //     console.log('error in viewdevices getconsumption:' + error);
+  //   }
+  //   setLoading(false);
+  // };
 
   const getDevices = async () => {
     try {
       const response = await instance(token).get('/v1/devices');
-      tempList = [];
-      console.log(response.data.docs);
-      tempList = response.data.docs.map(value => ({
-        id: value.id,
-        name: value.name,
-        powerRating: value.powerRating,
-        // consumption: value.total.toFixed(2),
-      }));
-      setDevices(tempList);
+      setDevices(response.data.docs);
       setLoading(false);
     } catch (err) {
       console.log('get devices in view devices ' + err);
@@ -77,6 +69,68 @@ const ViewDevices = props => {
 
   const addDeviceButtonPressed = props => {
     props.navigation.navigate('addDevice');
+  };
+
+  const turnOffDevice = async item => {
+    try {
+      // http://192.168.31.125:8081/zeroconf/switch
+      const response = await axios.post(
+        ` http://192.168.31.125:8081/zeroconf/switch`,
+        {
+          deviceid: '',
+          data: {
+            switch: 'off',
+          },
+        },
+      );
+      setDevices(
+        devices.map(value => {
+          {
+            value.id == item.id
+              ? (value.status = 'off')
+              : (value.status = 'on');
+          }
+          return value;
+        }),
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(
+        'There has been a problem with your fetch operation in enterhouse login: ' +
+          error.message,
+      );
+    }
+  };
+
+  const turnOnDevice = async item => {
+    try {
+      // http://192.168.31.125:8081/zeroconf/switch
+      const response = await axios.post(
+        ` http://192.168.31.125:8081/zeroconf/switch`,
+        {
+          deviceid: '',
+          data: {
+            switch: 'on',
+          },
+        },
+      );
+      setDevices(
+        devices.map(value => {
+          {
+            value.id == item.id
+              ? (value.status = 'on')
+              : (value.status = 'off');
+          }
+          return value;
+        }),
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(
+        'There has been a problem with your fetch operation in enterhouse login: ' +
+          error.message,
+      );
+    }
   };
 
   useEffect(() => {
@@ -103,31 +157,75 @@ const ViewDevices = props => {
         ) : (
           <>
             <ScrollView style={styles.container2}>
-              {devices.map(item => (
-                <TouchableOpacity
-                  key={item.id}
-                  onPress={() => {
-                    cardPressed(item.id);
-                  }}>
-                  <Card style={styles.card} pointerEvents="none">
-                    <CardItem header>
-                      <Left>
-                        <Text style={styles.roomName}>{item.name}</Text>
-                      </Left>
-                      <Right>
-                        <Text style={styles.deviceCount}>
-                          Power Rating: {item.powerRating} kWh
-                        </Text>
-                      </Right>
-                    </CardItem>
-                    {/* <CardItem style={styles.cardItem}>
-                        <Left>
-                          <Text style={styles.desc}>{item.desc}</Text>
-                        </Left>
-                      </CardItem> */}
-                  </Card>
-                </TouchableOpacity>
-              ))}
+              <View>
+                {devices.map(item => {
+                  {
+                    item.status == 'on' ? (
+                      <TouchableOpacity
+                        key={item.id}
+                        onPress={() => {
+                          cardPressed(item.id);
+                        }}>
+                        <Card style={styles.card} pointerEvents="none">
+                          <CardItem header>
+                            <Left>
+                              <Text style={styles.roomName}>{item.name}</Text>
+                            </Left>
+                            <Right>
+                              <Text style={styles.deviceCount}>
+                                Power Rating: {item.powerRating} kWh
+                              </Text>
+                            </Right>
+                            <Right>
+                              <Text
+                                style={{
+                                  backgroundColor: '#38d238',
+                                  padding: 15,
+                                  borderRadius: 50,
+                                  color: 'white',
+                                }}
+                                onPress={() => turnOffDevice(item)}>
+                                {item.status}
+                              </Text>
+                            </Right>
+                          </CardItem>
+                        </Card>
+                      </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity
+                        key={item.id}
+                        onPress={() => {
+                          cardPressed(item.id);
+                        }}>
+                        <Card style={styles.card} pointerEvents="none">
+                          <CardItem header>
+                            <Left>
+                              <Text style={styles.roomName}>{item.name}</Text>
+                            </Left>
+                            <Right>
+                              <Text style={styles.deviceCount}>
+                                Power Rating: {item.powerRating} kWh
+                              </Text>
+                            </Right>
+                            <Right>
+                              <Text
+                                style={{
+                                  backgroundColor: '#ce2222',
+                                  padding: 15,
+                                  borderRadius: 50,
+                                  color: 'white',
+                                }}
+                                onPress={() => turnOnDevice(item)}>
+                                {item.status}
+                              </Text>
+                            </Right>
+                          </CardItem>
+                        </Card>
+                      </TouchableOpacity>
+                    );
+                  }
+                })}
+              </View>
               <Button
                 style={styles.button}
                 onPress={() => addDeviceButtonPressed(props)}>

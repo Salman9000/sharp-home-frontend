@@ -110,7 +110,7 @@ export default class networkDiscoverer extends Component {
 
     this.setState({services: []});
 
-    zeroconf.scan('http', 'tcp', 'local.');
+    zeroconf.scan('ewelink', 'tcp', 'local.');
 
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
