@@ -28,6 +28,7 @@ import {
 import {BASE_URL} from '@env';
 import instance from '../helper';
 import Loading from './Loading';
+import {blue100} from 'react-native-paper/lib/typescript/styles/colors';
 
 const SelectRoom = props => {
   const token = props.token;
@@ -81,6 +82,19 @@ const SelectRoom = props => {
           <Loading />
         ) : (
           <>
+            <Button
+              style={styles.buttonContinue}
+              disabled={roomList.length > 0 ? false : true}
+              onPress={() => {
+                console.log(roomList);
+                {
+                  roomList.length > 0
+                    ? roomSelection(props)
+                    : console.log('no rooms selected');
+                }
+              }}>
+              <Text>Continue</Text>
+            </Button>
             <ScrollView style={styles.container2}>
               {rooms.map((item, i) => (
                 <View key={item.id}>
@@ -95,41 +109,56 @@ const SelectRoom = props => {
                         let arr = [...rooms];
                         arr[i].highlight = false;
                         setRooms(arr);
-
                         setRoomList(
                           roomList.filter(value => value.id !== item.id),
                         );
                       }
                     }}>
-                    <Card
-                      style={
-                        item.highlight ? styles.cardHightlight : styles.card
-                      }
-                      pointerEvents="none">
-                      <CardItem header>
-                        <Left>
-                          <Text style={styles.roomName}>{item.name}</Text>
-                        </Left>
-                        <Right>
-                          <Text style={styles.deviceCount}>
-                            Devices in Room: {item.count}
-                          </Text>
-                        </Right>
-                      </CardItem>
-                      <CardItem style={styles.cardItem}>
-                        <Left>
-                          <Text style={styles.desc}>{item.desc}</Text>
-                        </Left>
-                      </CardItem>
-                    </Card>
+                    {item.highlight ? (
+                      <Card
+                        style={styles.card}
+                        pointerEvents="none"
+                        backgroundColor={'#ECF0F9'}>
+                        <CardItem header backgroundColor={'#ECF0F9'}>
+                          <Left>
+                            <Text style={styles.roomName}>{item.name}</Text>
+                          </Left>
+                          <Right>
+                            <Text style={styles.deviceCount}>
+                              Devices in Room: {item.count}
+                            </Text>
+                          </Right>
+                        </CardItem>
+                        <CardItem
+                          style={styles.cardItem}
+                          backgroundColor={'#ECF0F9'}>
+                          <Left>
+                            <Text style={styles.desc}>{item.desc}</Text>
+                          </Left>
+                        </CardItem>
+                      </Card>
+                    ) : (
+                      <Card style={styles.card} pointerEvents="none">
+                        <CardItem header>
+                          <Left>
+                            <Text style={styles.roomName}>{item.name}</Text>
+                          </Left>
+                          <Right>
+                            <Text style={styles.deviceCount}>
+                              Devices in Room: {item.count}
+                            </Text>
+                          </Right>
+                        </CardItem>
+                        <CardItem style={styles.cardItem}>
+                          <Left>
+                            <Text style={styles.desc}>{item.desc}</Text>
+                          </Left>
+                        </CardItem>
+                      </Card>
+                    )}
                   </TouchableOpacity>
                 </View>
               ))}
-              <Button
-                style={styles.iconContainer}
-                onPress={() => roomSelection(props)}>
-                <Icon name="add" style={styles.icon} />
-              </Button>
             </ScrollView>
           </>
         )}
@@ -140,6 +169,12 @@ const SelectRoom = props => {
 };
 
 const styles = StyleSheet.create({
+  buttonContinue: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 20,
+  },
   container1: {
     flex: 1,
   },
@@ -160,10 +195,10 @@ const styles = StyleSheet.create({
     //   alignItems: 'center',
   },
   card: {
-    marginTop: 20,
+    marginTop: 10,
   },
   cardHightlight: {
-    marginTop: 20,
+    marginTop: 10,
     backgroundColor: 'red',
   },
   TextInput: {

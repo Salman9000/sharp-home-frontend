@@ -94,7 +94,7 @@ const RoomChart = props => {
 
   const getGraphs = async type => {
     try {
-      console.log('start ' + startDateParam);
+      // console.log('start ' + startDateParam);
       switch (type) {
         case 'today':
           if (!buttonArray[3].data) {
@@ -189,6 +189,7 @@ const RoomChart = props => {
             const value = await instance(token).get(
               `/v1/activity/customActivity?${deviceParams}&startDate=${startDateParam}&endDate=${endDateParam}`,
             );
+            console.log('room' + value.data);
             (value.data.resultConsumption.inputArray.datasets.color = (
               opacity = 1,
             ) => 'rgba(20,122,214,1)'),
@@ -204,13 +205,13 @@ const RoomChart = props => {
           }
       }
     } catch (error) {
-      console.log(error, 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
+      // console.log(error, 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
       setErrorMessage('No Data Found');
       setLoading(false);
     }
   };
   useEffect(() => {
-    console.log('hello' + props.route.params.startDate);
+    // console.log('hello' + props.route.params.startDate);
     startDateParam != null ? buttonPress(4, '') : getGraphs('today');
   }, []);
 

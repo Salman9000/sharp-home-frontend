@@ -31,7 +31,6 @@ import Loading from './Loading';
 const SelectDevices = props => {
   //   const {deviceName, deviceRating} = props.route.params;
   const token = props.token;
-  const [rooms, setRooms] = useState('');
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deviceList, setDeviceList] = useState([]);
@@ -89,6 +88,19 @@ const SelectDevices = props => {
           <Loading />
         ) : (
           <>
+            <Button
+              style={styles.buttonContinue}
+              disabled={deviceList.length > 0 ? false : true}
+              onPress={() => {
+                console.log(deviceList);
+                {
+                  deviceList.length > 0
+                    ? deviceSelection(props)
+                    : console.log('no devices found');
+                }
+              }}>
+              <Text>Continue</Text>
+            </Button>
             <ScrollView style={styles.container2}>
               {devices.map((item, i) => (
                 <View key={item.id}>
@@ -108,33 +120,45 @@ const SelectDevices = props => {
                         );
                       }
                       // deviceSelection();
-                    }}
-                    style={item.highlight ? styles.cardHightlight : ''}>
-                    <Card style={styles.card} pointerEvents="none">
-                      <CardItem header>
-                        <Left>
-                          <Text style={styles.roomName}>{item.name}</Text>
-                        </Left>
-                        <Right>
-                          <Text style={styles.deviceCount}>
-                            Power Rating: {item.powerRating} kWh
-                          </Text>
-                        </Right>
-                      </CardItem>
-                      {/* <CardItem style={styles.cardItem}>
-                        <Left>
-                          <Text style={styles.desc}>{item.desc}</Text>
-                        </Left>
-                      </CardItem> */}
-                    </Card>
+                    }}>
+                    {item.highlight ? (
+                      <>
+                        <Card
+                          style={styles.card}
+                          pointerEvents="none"
+                          backgroundColor={'#ECF0F9'}>
+                          <CardItem header backgroundColor={'#ECF0F9'}>
+                            <Left>
+                              <Text style={styles.roomName}>{item.name}</Text>
+                            </Left>
+                            <Right>
+                              <Text style={styles.deviceCount}>
+                                Power Rating: {item.powerRating} kWh
+                              </Text>
+                            </Right>
+                          </CardItem>
+                        </Card>
+                      </>
+                    ) : (
+                      <>
+                        <Card style={styles.card} pointerEvents="none">
+                          <CardItem header>
+                            <Left>
+                              <Text style={styles.roomName}>{item.name}</Text>
+                            </Left>
+                            <Right>
+                              <Text style={styles.deviceCount}>
+                                Power Rating: {item.powerRating} kWh
+                              </Text>
+                            </Right>
+                          </CardItem>
+                        </Card>
+                      </>
+                    )}
                   </TouchableOpacity>
                 </View>
               ))}
-              <Button
-                style={styles.iconContainer}
-                onPress={() => deviceSelection(props)}>
-                <Icon name="add" style={styles.icon} />
-              </Button>
+
               <Button
                 style={styles.button}
                 onPress={() => addDeviceButtonPressed(props)}>
@@ -150,6 +174,12 @@ const SelectDevices = props => {
 };
 
 const styles = StyleSheet.create({
+  buttonContinue: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 20,
+  },
   container1: {
     flex: 1,
   },
@@ -170,7 +200,7 @@ const styles = StyleSheet.create({
     //   alignItems: 'center',
   },
   card: {
-    marginTop: 20,
+    marginTop: 10,
   },
   cardHightlight: {
     // marginTop: 20,
