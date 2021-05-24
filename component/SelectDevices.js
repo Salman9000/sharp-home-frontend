@@ -43,6 +43,8 @@ const SelectDevices = props => {
       // deviceName: name,
       deviceList: deviceList,
       deviceArray: devices,
+      deviceSelect: true,
+      roomSelect: false,
     });
   };
   const getDevices = async () => {

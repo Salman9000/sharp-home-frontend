@@ -33,7 +33,10 @@ const Footer = props => {
           vertical
           active
           onPress={() => {
-            props.nav.navigation.navigate('vrChooseRoomAndDevice');
+            props.nav.navigation.navigate('vrChooseRoomAndDevice', {
+              roomSelect: false,
+              deviceSelect: false,
+            });
           }}>
           <Entypo name="bar-graph" style={styles.barIcon} />
           <Text>Analytics</Text>

@@ -40,6 +40,8 @@ const SelectRoom = props => {
     props.navigation.navigate('vrChooseRoomAndDevice', {
       roomList: roomList,
       roomArray: rooms,
+      roomSelect: true,
+      deviceSelect: false,
     });
   };
 

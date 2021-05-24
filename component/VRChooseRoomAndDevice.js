@@ -13,40 +13,72 @@ const axios = require('axios');
 import {Button as Button2, Icon} from 'native-base';
 import DropDownPicker from 'react-native-dropdown-picker';
 
+// function useForceUpdate() {
+//   const [value, setValue] = useState(0); // integer state
+//   return () => setValue(value => value + 1); // update the state to force render
+// }
 const VRChooseRoomAndDevice = props => {
-  let roomSelect = false;
-  let deviceSelect = false;
-  const [roomList, setRoomList] = useState([]);
-  let rooms = [];
-  let roomArray = [];
-  // roomList = [];
+  // let roomSelect = false;
+  // let deviceSelect = false;
+  // const [roomSelect, setRoomSelect] = useState(false);
+  // const [deviceSelect, setDeviceSelect] = useState(false);
+  const [rooms, setRooms] = useState([]);
+  const [devices, setDevices] = useState([]);
+  const [roomArray, setRoomArray] = useState([]);
+  const [deviceArray, setDeviceArray] = useState([]);
+  const [roomSelection, setRoomSelection] = useState(
+    props.route.params.roomSelect,
+  );
+  const [deviceSelection, setDeviceSelection] = useState(
+    props.route.params.deviceSelect,
+  );
+  // let rooms = [];
+  // let roomArray = [];
+  let roomSelect = props.route.params.roomSelect;
+  let deviceSelect = props.route.params.deviceSelect;
 
-  let devices = [];
-  let deviceArray = [];
-  // deviceArray2 = [];
   useEffect(() => {
-    if (props.route.params?.roomList) {
-      rooms = props.route.params.roomList;
-      setRoomList(props.route.params.roomList);
+    if (props.route.params?.roomList && roomSelect == true) {
+      setRooms(props.route.params.roomList);
       roomSelect = true;
-      devices.push(props.route.params.roomArray[0].devices);
-      roomArray = props.route.params.roomArray;
-      console.log(roomList, 'room2');
-    }
-    if (props.route.params?.deviceList) {
-      devices = props.route.params.deviceList;
+      setRoomSelection(true);
+      console.log(roomSelect, 'lll');
+      setDevices(props.route.params.roomArray[0].devices);
+      setRoomArray(props.route.params.roomArray);
+      console.log(rooms, 'room');
+    } else if (props.route.params?.deviceList && deviceSelect == true) {
+      console.log(deviceSelect);
+      setDevices(props.route.params.deviceList);
       deviceSelect = true;
+      setDeviceSelection(true);
       console.log(devices);
-      deviceArray = props.route.params.deviceArray;
+      setDeviceArray(props.route.params.deviceArray);
     }
-  }, []);
+  }, [roomSelect, deviceSelect]);
+  // if (props.route.params?.roomList) {
+  //   rooms = props.route.params.roomList;
+
+  //   roomSelect = true;
+  //   devices.push(props.route.params.roomArray[0].devices);
+  //   roomArray = props.route.params.roomArray;
+  //   console.log(rooms, 'room');
+  // }
+  // if (props.route.params?.deviceList) {
+  //   devices = props.route.params.deviceList;
+  //   deviceSelect = true;
+  //   console.log(devices);
+  //   deviceArray = props.route.params.deviceArray;
+  // }
+
   const selectRoom = props => {
+    roomSelect = true;
     props.navigation.navigate('selectRoom', {
       roomArray: roomArray,
     });
   };
 
   const selectDevices = props => {
+    deviceSelect = true;
     props.navigation.navigate('selectDevice', {
       deviceArray: deviceArray,
     });
@@ -54,21 +86,46 @@ const VRChooseRoomAndDevice = props => {
 
   const setRoomData = props => {
     console.log(devices, 'kkjh');
-    props.navigation.navigate('vrRooms', {
-      deviceArray: devices,
-      roomsArray: rooms,
-      roomSelect: roomSelect,
-      deviceSelect: deviceSelect,
-    });
+    if (rooms.length > 0 || devices.length > 0) {
+      props.navigation.navigate('vrRooms', {
+        deviceArray: devices,
+        roomsArray: rooms,
+        roomSelect: roomSelect,
+        deviceSelect: deviceSelect,
+      });
+    }
   };
   const deleteRoom = (item, i) => {
-    // let arr = [...rooms];
-    // // arr[i].highlight = false;
-    // // setRooms(arr);
     console.log(item);
-    rooms = rooms.filter(value => value.id !== item.id);
-    console.log(rooms, 'seconf');
-    setRoomList(rooms);
+    let arr = [...rooms];
+    arr = arr.filter(value => value.id !== item.id);
+    setRooms(arr);
+    console.log(rooms);
+    let arr2 = [...roomArray];
+    arr2[i].highlight = false;
+    setRoomArray(arr);
+    if (arr.length == 0) {
+      roomSelect = false;
+      deviceSelect = false;
+      setRoomSelection(false);
+      setDeviceSelection(false);
+    }
+  };
+  const deleteDevice = (item, i) => {
+    console.log(item);
+    let arr = [...devices];
+    arr = arr.filter(value => value.id !== item.id);
+    setDevices(arr);
+    let arr2 = [...deviceArray];
+    arr2[i].highlight = false;
+    setDeviceArray(arr);
+    console.log(devices);
+    if (arr.length == 0) {
+      roomSelect = false;
+      deviceSelect = false;
+      setRoomSelection(false);
+      setDeviceSelection(false);
+    }
   };
 
   return (
@@ -78,7 +135,7 @@ const VRChooseRoomAndDevice = props => {
         <View style={styles.otherboxes}>
           <Text style={{fontWeight: 'bold'}}>Rooms</Text>
           <View>
-            {roomList.length < 1 ? (
+            {rooms.length < 1 ? (
               <Text
                 style={{
                   color: '#B2B7C6',
@@ -88,7 +145,7 @@ const VRChooseRoomAndDevice = props => {
                 Select Room
               </Text>
             ) : (
-              roomList.map((value, i) => (
+              rooms.map((value, i) => (
                 <View style={styles.inline}>
                   <Text
                     key={i}
@@ -141,7 +198,11 @@ const VRChooseRoomAndDevice = props => {
                     }}>
                     {value.name}
                   </Text>
-                  <Icon name="trash" style={styles.iconStyle} />
+                  <Icon
+                    name="trash"
+                    onPress={() => deleteDevice(value, i)}
+                    style={styles.iconStyle}
+                  />
                 </View>
               ))
             )}
@@ -153,7 +214,7 @@ const VRChooseRoomAndDevice = props => {
           onPress={() => {
             selectRoom(props);
           }}
-          disabled={deviceSelect}>
+          disabled={deviceSelection}>
           Select Room
         </Button>
 
@@ -163,7 +224,7 @@ const VRChooseRoomAndDevice = props => {
           onPress={() => {
             selectDevices(props);
           }}
-          disabled={roomSelect}>
+          disabled={roomSelection}>
           Select Devices
         </Button>
 
