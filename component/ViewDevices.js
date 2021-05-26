@@ -36,7 +36,7 @@ const ViewDevices = props => {
   const [consumptions, setConsumptions] = useState([]);
 
   const cardPressed = id => {
-    console.log(id);
+    // console.log(id);
     // getConsumptions();
   };
 
@@ -59,8 +59,9 @@ const ViewDevices = props => {
 
   const getDevices = async () => {
     try {
-      const response = await instance(token).get('/v1/devices');
+      const response = await instance(token).get(`/v1/devices`);
       setDevices(response.data.docs);
+      // console.log('response data docs ' + response.data.docs);
       setLoading(false);
     } catch (err) {
       console.log('get devices in view devices ' + err);
@@ -73,27 +74,33 @@ const ViewDevices = props => {
 
   const turnOffDevice = async item => {
     try {
-      // http://192.168.31.125:8081/zeroconf/switch
-      const response = await axios.post(
-        ` http://192.168.31.125:8081/zeroconf/switch`,
-        {
-          deviceid: '',
-          data: {
-            switch: 'off',
+      if (item.ip != undefined) {
+        //192.168.31.125:8081/zeroconf/switch
+        const response = await axios.post(
+          `http://${item.ip}:8081/zeroconf/switch`,
+          {
+            deviceid: '',
+            data: {
+              switch: 'off',
+            },
           },
-        },
-      );
+        );
+        console.log(response);
+        console.log('device turned off');
+      } else {
+        console.log('ip doesnt exist');
+      }
       setDevices(
         devices.map(value => {
           {
-            value.id == item.id
-              ? (value.status = 'off')
-              : (value.status = 'on');
+            if (value.id == item.id) {
+              value.status = 'off';
+            }
           }
           return value;
         }),
       );
-      console.log(response);
+      // console.log(response);
     } catch (error) {
       console.log(
         'There has been a problem with your fetch operation in enterhouse login: ' +
@@ -103,28 +110,45 @@ const ViewDevices = props => {
   };
 
   const turnOnDevice = async item => {
+    console.log('pressed off');
     try {
       // http://192.168.31.125:8081/zeroconf/switch
-      const response = await axios.post(
-        ` http://192.168.31.125:8081/zeroconf/switch`,
-        {
-          deviceid: '',
-          data: {
-            switch: 'on',
+      // const response = await axios.post(
+      //   ` http://192.168.31.125:8081/zeroconf/switch`,
+      //   {
+      //     deviceid: '',
+      //     data: {
+      //       switch: 'on',
+      //     },
+      //   },
+      // );
+      if (item.ip != undefined) {
+        //192.168.31.125:8081/zeroconf/switch
+        const response = await axios.post(
+          `http://${item.ip}:8081/zeroconf/switch`,
+          {
+            deviceid: '',
+            data: {
+              switch: 'on',
+            },
           },
-        },
-      );
+        );
+        console.log(response);
+        console.log('device turned on');
+      } else {
+        console.log('ip doesnt exist');
+      }
       setDevices(
         devices.map(value => {
           {
-            value.id == item.id
-              ? (value.status = 'on')
-              : (value.status = 'off');
+            if (value.id == item.id) {
+              value.status = 'on';
+            }
           }
           return value;
         }),
       );
-      console.log(response);
+      // console.log(response);
     } catch (error) {
       console.log(
         'There has been a problem with your fetch operation in enterhouse login: ' +
@@ -157,8 +181,52 @@ const ViewDevices = props => {
         ) : (
           <>
             <ScrollView style={styles.container2}>
-              <View>
-                {devices.map(item => {
+              {devices.map(item => (
+                <View key={item.id}>
+                  <TouchableOpacity onPress={cardPressed(item.id)}>
+                    <Card style={styles.card}>
+                      <CardItem header>
+                        <Left>
+                          <Text style={styles.roomName}>{item.name}</Text>
+                        </Left>
+                        <Right>
+                          <Text style={styles.deviceCount}>
+                            Power Rating: {item.powerRating} kWh
+                          </Text>
+                        </Right>
+                        <Right>
+                          {item.status == 'on' ? (
+                            <Button
+                              style={{
+                                backgroundColor: '#38d238',
+                                padding: 15,
+                                borderRadius: 50,
+                                color: 'white',
+                              }}
+                              onPress={() => turnOffDevice(item)}>
+                              <Text>{item.status}</Text>
+                            </Button>
+                          ) : (
+                            <Button
+                              style={{
+                                backgroundColor: '#ce2222',
+                                padding: 15,
+                                borderRadius: 50,
+                                color: 'white',
+                              }}
+                              onPress={() => turnOnDevice(item)}>
+                              <Text>{item.status}</Text>
+                            </Button>
+                          )}
+                        </Right>
+                      </CardItem>
+                    </Card>
+                  </TouchableOpacity>
+                </View>
+              ))}
+
+              {/* <View>
+                {devices.map(item => (
                   {
                     item.status == 'on' ? (
                       <TouchableOpacity
@@ -224,8 +292,8 @@ const ViewDevices = props => {
                       </TouchableOpacity>
                     );
                   }
-                })}
-              </View>
+                ))}
+              </View> */}
               <Button
                 style={styles.button}
                 onPress={() => addDeviceButtonPressed(props)}>

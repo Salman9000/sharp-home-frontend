@@ -42,16 +42,12 @@ const VRChooseRoomAndDevice = props => {
       setRooms(props.route.params.roomList);
       roomSelect = true;
       setRoomSelection(true);
-      console.log(roomSelect, 'lll');
       setDevices(props.route.params.roomArray[0].devices);
       setRoomArray(props.route.params.roomArray);
-      console.log(rooms, 'room');
     } else if (props.route.params?.deviceList && deviceSelect == true) {
-      console.log(deviceSelect);
       setDevices(props.route.params.deviceList);
       deviceSelect = true;
       setDeviceSelection(true);
-      console.log(devices);
       setDeviceArray(props.route.params.deviceArray);
     }
   }, [roomSelect, deviceSelect]);
@@ -61,12 +57,10 @@ const VRChooseRoomAndDevice = props => {
   //   roomSelect = true;
   //   devices.push(props.route.params.roomArray[0].devices);
   //   roomArray = props.route.params.roomArray;
-  //   console.log(rooms, 'room');
   // }
   // if (props.route.params?.deviceList) {
   //   devices = props.route.params.deviceList;
   //   deviceSelect = true;
-  //   console.log(devices);
   //   deviceArray = props.route.params.deviceArray;
   // }
 
@@ -85,7 +79,6 @@ const VRChooseRoomAndDevice = props => {
   };
 
   const setRoomData = props => {
-    console.log(devices, 'kkjh');
     if (rooms.length > 0 || devices.length > 0) {
       props.navigation.navigate('vrRooms', {
         deviceArray: devices,
@@ -96,11 +89,9 @@ const VRChooseRoomAndDevice = props => {
     }
   };
   const deleteRoom = (item, i) => {
-    console.log(item);
     let arr = [...rooms];
     arr = arr.filter(value => value.id !== item.id);
     setRooms(arr);
-    console.log(rooms);
     let arr2 = [...roomArray];
     arr2[i].highlight = false;
     setRoomArray(arr);
@@ -111,15 +102,13 @@ const VRChooseRoomAndDevice = props => {
       setDeviceSelection(false);
     }
   };
-  const deleteDevice = (item, i) => {
-    console.log(item);
+  const deleteDevice = (item, j) => {
     let arr = [...devices];
     arr = arr.filter(value => value.id !== item.id);
     setDevices(arr);
     let arr2 = [...deviceArray];
     arr2[i].highlight = false;
     setDeviceArray(arr);
-    console.log(devices);
     if (arr.length == 0) {
       roomSelect = false;
       deviceSelect = false;
@@ -145,10 +134,10 @@ const VRChooseRoomAndDevice = props => {
                 Select Room
               </Text>
             ) : (
-              rooms.map((value, i) => (
+              rooms.map(value => (
                 <View style={styles.inline}>
                   <Text
-                    key={i}
+                    key={value.id}
                     style={{
                       color: '#B2B7C6',
                       fontSize: 22,
@@ -163,7 +152,7 @@ const VRChooseRoomAndDevice = props => {
                     style={{backgroundColor: 'red'}}> */}
                   <Icon
                     name="trash"
-                    onPress={() => deleteRoom(value, i)}
+                    onPress={() => deleteRoom(value, value.id)}
                     style={styles.iconStyle}
                   />
                   {/* </Button2> */}
@@ -186,10 +175,10 @@ const VRChooseRoomAndDevice = props => {
                 All Devices are Selected
               </Text>
             ) : (
-              devices.map((value, i) => (
+              devices.map(value => (
                 <View style={styles.inline}>
                   <Text
-                    key={i}
+                    key={value.id}
                     style={{
                       color: '#B2B7C6',
                       fontSize: 22,
@@ -200,7 +189,7 @@ const VRChooseRoomAndDevice = props => {
                   </Text>
                   <Icon
                     name="trash"
-                    onPress={() => deleteDevice(value, i)}
+                    onPress={() => deleteDevice(value, value.id)}
                     style={styles.iconStyle}
                   />
                 </View>

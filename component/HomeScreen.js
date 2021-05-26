@@ -22,10 +22,10 @@ const HomeScreen = props => {
   const [devices, setDevices] = useState(null);
   const [loading, setLoading] = useState(true);
   const token = props.token;
-  console.log(token);
+  // console.log(token);
   const getDevices = async () => {
     const response = await instance(token).get('/v1/devices');
-    console.log(response.data.docs, 'jjjj');
+    // console.log(response.data.docs, 'jjjj');
     setDevices(response.data.docs);
     setLoading(false);
   };
