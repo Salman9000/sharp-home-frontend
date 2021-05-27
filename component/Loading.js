@@ -2,9 +2,12 @@ import React from 'react';
 // import {Button, TextInput} from 'react-native-paper';
 import {View, ActivityIndicator, StyleSheet} from 'react-native';
 
-const Loading = () => (
+const Loading = props => (
   <View style={styles.loading}>
-    <ActivityIndicator size="large" color="blue" />
+    <ActivityIndicator
+      size={props.size ? props.size : 'large'}
+      color={props.color ? props.color : 'blue'}
+    />
   </View>
 );
 

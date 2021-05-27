@@ -33,29 +33,8 @@ const ViewDevices = props => {
   const token = props.token;
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [btnLoading, setBtnLoading] = useState(false);
   const [consumptions, setConsumptions] = useState([]);
-
-  const cardPressed = id => {
-    // console.log(id);
-    // getConsumptions();
-  };
-
-  // const getConsumptions = async () => {
-  //   try {
-  //     const response = await instance(token).get('/v1/devices/getConsumptions');
-  //     tempList = [];
-  //     console.log(response.data.result.docs);
-  //     tempList = response.data.result.docs.map(value => ({
-  //       id: value.dev[0]._id,
-  //       name: value.dev[0].name,
-  //       consumption: value.total.toFixed(2),
-  //     }));
-  //     setDevices(tempList);
-  //   } catch (error) {
-  //     console.log('error in viewdevices getconsumption:' + error);
-  //   }
-  //   setLoading(false);
-  // };
 
   const getDevices = async () => {
     try {
@@ -75,6 +54,7 @@ const ViewDevices = props => {
   const turnOffDevice = async item => {
     try {
       if (item.ip != undefined) {
+        setBtnLoading(true);
         //192.168.31.125:8081/zeroconf/switch
         const response = await axios.post(
           `http://${item.ip}:8081/zeroconf/switch`,
@@ -87,6 +67,14 @@ const ViewDevices = props => {
         );
         console.log(response);
         console.log('device turned off');
+        const response2 = await axios.patch(
+          `${BASE_URL}/v1/devices/getDevice/${item.id}`,
+          {
+            status: 'off',
+          },
+        );
+        console.log(response2.data);
+        setBtnLoading(false);
       } else {
         console.log('ip doesnt exist');
       }
@@ -110,19 +98,9 @@ const ViewDevices = props => {
   };
 
   const turnOnDevice = async item => {
-    console.log('pressed off');
     try {
-      // http://192.168.31.125:8081/zeroconf/switch
-      // const response = await axios.post(
-      //   ` http://192.168.31.125:8081/zeroconf/switch`,
-      //   {
-      //     deviceid: '',
-      //     data: {
-      //       switch: 'on',
-      //     },
-      //   },
-      // );
       if (item.ip != undefined) {
+        setBtnLoading(true);
         //192.168.31.125:8081/zeroconf/switch
         const response = await axios.post(
           `http://${item.ip}:8081/zeroconf/switch`,
@@ -135,6 +113,14 @@ const ViewDevices = props => {
         );
         console.log(response);
         console.log('device turned on');
+        const response2 = await axios.patch(
+          `${BASE_URL}/v1/devices/getDevice/${item.id}`,
+          {
+            status: 'on',
+          },
+        );
+        console.log(response2.data);
+        setBtnLoading(false);
       } else {
         console.log('ip doesnt exist');
       }
@@ -183,7 +169,7 @@ const ViewDevices = props => {
             <ScrollView style={styles.container2}>
               {devices.map(item => (
                 <View key={item.id}>
-                  <TouchableOpacity onPress={cardPressed(item.id)}>
+                  <TouchableOpacity>
                     <Card style={styles.card}>
                       <CardItem header>
                         <Left>
@@ -196,15 +182,42 @@ const ViewDevices = props => {
                         </Right>
                         <Right>
                           {item.status == 'on' ? (
+                            btnLoading ? (
+                              <Button
+                                style={{
+                                  backgroundColor: '#78ef78',
+                                  padding: 15,
+                                  borderRadius: 50,
+                                  color: 'white',
+                                }}>
+                                <Text>
+                                  {' '}
+                                  <Loading color="white" size="small" />
+                                </Text>
+                              </Button>
+                            ) : (
+                              <Button
+                                style={{
+                                  backgroundColor: '#38d238',
+                                  padding: 15,
+                                  borderRadius: 50,
+                                  color: 'white',
+                                }}
+                                onPress={() => turnOffDevice(item)}>
+                                <Text>{item.status}</Text>
+                              </Button>
+                            )
+                          ) : btnLoading ? (
                             <Button
                               style={{
-                                backgroundColor: '#38d238',
+                                backgroundColor: '#e05454',
                                 padding: 15,
                                 borderRadius: 50,
                                 color: 'white',
-                              }}
-                              onPress={() => turnOffDevice(item)}>
-                              <Text>{item.status}</Text>
+                              }}>
+                              <Text>
+                                <Loading color="white" size="small" />
+                              </Text>
                             </Button>
                           ) : (
                             <Button
