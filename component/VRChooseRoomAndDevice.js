@@ -102,7 +102,7 @@ const VRChooseRoomAndDevice = props => {
       setDeviceSelection(false);
     }
   };
-  const deleteDevice = (item, j) => {
+  const deleteDevice = (item, i) => {
     let arr = [...devices];
     arr = arr.filter(value => value.id !== item.id);
     setDevices(arr);
@@ -134,10 +134,9 @@ const VRChooseRoomAndDevice = props => {
                 Select Room
               </Text>
             ) : (
-              rooms.map(value => (
-                <View style={styles.inline}>
+              rooms.map((value, i) => (
+                <View key={value.id} style={styles.inline}>
                   <Text
-                    key={value.id}
                     style={{
                       color: '#B2B7C6',
                       fontSize: 22,
@@ -152,7 +151,7 @@ const VRChooseRoomAndDevice = props => {
                     style={{backgroundColor: 'red'}}> */}
                   <Icon
                     name="trash"
-                    onPress={() => deleteRoom(value, value.id)}
+                    onPress={() => deleteRoom(value, i)}
                     style={styles.iconStyle}
                   />
                   {/* </Button2> */}
@@ -175,10 +174,9 @@ const VRChooseRoomAndDevice = props => {
                 All Devices are Selected
               </Text>
             ) : (
-              devices.map(value => (
-                <View style={styles.inline}>
+              devices.map((value, i) => (
+                <View key={value.id} style={styles.inline}>
                   <Text
-                    key={value.id}
                     style={{
                       color: '#B2B7C6',
                       fontSize: 22,
@@ -189,7 +187,7 @@ const VRChooseRoomAndDevice = props => {
                   </Text>
                   <Icon
                     name="trash"
-                    onPress={() => deleteDevice(value, value.id)}
+                    onPress={() => deleteDevice(value, i)}
                     style={styles.iconStyle}
                   />
                 </View>

@@ -20,14 +20,14 @@ import {
 import instance from '../helper';
 import Loading from './Loading';
 
-const ApplianceChart = props => {
+const ApplianceReportChart = props => {
   const [loading, setLoading] = useState(true);
   const token = props.token;
   const [startDateParam, setStartDateParam] = useState(
-    props.route.params?.startDate ? props.route.params.startDate : null,
+    props.route.params.startDate || null,
   );
   const [endDateParam, setEndDateParam] = useState(
-    props.route.params?.endDate ? props.route.params.endDate : null,
+    props.route.params.endDate || null,
   );
   const [deviceParams, setDeviceParams] = useState(
     props.deviceParams ? props.deviceParams : '',
@@ -592,4 +592,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ApplianceChart;
+export default ApplianceReportChart;
