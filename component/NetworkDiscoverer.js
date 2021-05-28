@@ -1,4 +1,6 @@
-import React, {Component} from 'react';
+import React, {useEffect, useState} from 'react';
+import {PermissionsAndroid} from 'react-native';
+import WifiManager from 'react-native-wifi-reborn';
 import {
   Platform,
   StyleSheet,
@@ -25,68 +27,93 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+
 // import SelectDevices from './SelectDevices';
 
 const zeroconf = new Zeroconf();
 
-export default class networkDiscoverer extends Component {
-  state = {
-    isScanning: false,
-    selectedService: null,
-    services: {},
-    deviceName: this.props.route.params.deviceName,
-    deviceRating: this.props.route.params.deviceRating,
-    roomId: this.props.route.params.roomId,
+const NetworkDiscoverer = props => {
+  const [isScanning, setIsScanning] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
+  const [services, setServices] = useState({});
+  const [deviceName, setDeviceName] = useState('props.route.params.deviceName');
+  const [deviceRating, setDeviceRating] = useState(
+    'props.route.params.deviceRating',
+  );
+  const [roomId, setRoomId] = useState('props.route.params.roomId');
+  const [wifiSsid, setWifiSsid] = useState('');
+  const requestCameraPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Cool Photo App Camera Permission',
+          message:
+            'Cool Photo App needs access to your camera ' +
+            'so you can take awesome pictures.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('You can use the wifi');
+        const ssid = await WifiManager.getCurrentWifiSSID();
+        if (ssid) {
+          console.log('Your current connected wifi SSID is ' + ssid);
+          setWifiSsid(ssid);
+        } else {
+          console.log('Cannot get current SSID!');
+          setWifiSsid(null);
+        }
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
   };
-
-  componentDidMount() {
-    this.refreshData();
-    // const {deviceName, deviceRating, roomId} = this.props.route.params;
-    // console.log(deviceName, 'hh');
+  useEffect(() => {
+    refreshData();
     zeroconf.on('start', () => {
-      this.setState({isScanning: true});
+      setIsScanning(true);
       console.log('[Start]');
     });
 
     zeroconf.on('stop', () => {
-      this.setState({isScanning: false});
+      setIsScanning(false);
       console.log('[Stop]');
     });
 
     zeroconf.on('resolved', service => {
       // console.log('[Resolve]', JSON.stringify(service, null, 2));
-
-      this.setState({
-        services: {
-          ...this.state.services,
-          [service.host]: service,
-        },
-      });
+      setServices({...services, [service.host]: service});
     });
 
     zeroconf.on('error', err => {
-      this.setState({isScanning: false});
+      setIsScanning(false);
       console.log('[Error]', err);
     });
-  }
-  SelectDevice = (host, name) => {
-    console.log(this.state.roomId);
-    this.props.navigation.navigate('confirmDeviceDetails', {
-      deviceName: this.state.deviceName,
-      deviceRating: this.state.deviceRating,
-      roomId: this.state.roomId,
+  }, []);
+
+  const selectDevice = (host, name) => {
+    console.log(roomId);
+    props.navigation.navigate('confirmDeviceDetails', {
+      deviceName: deviceName,
+      deviceRating: deviceRating,
+      roomId: roomId,
       host: host,
       name: name,
     });
   };
 
-  renderRow = ({item, index}) => {
-    const {name, fullName, host} = this.state.services[item];
-
+  const renderRow = ({item, index}) => {
+    const {name, fullName, host} = services[item];
+    // console.log(services[item]);
     return (
       <TouchableOpacity
         style={styles.list}
-        onPress={() => this.SelectDevice(host, name)}>
+        onPress={() => selectDevice(host, name)}>
         <Card style={styles.card} pointerEvents="none">
           <CardItem header>
             <Left>
@@ -102,64 +129,64 @@ export default class networkDiscoverer extends Component {
     );
   };
 
-  refreshData = () => {
-    const {isScanning} = this.state;
+  const refreshData = () => {
+    requestCameraPermission();
     if (isScanning) {
       return;
     }
-
-    this.setState({services: []});
+    setServices([]);
 
     zeroconf.scan('ewelink', 'tcp', 'local.');
 
-    clearTimeout(this.timeout);
-    this.timeout = setTimeout(() => {
+    // clearTimeout(timeout);
+    setTimeout(() => {
       zeroconf.stop();
     }, 5000);
   };
 
-  render() {
-    const {services, selectedService, isScanning} = this.state;
-    // console.log(selectedService, 'kkk');
+  const service = services[selectedService];
 
-    const service = services[selectedService];
-
-    if (service) {
-      return (
-        <SafeAreaView style={styles.container}>
-          <TouchableOpacity
-            onPress={() => this.setState({selectedService: null})}>
-            <Text style={styles.closeButton}>{'CLOSE'}</Text>
-          </TouchableOpacity>
-
-          <Text style={styles.json}>{JSON.stringify(services, null, 2)}</Text>
-        </SafeAreaView>
-      );
-    }
-
+  if (service) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.state}>
-          {isScanning ? 'Scanning for Devices' : 'Scanning Stopped'}
-        </Text>
+        <TouchableOpacity onPress={() => selectedService(null)}>
+          <Text style={styles.closeButton}>{'CLOSE'}</Text>
+        </TouchableOpacity>
 
-        <FlatList
-          data={Object.keys(services)}
-          renderItem={this.renderRow}
-          keyExtractor={key => key}
-          refreshControl={
-            <RefreshControl
-              refreshing={isScanning}
-              onRefresh={this.refreshData}
-              tintColor="skyblue"
-            />
-          }
-        />
-        <Footer nav={this.props} />
+        <Text style={styles.json}>{JSON.stringify(services, null, 2)}</Text>
       </SafeAreaView>
     );
   }
-}
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.state}>
+        {isScanning ? 'Scanning for Devices' : 'Scanning Stopped'}
+      </Text>
+      <Text style={styles.ssid}>
+        {wifiSsid
+          ? `Your Network name is: ${wifiSsid}`
+          : 'Cannot get Network Name'}
+      </Text>
+      {services.length < 1 && (
+        <Text style={styles.ssid}>Unable to find devices</Text>
+      )}
+      <FlatList
+        data={Object.keys(services)}
+        renderItem={renderRow}
+        keyExtractor={key => key}
+        refreshControl={
+          <RefreshControl
+            refreshing={isScanning}
+            onRefresh={refreshData}
+            tintColor="skyblue"
+          />
+        }
+      />
+      <Footer nav={props} />
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -187,8 +214,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 30,
   },
+  ssid: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 30,
+  },
   list: {
     color: 'black',
     backgroundColor: '#DDDDDD',
   },
 });
+
+export default NetworkDiscoverer;

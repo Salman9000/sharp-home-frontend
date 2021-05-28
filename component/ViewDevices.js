@@ -40,7 +40,6 @@ const ViewDevices = props => {
     try {
       const response = await instance(token).get(`/v1/devices`);
       setDevices(response.data.docs);
-      // console.log('response data docs ' + response.data.docs);
       setLoading(false);
     } catch (err) {
       console.log('get devices in view devices ' + err);
@@ -65,15 +64,12 @@ const ViewDevices = props => {
             },
           },
         );
-        console.log(response);
-        console.log('device turned off');
         const response2 = await axios.patch(
           `${BASE_URL}/v1/devices/getDevice/${item.id}`,
           {
             status: 'off',
           },
         );
-        console.log(response2.data);
         setBtnLoading(false);
       } else {
         console.log('ip doesnt exist');
@@ -88,7 +84,6 @@ const ViewDevices = props => {
           return value;
         }),
       );
-      // console.log(response);
     } catch (error) {
       console.log(
         'There has been a problem with your fetch operation in enterhouse login: ' +
@@ -111,15 +106,12 @@ const ViewDevices = props => {
             },
           },
         );
-        console.log(response);
-        console.log('device turned on');
         const response2 = await axios.patch(
           `${BASE_URL}/v1/devices/getDevice/${item.id}`,
           {
             status: 'on',
           },
         );
-        console.log(response2.data);
         setBtnLoading(false);
       } else {
         console.log('ip doesnt exist');
@@ -134,7 +126,6 @@ const ViewDevices = props => {
           return value;
         }),
       );
-      // console.log(response);
     } catch (error) {
       console.log(
         'There has been a problem with your fetch operation in enterhouse login: ' +

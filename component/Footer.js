@@ -45,7 +45,7 @@ const Footer = props => {
           vertical
           active
           onPress={() => {
-            props.nav.navigation.navigate('viewDevices');
+            props.nav.navigation.navigate('deviceDiscover');
           }}>
           <Icon active name="navigate" />
           <Text>Devices</Text>
