@@ -119,7 +119,11 @@ const VRChooseRoomAndDevice = props => {
 
   return (
     <View style={styles.container1}>
-      <Header title="Select rooms and devices" />
+      <Header
+        title="Select Rooms and Devices"
+        nav={props.navigation}
+        buttonsEnabled={true}
+      />
       <View style={styles.container2}>
         <View style={styles.otherboxes}>
           <Text style={{fontWeight: 'bold'}}>Rooms</Text>

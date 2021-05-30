@@ -34,7 +34,7 @@ const ChooseRoom = props => {
   const [loading, setLoading] = useState(true);
 
   const cardPressed = id => {
-    props.navigation.navigate('deviceDiscover', {
+    props.navigation.push('deviceDiscover', {
       deviceName: deviceName,
       deviceRating: deviceRating,
       roomId: id,
@@ -70,7 +70,7 @@ const ChooseRoom = props => {
   );
 
   const addRoomButtonPressed = props => {
-    props.navigation.replace('addRoom', {
+    props.navigation.push('addRoom', {
       deviceName: deviceName,
       deviceRating: deviceRating,
     });
@@ -82,7 +82,11 @@ const ChooseRoom = props => {
 
   return (
     <View style={styles.container1}>
-      <Header title="Choose a Room" />
+      <Header
+        title="Choose a Room"
+        nav={props.navigation}
+        buttonsEnabled={true}
+      />
       <>
         {loading ? (
           <LoadingScreen />

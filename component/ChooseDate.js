@@ -17,7 +17,11 @@ const ChooseDate = props => {
 
   return (
     <View style={styles.scroll}>
-      <Header title="Choose Date" />
+      <Header
+        title="Choose Date"
+        nav={props.navigation}
+        buttonsEnabled={true}
+      />
       <View style={styles.container}>
         <Text style={styles.container2}>Start Date</Text>
         <DatePicker date={startDate} onDateChange={setStartDate} mode="date" />
@@ -42,7 +46,7 @@ const ChooseDate = props => {
           labelStyle={{fontSize: 18}}
           dark={true}
           onPress={() => {
-            props.navigation.replace('vrRooms', {
+            props.navigation.push('vrRooms', {
               deviceParams: props.route.params.deviceParams,
               roomsArray: props.route.params.roomsArray,
               startDate: startDate.toISOString(),

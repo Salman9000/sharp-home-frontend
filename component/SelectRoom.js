@@ -38,7 +38,7 @@ const SelectRoom = props => {
 
   const roomSelection = (id, name) => {
     console.log(roomList);
-    props.navigation.navigate('vrChooseRoomAndDevice', {
+    props.navigation.push('vrChooseRoomAndDevice', {
       roomList: roomList,
       roomArray: rooms,
       roomSelect: true,
@@ -76,7 +76,11 @@ const SelectRoom = props => {
 
   return (
     <View style={styles.container1}>
-      <Header title="Select Room" />
+      <Header
+        title="Select Room"
+        nav={props.navigation}
+        buttonsEnabled={true}
+      />
       <>
         {loading ? (
           <Loading />

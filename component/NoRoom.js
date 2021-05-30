@@ -6,7 +6,7 @@ import {Button, Text, Icon} from 'native-base';
 
 const NoRoom = props => {
   const addRoomButtonPressed = props => {
-    props.navigation.replace('addRoom');
+    props.navigation.push('addRoom');
   };
   const styles = StyleSheet.create({
     addDeviceButton: {
@@ -49,7 +49,7 @@ const NoRoom = props => {
   });
   return (
     <View style={styles.scroll}>
-      <Header title="Rooms" />
+      <Header title="Rooms" nav={props.navigation} buttonsEnabled={true} />
       <View style={styles.scrollv}>
         <Text style={styles.text}>No Rooms</Text>
         <Text style={styles.text}>Found</Text>

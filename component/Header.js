@@ -12,14 +12,25 @@ import {
 } from 'react-native';
 import {Appbar} from 'react-native-paper';
 
-const Header = ({title}) => {
-  const _goBack = () => console.log('Went back');
+const Header = props => {
+  const _goBack = () => {
+    console.log('Went back');
+    props.nav.pop();
+  };
   const _handleMore = () => console.log('Shown more');
   return (
     <Appbar.Header style={[t.bgBlue900]}>
-      {/* <Appbar.BackAction onPress={_goBack} size={20} /> */}
-      <Appbar.Content title={title} titleStyle={{textAlign: 'center'}} />
-      {/* <Appbar.Action icon="dots-vertical" onPress={_handleMore} size={24} /> */}
+      {props.buttonsEnabled ? (
+        <Appbar.BackAction onPress={_goBack} size={20} />
+      ) : (
+        <></>
+      )}
+      <Appbar.Content title={props.title} titleStyle={{textAlign: 'center'}} />
+      {props.buttonsEnabled ? (
+        <Appbar.Action icon="dots-vertical" onPress={_handleMore} size={24} />
+      ) : (
+        <></>
+      )}
     </Appbar.Header>
   );
 };

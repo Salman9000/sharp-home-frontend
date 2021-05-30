@@ -37,7 +37,7 @@ const SelectDevices = props => {
 
   const deviceSelection = (id, name) => {
     console.log(deviceList);
-    props.navigation.navigate('vrChooseRoomAndDevice', {
+    props.navigation.push('vrChooseRoomAndDevice', {
       // deviceId: id,
       // deviceName: name,
       deviceList: deviceList,
@@ -82,7 +82,11 @@ const SelectDevices = props => {
 
   return (
     <View style={styles.container1}>
-      <Header title="All Devices" />
+      <Header
+        title="All Devices"
+        nav={props.navigation}
+        buttonsEnabled={true}
+      />
       <>
         {loading ? (
           <Loading />

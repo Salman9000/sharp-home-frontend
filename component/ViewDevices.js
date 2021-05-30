@@ -141,7 +141,11 @@ const ViewDevices = props => {
 
   return (
     <View style={styles.container1}>
-      <Header title="All Devices" />
+      <Header
+        title="All Devices"
+        nav={props.navigation}
+        buttonsEnabled={true}
+      />
       <>
         {loading ? (
           <Loading />

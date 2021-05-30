@@ -14,9 +14,9 @@ const LoadingScreen = props => {
     const token = await AsyncStorage.getItem('token');
     console.log(token);
     if (token) {
-      props.navigation.replace('home');
+      props.navigation.navigate('home');
     } else {
-      props.navigation.replace('Login');
+      props.navigation.push('Login');
     }
   };
   useEffect(() => {

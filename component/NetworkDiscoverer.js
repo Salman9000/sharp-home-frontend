@@ -23,6 +23,7 @@ import {
 import {List, ListItem} from 'react-native-elements';
 import Zeroconf from 'react-native-zeroconf';
 import Footer from './Footer';
+import Header from './Header';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -160,6 +161,7 @@ const NetworkDiscoverer = props => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Header title={'Scanning For Devices'} />
       <Text style={styles.state}>
         {isScanning ? 'Scanning for Devices' : 'Scanning Stopped'}
       </Text>

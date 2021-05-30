@@ -88,7 +88,11 @@ const ConfirmDeviceDetails = props => {
   });
   return (
     <View style={styles.container1}>
-      <Header title="Confirm Room" />
+      <Header
+        title="Confirm Room"
+        nav={props.navigation}
+        buttonsEnabled={true}
+      />
       <View style={styles.container2}>
         <View style={styles.otherboxes}>
           <View style={styles.inputView}>

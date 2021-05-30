@@ -28,7 +28,7 @@ const AddRoom = props => {
         description: desc,
       });
 
-      props.navigation.navigate('chooseRoom', {
+      props.navigation.push('chooseRoom', {
         deviceName: props.deviceName,
         deviceRating: props.deviceRating,
       });
@@ -40,7 +40,7 @@ const AddRoom = props => {
 
   return (
     <View style={styles.container1}>
-      <Header title="Add a Room" />
+      <Header title="Add a Room" nav={props.navigation} buttonsEnabled={true} />
       <View style={styles.container2}>
         <View style={styles.otherboxes}>
           <View style={styles.inputView}>

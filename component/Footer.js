@@ -33,7 +33,7 @@ const Footer = props => {
           vertical
           active
           onPress={() => {
-            props.nav.navigation.navigate('vrChooseRoomAndDevice', {
+            props.nav.navigation.push('vrChooseRoomAndDevice', {
               roomSelect: false,
               deviceSelect: false,
             });

@@ -10,7 +10,6 @@ import {
 import {Button, TextInput} from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const axios = require('axios');
-import DropDownPicker from 'react-native-dropdown-picker';
 
 const AddDevice = props => {
   const [name, setName] = useState('');
@@ -20,7 +19,7 @@ const AddDevice = props => {
     if (name.length === 0 || rating.length === 0) {
       alert('Name and Rating are compulsory!');
     } else {
-      props.navigation.navigate('chooseRoom', {
+      props.navigation.push('chooseRoom', {
         deviceName: name,
         deviceRating: rating,
       });
@@ -29,7 +28,11 @@ const AddDevice = props => {
 
   return (
     <View style={styles.container1}>
-      <Header title="Add a Device" />
+      <Header
+        title="Add a Device"
+        nav={props.navigation}
+        buttonsEnabled={true}
+      />
       <View style={styles.container2}>
         <View style={styles.otherboxes}>
           <View style={styles.inputView}>

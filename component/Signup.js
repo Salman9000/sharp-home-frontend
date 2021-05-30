@@ -60,7 +60,7 @@ const Signup = props => {
             response.data.tokens.access.token,
           );
           props.setToken(response.data.tokens.access.token);
-          props.navigation.replace('home');
+          props.navigation.navigate('home');
         }
       } else {
         alert('Email address not appropriate');

@@ -35,16 +35,16 @@ const HomeScreen = props => {
   }, []);
 
   const addDevice2Pressed = props => {
-    props.navigation.replace('addDevice');
+    props.navigation.navigate('addDevice');
   };
 
   const viewReport = props => {
-    props.navigation.replace('vrChooseRoomAndDevice');
+    props.navigation.push('vrChooseRoomAndDevice');
   };
 
   return (
     <View style={styles.scroll}>
-      <Header title="Welcome" />
+      <Header title="Welcome" nav={props.navigation} buttonsEnabled={false} />
       <View style={styles.scrollv}>
         {loading ? (
           <Loading />

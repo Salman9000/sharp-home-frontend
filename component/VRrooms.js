@@ -33,12 +33,8 @@ const VRrooms = props => {
   const deviceSelect = props.route.params.deviceSelect;
   console.log('im in view report room');
 
-  const addDevice2Pressed = props => {
-    props.navigation.replace('addDevice');
-  };
-
   const viewReport = props => {
-    props.navigation.replace('vrChooseRoomAndDevice');
+    props.navigation.push('vrChooseRoomAndDevice');
   };
 
   const getDevices = async () => {
@@ -77,7 +73,11 @@ const VRrooms = props => {
 
   return (
     <View style={styles.scroll}>
-      <Header title="Room Report" />
+      <Header
+        title="Room Report"
+        nav={props.navigation}
+        buttonsEnabled={true}
+      />
       <View style={styles.scrollv}>
         <>
           {loading ? (
@@ -89,7 +89,7 @@ const VRrooms = props => {
                   style={styles.button1}
                   mode="contained"
                   onPress={() => {
-                    props.navigation.replace('chooseDate', {
+                    props.navigation.push('chooseDate', {
                       deviceParams: deviceParams,
                       roomsArray: props.route.params.roomsArray,
                       roomSelect: roomSelect,

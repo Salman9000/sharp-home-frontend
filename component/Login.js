@@ -42,7 +42,7 @@ const Login = props => {
       // console.log(response.data.tokens.access.token);
       await AsyncStorage.setItem('token', response.data.tokens.access.token);
       props.setToken(response.data.tokens.access.token);
-      props.navigation.replace('home');
+      props.navigation.navigate('home');
     } catch (error) {
       console.log(
         'There has been a problem with your fetch operation in enterhouse login: ' +
