@@ -6,6 +6,7 @@ import {
   ScrollView,
   ActivityIndicator,
   TouchableOpacity,
+  Switch,
 } from 'react-native';
 import Header from './Header';
 import Footer from './Footer';
@@ -32,6 +33,7 @@ const ViewDevices = props => {
   //   const {deviceName, deviceRating} = props.route.params;
   const token = props.token;
   const [devices, setDevices] = useState([]);
+  const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [btnLoading, setBtnLoading] = useState(false);
   const [consumptions, setConsumptions] = useState([]);
@@ -39,8 +41,21 @@ const ViewDevices = props => {
   const getDevices = async () => {
     try {
       const response = await instance(token).get(`/v1/devices`);
+      var count = 0;
+      var tempRooms = [];
+      // console.log(response.data.docs[0]);
+      const res = await response.data.docs.map(async item => {
+        var room = item.room;
+        // console.log('room ' + room);
+        var resp2 = await instance(token).get(`/v1/rooms/${room}`);
+        // console.log(count + '' + resp2.data.name);
+        count++;
+        tempRooms.push({roomId: item.room, roomName: resp2.data.name});
+      });
+      setRooms(tempRooms);
       setDevices(response.data.docs);
       setLoading(false);
+      console.log(tempRooms);
     } catch (err) {
       console.log('get devices in view devices ' + err);
     }
@@ -180,6 +195,26 @@ const ViewDevices = props => {
                           <Text style={styles.deviceCount}>
                             Power Rating: {item.powerRating} kWh
                           </Text>
+                          {/* <>
+                            <Text style={styles.deviceCount}>
+                              Room Name: {item.room}
+                            </Text>
+                          </> */}
+                        </Right>
+                        <Right>
+                          {rooms.map(rooma => {
+                            <View key={rooma.roomId}>
+                              <>
+                                {item.room == rooma.roomId ? (
+                                  <Text>Room Name: {rooma.roomName}</Text>
+                                ) : (
+                                  <>
+                                    <Text>blah</Text>
+                                  </>
+                                )}
+                              </>
+                            </View>;
+                          })}
                         </Right>
                         <Right>
                           {item.status == 'on' ? (
@@ -197,16 +232,21 @@ const ViewDevices = props => {
                                 </Text>
                               </Button>
                             ) : (
-                              <Button
-                                style={{
-                                  backgroundColor: '#38d238',
-                                  padding: 15,
-                                  borderRadius: 50,
-                                  color: 'white',
-                                }}
-                                onPress={() => turnOffDevice(item)}>
-                                <Text>{item.status}</Text>
-                              </Button>
+                              <>
+                                <Switch
+                                  trackColor={{
+                                    false: '#767577',
+                                    true: '#767577',
+                                  }}
+                                  thumbColor={
+                                    item.status === 'on' ? '#38d238' : '#f4f3f4'
+                                  }
+                                  onValueChange={() => {
+                                    turnOffDevice(item);
+                                  }}
+                                  value={item.status === 'on'}
+                                />
+                              </>
                             )
                           ) : btnLoading ? (
                             <Button
@@ -221,16 +261,21 @@ const ViewDevices = props => {
                               </Text>
                             </Button>
                           ) : (
-                            <Button
-                              style={{
-                                backgroundColor: '#ce2222',
-                                padding: 15,
-                                borderRadius: 50,
-                                color: 'white',
-                              }}
-                              onPress={() => turnOnDevice(item)}>
-                              <Text>{item.status}</Text>
-                            </Button>
+                            <>
+                              <Switch
+                                trackColor={{
+                                  false: '#767577',
+                                  true: '#767577',
+                                }}
+                                thumbColor={
+                                  item.status === 'on' ? '#38d238' : '#ce2222'
+                                }
+                                onValueChange={() => {
+                                  turnOnDevice(item);
+                                }}
+                                value={item.status === 'on'}
+                              />
+                            </>
                           )}
                         </Right>
                       </CardItem>
