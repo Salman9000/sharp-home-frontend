@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {PermissionsAndroid} from 'react-native';
+import {Alert, PermissionsAndroid} from 'react-native';
 import WifiManager from 'react-native-wifi-reborn';
 import {
   Platform,
@@ -28,12 +28,15 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import instance from '../helper';
+import Loading from './Loading';
 
 // import SelectDevices from './SelectDevices';
 
 const zeroconf = new Zeroconf();
 
 const NetworkDiscoverer = props => {
+  const token = props.token;
   const [isScanning, setIsScanning] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const [services, setServices] = useState({});
@@ -41,6 +44,8 @@ const NetworkDiscoverer = props => {
   const [deviceRating, setDeviceRating] = useState(
     'props.route.params.deviceRating',
   );
+  const [devices, setDevices] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [roomId, setRoomId] = useState('props.route.params.roomId');
   const [wifiSsid, setWifiSsid] = useState('');
   const requestCameraPermission = async () => {
@@ -72,6 +77,18 @@ const NetworkDiscoverer = props => {
       }
     } catch (err) {
       console.warn(err);
+    }
+  };
+
+  const getDevices = async () => {
+    try {
+      const response = await instance(token).get(`/v1/devices`);
+      setDevices(response.data.docs);
+      setLoading(false);
+      console.log('dfone');
+    } catch (err) {
+      console.log('get devices in view devices ' + err);
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -109,19 +126,22 @@ const NetworkDiscoverer = props => {
   };
 
   const renderRow = ({item, index}) => {
-    const {name, fullName, host} = services[item];
-    // console.log(services[item]);
+    const {name, fullName, host, id} = services[item];
+    let deviceExists = devices.map(value => value.deviceid).includes(id);
     return (
       <TouchableOpacity
         style={styles.list}
-        onPress={() => selectDevice(host, name)}>
-        <Card style={styles.card} pointerEvents="none">
-          <CardItem header>
+        onPress={() => {
+          deviceExists ? Alert.alert('asd') : selectDevice(host, name);
+        }}>
+        <Card style={styles.card} pointerEvents="none" transparent={true}>
+          <CardItem style={deviceExists && styles.cardItem} header>
             <Left>
               <Text style={styles.roomName}>{name}</Text>
             </Left>
             <Right>
               <Text style={styles.deviceCount}> {host}</Text>
+              {deviceExists && <Text>Device already added</Text>}
             </Right>
           </CardItem>
         </Card>
@@ -131,6 +151,8 @@ const NetworkDiscoverer = props => {
   };
 
   const refreshData = () => {
+    setLoading(true);
+    getDevices();
     requestCameraPermission();
     if (isScanning) {
       return;
@@ -170,6 +192,7 @@ const NetworkDiscoverer = props => {
           ? `Your Network name is: ${wifiSsid}`
           : 'Cannot get Network Name'}
       </Text>
+      {loading && <Loading style={'no style'} />}
       {services.length < 1 && (
         <Text style={styles.ssid}>Unable to find devices</Text>
       )}
@@ -193,7 +216,7 @@ const NetworkDiscoverer = props => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#DDDDDD',
+    backgroundColor: 'white',
   },
   closeButton: {
     padding: 20,
@@ -201,11 +224,17 @@ const styles = StyleSheet.create({
   },
   card: {
     marginTop: 20,
+    marginRight: 10,
+    marginLeft: 10,
   },
   cardItem: {
-    width: wp('90%'),
-    height: 120,
-
+    // width: wp('90%'),
+    // height: 120,
+    backgroundColor: '#ccc',
+    borderTopColor: '#CCC',
+    borderTopWidth: 1,
+    borderBottomColor: '#CCC',
+    borderBottomWidth: 1,
     //   alignItems: 'center',
   },
   json: {
@@ -222,8 +251,8 @@ const styles = StyleSheet.create({
     margin: 30,
   },
   list: {
-    color: 'black',
-    backgroundColor: '#DDDDDD',
+    backgroundColor: 'white',
+    color: 'white',
   },
 });
 
