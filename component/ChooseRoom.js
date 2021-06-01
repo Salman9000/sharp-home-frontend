@@ -26,6 +26,7 @@ import {
 } from 'native-base';
 import {BASE_URL} from '@env';
 import instance from '../helper';
+import Loading from './Loading';
 
 const ChooseRoom = props => {
   const {deviceName, deviceRating} = props.route.params;
@@ -63,11 +64,6 @@ const ChooseRoom = props => {
       console.log(error);
     }
   };
-  const LoadingScreen = () => (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color="blue" />
-    </View>
-  );
 
   const addRoomButtonPressed = props => {
     props.navigation.push('addRoom', {
@@ -89,7 +85,7 @@ const ChooseRoom = props => {
       />
       <>
         {loading ? (
-          <LoadingScreen />
+          <Loading />
         ) : rooms.length < 1 ? (
           <View style={styles.scrollv}>
             <Text style={styles.text}>No Rooms</Text>
@@ -185,11 +181,7 @@ const styles = StyleSheet.create({
   desc: {
     fontSize: 24,
   },
-  loading: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+
   icon: {
     fontSize: 40,
   },

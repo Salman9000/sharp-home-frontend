@@ -3,10 +3,10 @@ import React from 'react';
 import {View, ActivityIndicator, StyleSheet} from 'react-native';
 
 const Loading = props => (
-  <View style={styles.loading}>
+  <View style={!props.style && styles.loading}>
     <ActivityIndicator
-      size={props.size ? props.size : 'large'}
-      color={props.color ? props.color : 'blue'}
+      size={!props.size && 'large'}
+      color={!props.color && 'blue'}
     />
   </View>
 );

@@ -65,7 +65,7 @@ const ViewDevices = props => {
           },
         );
         const response2 = await axios.patch(
-          `${BASE_URL}/v1/devices/getDevice/${item.id}`,
+          `${BASE_URL}/v1/devices/${item.id}`,
           {
             status: 'off',
           },
@@ -107,7 +107,7 @@ const ViewDevices = props => {
           },
         );
         const response2 = await axios.patch(
-          `${BASE_URL}/v1/devices/getDevice/${item.id}`,
+          `${BASE_URL}/v1/devices/${item.id}`,
           {
             status: 'on',
           },

@@ -83,7 +83,6 @@ const App = () => {
               headerShown: false,
               cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             }}>
-            {/* <Stack.Screen name="loading" component={LoadingScreen} /> */}
             <Stack.Screen name="home">
               {props => (
                 <HomeScreen
