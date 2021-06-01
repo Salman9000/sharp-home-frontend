@@ -45,6 +45,12 @@ const ViewDevices = props => {
       console.log('get devices in view devices ' + err);
     }
   };
+  const deviceInfo = item => {
+    console.log(item);
+    props.navigation.push('editDevice', {
+      deviceInfo: item,
+    });
+  };
 
   const addDeviceButtonPressed = props => {
     props.navigation.navigate('addDevice');
@@ -164,7 +170,7 @@ const ViewDevices = props => {
             <ScrollView style={styles.container2}>
               {devices.map(item => (
                 <View key={item.id}>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => deviceInfo(item)}>
                     <Card style={styles.card}>
                       <CardItem header>
                         <Left>
