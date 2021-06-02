@@ -6,6 +6,7 @@ import {
   ScrollView,
   ActivityIndicator,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import Header from './Header';
 import Footer from './Footer';
@@ -36,7 +37,7 @@ const ViewDevices = props => {
   const [loading, setLoading] = useState(true);
   const [btnLoading, setBtnLoading] = useState(false);
   const [consumptions, setConsumptions] = useState([]);
-  const [deviceId, setDeviceId] = useState();
+  const [deviceItem, setDeviceItem] = useState();
   let swipeBtns = [
     {
       text: 'Delete',
@@ -48,8 +49,18 @@ const ViewDevices = props => {
     },
   ];
 
+  const createTwoButtonAlert = () =>
+    Alert.alert('Device Delete', `Do you want to delete ${deviceItem.name} `, [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'OK', onPress: () => deleteDevice},
+    ]);
+
   const deleteNote = () => {
-    deleteDevice();
+    createTwoButtonAlert();
   };
 
   const getDevices = async () => {
@@ -70,10 +81,10 @@ const ViewDevices = props => {
 
   const deleteDevice = async props => {
     try {
-      //   alert('Do you want to delete the Device');
+      // alert('Do you want to delete the Device');
       const response = await instance(token).delete(`/v1/devices/${deviceId}`);
       if (response) {
-        setDevices(devices.filter(value => value.id !== deviceId));
+        setDevices(devices.filter(value => value.id !== deviceItem.id));
       }
     } catch (error) {
       console.log(
@@ -201,9 +212,9 @@ const ViewDevices = props => {
                   <Card style={styles.card}>
                     <Swipeout
                       right={swipeBtns}
-                      autoClose="true"
+                      autoClose={true}
                       backgroundColor="transparent"
-                      onOpen={() => setDeviceId(item.id)}>
+                      onOpen={() => setDeviceItem(item)}>
                       <TouchableOpacity onPress={() => deviceInfo(item)}>
                         <CardItem header>
                           <Left>
