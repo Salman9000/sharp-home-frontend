@@ -48,8 +48,9 @@ const VRrooms = props => {
           return `room${i + 1}=${value.id}`;
         })
         .join('&');
+      console.log(roomParams);
       const response = await instance(token).get(
-        `/v1/devices/rooms/?${roomParams}`,
+        `/v1/devices/rooms?${roomParams}`,
       );
       setDeviceArray(response.data);
       setDeviceParams(
