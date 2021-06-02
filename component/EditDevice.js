@@ -22,11 +22,24 @@ import instance from '../helper';
 const EditDevice = props => {
   const token = props.token;
   const [name, setName] = useState(props.route.params.deviceInfo.name);
+  const [status, setStatus] = useState(props.route.params.deviceInfo.status);
   const [rating, setRating] = useState(
     props.route.params.deviceInfo.powerRating,
   );
+  const [room, setRoom] = useState('');
   const [deviceId, setDeviceId] = useState(props.route.params.deviceInfo.id);
 
+  const getRoom = async props => {
+    try {
+      const response = await instance(token).get(
+        `/v1/rooms/${props.route.params.deviceInfo.room}`,
+      );
+      console.log(response.data);
+      setRoom(response.data.name);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const updateDevice = async props => {
     try {
       const response = await instance(token).patch(`/v1/devices/${deviceId}`, {
@@ -49,6 +62,11 @@ const EditDevice = props => {
     setName('');
     props.navigation.push('viewDevices');
   };
+
+  useEffect(() => {
+    getRoom(props);
+  }, []);
+
   return (
     <View style={styles.container1}>
       <Header
@@ -58,6 +76,24 @@ const EditDevice = props => {
       />
       <View style={styles.container2}>
         <View style={styles.otherboxes}>
+          <Card style={styles.card}>
+            <CardItem>
+              <Text>
+                Device ID: {'\n'}
+                {deviceId}{' '}
+              </Text>
+              <Right>
+                {status == 'on' ? (
+                  <Text style={{color: 'green'}}>{status}</Text>
+                ) : (
+                  <Text style={{color: 'red'}}>{status}</Text>
+                )}
+              </Right>
+            </CardItem>
+          </Card>
+          <View style={styles.headingView}>
+            <Text style={styles.heading}>Device Name</Text>
+          </View>
           <View style={styles.inputView}>
             <TextInput
               style={styles.TextInput}
@@ -69,6 +105,9 @@ const EditDevice = props => {
               onChangeText={name => setName(name)}
             />
           </View>
+          <View style={styles.headingView}>
+            <Text style={styles.heading}>Device Rating (kWh)</Text>
+          </View>
           <View style={styles.inputView}>
             <TextInput
               style={styles.TextInput}
@@ -79,6 +118,12 @@ const EditDevice = props => {
               underlineColorAndroid="#D2D6DE"
               onChangeText={rating => setRating(rating)}
             />
+          </View>
+          <View style={styles.headingView}>
+            <Text style={styles.heading}>Room</Text>
+          </View>
+          <View style={styles.headingView}>
+            <Text style={styles.room}>{room}</Text>
           </View>
         </View>
         <View style={styles.otherboxes2}>
@@ -105,6 +150,32 @@ const EditDevice = props => {
   );
 };
 const styles = StyleSheet.create({
+  headingView: {
+    marginLeft: 32,
+  },
+  heading1: {
+    fontSize: 24,
+    marginLeft: 32,
+  },
+  heading: {
+    color: '#606060',
+  },
+  room: {
+    fontSize: 24,
+    marginTop: 6,
+    color: 'black',
+  },
+  cardItem: {
+    width: wp('90%'),
+    height: 120,
+  },
+  card: {
+    marginBottom: 50,
+    width: wp('90%'),
+    height: 70,
+    alignItems: 'center',
+    borderRadius: 10,
+  },
   container1: {
     flex: 1,
     backgroundColor: '#F4F5F8',
@@ -139,6 +210,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   otherboxes2: {
+    marginTop: 30,
     height: hp('20%'),
     width: wp('100%'),
     flexDirection: 'row',
@@ -149,6 +221,19 @@ const styles = StyleSheet.create({
     margin: 20,
     height: 50,
     justifyContent: 'center',
+    backgroundColor: '#3F51B5',
+  },
+  on: {
+    width: 10,
+    height: 10,
+    borderRadius: 10 / 2,
+    backgroundColor: 'green',
+  },
+  off: {
+    width: 10,
+    height: 10,
+    borderRadius: 10 / 2,
+    backgroundColor: 'red',
   },
 });
 export default EditDevice;
