@@ -39,7 +39,7 @@ const Footer = props => {
             });
           }}>
           <Entypo name="bar-graph" style={styles.barIcon} />
-          <Text>Analytics</Text>
+          <Text>Analy</Text>
         </Button>
         <Button
           vertical
@@ -49,6 +49,15 @@ const Footer = props => {
           }}>
           <Icon active name="navigate" />
           <Text>Devices</Text>
+        </Button>
+        <Button
+          vertical
+          active
+          onPress={() => {
+            props.nav.navigation.navigate('viewRooms');
+          }}>
+          <Icon active name="navigate" />
+          <Text>Rooms</Text>
         </Button>
         <Button
           vertical

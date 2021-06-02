@@ -35,6 +35,8 @@ import NetworkDiscoverer from './component/NetworkDiscoverer';
 import ChooseDate from './component/ChooseDate';
 import CustomRoomChart from './component/CustomRoomChart';
 import EditDevice from './component/EditDevice';
+import ViewRooms from './component/ViewRooms';
+import EditRoom from './component/EditRoom';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -236,6 +238,24 @@ const App = () => {
                   {...props}
                   token={token}
                   options={{title: 'Edit Device'}}
+                />
+              )}
+            </Stack.Screen>
+            <Stack.Screen name="viewRooms">
+              {props => (
+                <ViewRooms
+                  {...props}
+                  token={token}
+                  options={{title: 'View Rooms'}}
+                />
+              )}
+            </Stack.Screen>
+            <Stack.Screen name="editRoom">
+              {props => (
+                <EditRoom
+                  {...props}
+                  token={token}
+                  options={{title: 'Edit Room'}}
                 />
               )}
             </Stack.Screen>

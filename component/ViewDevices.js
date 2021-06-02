@@ -27,6 +27,7 @@ import {
 import {BASE_URL} from '@env';
 import instance from '../helper';
 import Loading from './Loading';
+import Swipeout from 'react-native-swipeout';
 
 const ViewDevices = props => {
   //   const {deviceName, deviceRating} = props.route.params;
@@ -35,6 +36,21 @@ const ViewDevices = props => {
   const [loading, setLoading] = useState(true);
   const [btnLoading, setBtnLoading] = useState(false);
   const [consumptions, setConsumptions] = useState([]);
+  const [deviceId, setDeviceId] = useState();
+  let swipeBtns = [
+    {
+      text: 'Delete',
+      backgroundColor: 'red',
+      underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+      onPress: () => {
+        deleteNote();
+      },
+    },
+  ];
+
+  const deleteNote = () => {
+    deleteDevice();
+  };
 
   const getDevices = async () => {
     try {
@@ -50,6 +66,21 @@ const ViewDevices = props => {
     props.navigation.push('editDevice', {
       deviceInfo: item,
     });
+  };
+
+  const deleteDevice = async props => {
+    try {
+      //   alert('Do you want to delete the Device');
+      const response = await instance(token).delete(`/v1/devices/${deviceId}`);
+      if (response) {
+        setDevices(devices.filter(value => value.id !== deviceId));
+      }
+    } catch (error) {
+      console.log(
+        'There has been a problem with your fetch operation in enterhouse login: ' +
+          error.message,
+      );
+    }
   };
 
   const addDeviceButtonPressed = props => {
@@ -170,72 +201,79 @@ const ViewDevices = props => {
             <ScrollView style={styles.container2}>
               {devices.map(item => (
                 <View key={item.id}>
-                  <TouchableOpacity onPress={() => deviceInfo(item)}>
-                    <Card style={styles.card}>
-                      <CardItem header>
-                        <Left>
-                          <Text style={styles.roomName}>{item.name}</Text>
-                        </Left>
-                        <Right>
-                          <Text style={styles.deviceCount}>
-                            Power Rating: {item.powerRating} kWh
-                          </Text>
-                        </Right>
-                        <Right>
-                          {item.status == 'on' ? (
-                            btnLoading ? (
+                  <Card style={styles.card}>
+                    <Swipeout
+                      right={swipeBtns}
+                      autoClose="true"
+                      backgroundColor="transparent"
+                      onOpen={() => setDeviceId(item.id)}>
+                      <TouchableOpacity onPress={() => deviceInfo(item)}>
+                        <CardItem header>
+                          <Left>
+                            <Text style={styles.roomName}>{item.name}</Text>
+                          </Left>
+                          <Right>
+                            <Text style={styles.deviceCount}>
+                              Power Rating: {item.powerRating} kWh
+                            </Text>
+                          </Right>
+                          <Right>
+                            {item.status == 'on' ? (
+                              btnLoading ? (
+                                <Button
+                                  style={{
+                                    backgroundColor: '#78ef78',
+                                    padding: 15,
+                                    borderRadius: 50,
+                                    color: 'white',
+                                  }}>
+                                  <Text>
+                                    {' '}
+                                    <Loading color="white" size="small" />
+                                  </Text>
+                                </Button>
+                              ) : (
+                                <Button
+                                  style={{
+                                    backgroundColor: '#38d238',
+                                    padding: 15,
+                                    borderRadius: 50,
+                                    color: 'white',
+                                  }}
+                                  onPress={() => turnOffDevice(item)}>
+                                  <Text>{item.status}</Text>
+                                </Button>
+                              )
+                            ) : btnLoading ? (
                               <Button
                                 style={{
-                                  backgroundColor: '#78ef78',
+                                  backgroundColor: '#e05454',
                                   padding: 15,
                                   borderRadius: 50,
                                   color: 'white',
                                 }}>
                                 <Text>
-                                  {' '}
                                   <Loading color="white" size="small" />
                                 </Text>
                               </Button>
                             ) : (
                               <Button
                                 style={{
-                                  backgroundColor: '#38d238',
+                                  backgroundColor: '#ce2222',
                                   padding: 15,
                                   borderRadius: 50,
                                   color: 'white',
                                 }}
-                                onPress={() => turnOffDevice(item)}>
+                                onPress={() => turnOnDevice(item)}>
                                 <Text>{item.status}</Text>
                               </Button>
-                            )
-                          ) : btnLoading ? (
-                            <Button
-                              style={{
-                                backgroundColor: '#e05454',
-                                padding: 15,
-                                borderRadius: 50,
-                                color: 'white',
-                              }}>
-                              <Text>
-                                <Loading color="white" size="small" />
-                              </Text>
-                            </Button>
-                          ) : (
-                            <Button
-                              style={{
-                                backgroundColor: '#ce2222',
-                                padding: 15,
-                                borderRadius: 50,
-                                color: 'white',
-                              }}
-                              onPress={() => turnOnDevice(item)}>
-                              <Text>{item.status}</Text>
-                            </Button>
-                          )}
-                        </Right>
-                      </CardItem>
-                    </Card>
-                  </TouchableOpacity>
+                            )}
+                          </Right>
+                        </CardItem>
+                      </TouchableOpacity>
+                    </Swipeout>
+                  </Card>
+                  {/* </TouchableOpacity> */}
                 </View>
               ))}
 
