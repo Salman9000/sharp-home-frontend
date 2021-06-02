@@ -56,53 +56,15 @@ const ViewDevices = props => {
     props.navigation.navigate('addDevice');
   };
 
-  const turnOffDevice = async item => {
-    try {
-      if (item.ip != undefined) {
-        setBtnLoading(true);
-        //192.168.31.125:8081/zeroconf/switch
-        const response = await axios.post(
-          `http://${item.ip}:8081/zeroconf/switch`,
-          {
-            deviceid: '',
-            data: {
-              switch: 'off',
-            },
-          },
-        );
-        const response2 = await axios.patch(
-          `${BASE_URL}/v1/devices/${item.id}`,
-          {
-            status: 'off',
-          },
-        );
-        setBtnLoading(false);
-      } else {
-        console.log('ip doesnt exist');
-      }
-      setDevices(
-        devices.map(value => {
-          {
-            if (value.id == item.id) {
-              value.status = 'off';
-            }
-          }
-          return value;
-        }),
-      );
-    } catch (error) {
-      console.log(
-        'There has been a problem with your fetch operation in enterhouse login: ' +
-          error.message,
-      );
-    }
-  };
-
   const turnOnDevice = async item => {
     try {
+      setBtnLoading(true);
+      // console.log(BASE_URL, 'turn on device');
+      // console.log(item.id, 'turn on device');
+      const response2 = await axios.patch(`${BASE_URL}/v1/devices/${item.id}`, {
+        status: 'on',
+      });
       if (item.ip != undefined) {
-        setBtnLoading(true);
-        //192.168.31.125:8081/zeroconf/switch
         const response = await axios.post(
           `http://${item.ip}:8081/zeroconf/switch`,
           {
@@ -112,16 +74,8 @@ const ViewDevices = props => {
             },
           },
         );
-        const response2 = await axios.patch(
-          `${BASE_URL}/v1/devices/${item.id}`,
-          {
-            status: 'on',
-          },
-        );
-        setBtnLoading(false);
-      } else {
-        console.log('ip doesnt exist');
       }
+      console.log(response2.data);
       setDevices(
         devices.map(value => {
           {
@@ -132,11 +86,47 @@ const ViewDevices = props => {
           return value;
         }),
       );
+      setBtnLoading(false);
     } catch (error) {
-      console.log(
-        'There has been a problem with your fetch operation in enterhouse login: ' +
-          error.message,
+      setBtnLoading(false);
+      console.log(error);
+    }
+  };
+
+  const turnOffDevice = async item => {
+    try {
+      setBtnLoading(true);
+      // console.log(BASE_URL, 'turn off device');
+      // console.log(item.id, 'turn off device');
+      const response2 = await axios.patch(`${BASE_URL}/v1/devices/${item.id}`, {
+        status: 'off',
+      });
+      if (item.ip != undefined) {
+        const response = await axios.post(
+          `http://${item.ip}:8081/zeroconf/switch`,
+          {
+            deviceid: '',
+            data: {
+              switch: 'off',
+            },
+          },
+        );
+      }
+      console.log(response2.data);
+      setDevices(
+        devices.map(value => {
+          {
+            if (value.id == item.id) {
+              value.status = 'off';
+            }
+          }
+          return value;
+        }),
       );
+      setBtnLoading(false);
+    } catch (error) {
+      setBtnLoading(false);
+      console.log(error);
     }
   };
 
