@@ -92,9 +92,6 @@ const ViewDevices = props => {
       setBtnLoading(true);
       // console.log(BASE_URL, 'turn on device');
       // console.log(item.id, 'turn on device');
-      const response2 = await axios.patch(`${BASE_URL}/v1/devices/${item.id}`, {
-        status: 'on',
-      });
       if (item.ip != undefined) {
         const response = await axios.post(
           `http://${item.ip}:8081/zeroconf/switch`,
@@ -106,7 +103,14 @@ const ViewDevices = props => {
           },
         );
       }
+      const response2 = await axios.patch(
+        `${BASE_URL}/v1/devices/info/${item.id}`,
+        {
+          status: 'on',
+        },
+      );
       console.log(response2.data);
+
       setDevices(
         devices.map(value => {
           {
@@ -129,9 +133,6 @@ const ViewDevices = props => {
       setBtnLoading(true);
       // console.log(BASE_URL, 'turn off device');
       // console.log(item.id, 'turn off device');
-      const response2 = await axios.patch(`${BASE_URL}/v1/devices/${item.id}`, {
-        status: 'off',
-      });
       if (item.ip != undefined) {
         const response = await axios.post(
           `http://${item.ip}:8081/zeroconf/switch`,
@@ -143,6 +144,12 @@ const ViewDevices = props => {
           },
         );
       }
+      const response2 = await axios.patch(
+        `${BASE_URL}/v1/devices/info/${item.id}`,
+        {
+          status: 'off',
+        },
+      );
       console.log(response2.data);
       setDevices(
         devices.map(value => {

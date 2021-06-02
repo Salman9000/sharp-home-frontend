@@ -29,10 +29,13 @@ const EditDevice = props => {
 
   const updateDevice = async props => {
     try {
-      const response = await instance(token).patch(`/v1/devices/${deviceId}`, {
-        name: name,
-        powerRating: rating,
-      });
+      const response = await instance(token).patch(
+        `/v1/devices/info/${deviceId}`,
+        {
+          name: name,
+          powerRating: rating,
+        },
+      );
       if (response) {
         alert('Device Updated');
         props.navigation.push('viewDevices');
