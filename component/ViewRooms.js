@@ -6,6 +6,7 @@ import {
   ScrollView,
   ActivityIndicator,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import Header from './Header';
 import Footer from './Footer';
@@ -34,17 +35,28 @@ const ViewRooms = props => {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [roomId, setRoomId] = useState();
+  const [roomItem, setRoomItem] = useState();
 
   let swipeBtns = [
     {
       text: 'Delete',
       backgroundColor: 'red',
       underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-      onPress: e => {
-        deleteNote(e);
+      onPress: () => {
+        createTwoButtonAlert();
       },
     },
   ];
+
+  const createTwoButtonAlert = () =>
+    Alert.alert('Device Room', `Do you want to delete ${roomItem.name} `, [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'OK', onPress: () => deleteRoom()},
+    ]);
 
   const deleteNote = () => {
     deleteRoom();
@@ -55,7 +67,7 @@ const ViewRooms = props => {
       //   alert('Do you want to delete the Device');
       const response = await instance(token).delete(`/v1/devices/${roomId}`);
       if (response) {
-        setRooms(rooms.filter(value => value.id !== roomId));
+        setRooms(rooms.filter(value => value.id !== roomItem.id));
       }
     } catch (error) {
       console.log(
@@ -122,9 +134,9 @@ const ViewRooms = props => {
                   <Card style={styles.card}>
                     <Swipeout
                       right={swipeBtns}
-                      autoClose="true"
+                      autoClose={true}
                       backgroundColor="transparent"
-                      onOpen={() => setRoomId(item.id)}>
+                      onOpen={() => setRoomItem(item)}>
                       <TouchableOpacity onPress={() => roomInfo(item)}>
                         <CardItem header>
                           <Left>
