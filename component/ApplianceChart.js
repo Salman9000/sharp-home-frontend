@@ -3,7 +3,7 @@ import {t} from 'react-native-tailwindcss';
 import {Searchbar, Title, Button} from 'react-native-paper';
 import Header from './Header';
 import Footer from './Footer';
-import {LineChart} from 'react-native-chart-kit';
+import {LineChart, BarChart} from 'react-native-chart-kit';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
 import {
   Dimensions,
@@ -44,6 +44,7 @@ const ApplianceChart = props => {
       id: 0,
       selected: false,
       data: null,
+      bardata: null,
       width: '100%',
       fillShadowGradient: '#79D2DE',
     },
@@ -53,6 +54,7 @@ const ApplianceChart = props => {
       id: 1,
       selected: false,
       data: null,
+      bardata: null,
       width: '100%',
       fillShadowGradient: '#ffffff',
     },
@@ -62,6 +64,7 @@ const ApplianceChart = props => {
       id: 2,
       selected: false,
       data: null,
+      bardata: null,
       width: '200%',
       fillShadowGradient: '#4048CC',
     },
@@ -71,6 +74,7 @@ const ApplianceChart = props => {
       id: 3,
       selected: true,
       data: null,
+      bardata: null,
       width: '200%',
       fillShadowGradient: '#4048CC',
     },
@@ -80,6 +84,7 @@ const ApplianceChart = props => {
       id: 4,
       selected: false,
       data: null,
+      bardata: null,
       width: '200%',
       fillShadowGradient: '#4048CC',
     },
@@ -94,6 +99,7 @@ const ApplianceChart = props => {
 
     (opacity = 1) => `rgba(0,102,0, 1)`,
   ];
+
   const [errorMessage, setErrorMessage] = useState(null);
   const wait = timeout => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -136,7 +142,14 @@ const ApplianceChart = props => {
               startDate: value.data.startDate,
               endDate: null,
             };
-            updateGraph(3, gData);
+            bData = {
+              labels: value.data.resultConsumption.deviceName,
+              datasets: [
+                {data: value.data.resultConsumption.overallConsumptionByDevice},
+              ],
+            };
+
+            updateGraph(3, gData, bData);
             setLoading(false);
           }
           break;
@@ -159,7 +172,13 @@ const ApplianceChart = props => {
               startDate: value.data.startDate,
               endDate: value.data.endDate,
             };
-            updateGraph(1, gData);
+            bData = {
+              labels: value.data.resultConsumption.deviceName,
+              datasets: [
+                {data: value.data.resultConsumption.overallConsumptionByDevice},
+              ],
+            };
+            updateGraph(1, gData, bData);
             setLoading(false);
           }
           break;
@@ -182,7 +201,13 @@ const ApplianceChart = props => {
               startDate: value.data.startDate,
               endDate: value.data.endDate,
             };
-            updateGraph(0, gData);
+            bData = {
+              labels: value.data.resultConsumption.deviceName,
+              datasets: [
+                {data: value.data.resultConsumption.overallConsumptionByDevice},
+              ],
+            };
+            updateGraph(0, gData, bData);
 
             setLoading(false);
           }
@@ -209,7 +234,13 @@ const ApplianceChart = props => {
               startDate: value.data.startDate,
               endDate: null,
             };
-            updateGraph(2, gData);
+            bData = {
+              labels: value.data.resultConsumption.deviceName,
+              datasets: [
+                {data: value.data.resultConsumption.overallConsumptionByDevice},
+              ],
+            };
+            updateGraph(2, gData, bData);
 
             setLoading(false);
           }
@@ -233,7 +264,13 @@ const ApplianceChart = props => {
               startDate: value.data.startDate,
               endDate: value.data.endDate,
             };
-            updateGraph(4, gData);
+            bData = {
+              labels: value.data.resultConsumption.deviceName,
+              datasets: [
+                {data: value.data.resultConsumption.overallConsumptionByDevice},
+              ],
+            };
+            updateGraph(4, gData, bData);
             setLoading(false);
           }
       }
@@ -266,11 +303,13 @@ const ApplianceChart = props => {
     getGraphs(name);
   };
 
-  const updateGraph = (id, graphDataButton) => {
+  const updateGraph = (id, graphDataButton, barGraphData) => {
     setButtonArray(
       buttonArray.map(value => {
         {
-          value.id == id && (value.data = graphDataButton);
+          value.id == id &&
+            (value.data = graphDataButton) &&
+            (value.bardata = barGraphData);
         }
         return value;
       }),
@@ -556,6 +595,60 @@ const ApplianceChart = props => {
                   );
                 }),
               )}
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#4048CC',
+                paddingTop: 30,
+                paddingBottom: 30,
+                marginTop: 10,
+                borderTopLeftRadius: 30,
+                borderTopRightRadius: 30,
+                borderWidth: 1,
+                // margin: '100',
+              }}>
+              {buttonArray
+                .filter(value => value.selected == true)
+                .map(
+                  (element, index) => {
+                    if (element.bardata)
+                      return (
+                        <BarChart
+                          data={element.bardata}
+                          width={wp('80%')}
+                          height={220}
+                          yAxisLabel=""
+                          withInnerLines={false}
+                          withOuterLines={false}
+                          withVerticalLines={false}
+                          withHorizontalLines={false}
+                          withHorizontalLabels={true}
+                          backgroundColor="red"
+                          yAxisSuffix="/KW"
+                          chartConfig={{
+                            backgroundGradientFrom: '#4048CC',
+                            backgroundGradientTo: '#4048CC',
+                            fillShadowGradientOpacity: 1,
+                            fillShadowGradient: '#6493D1',
+                            strokeWidth: 3,
+                            // fillShadowGradient: 'red',
+                            useShadowColorFromDataset: false,
+                            color: (opacity = 1) =>
+                              `rgba(255, 255, 255, ${opacity})`,
+                            strokeWidth: 2, // optional, default 3
+                            barPercentage: 2,
+                            propsForBackgroundLines: {
+                              stroke: '#ffffff',
+                            },
+                          }}
+                          // verticalLabelRotation={30}
+                        />
+                      );
+                  },
+                  // console.log(element))}
+                )}
+            </View>
           </View>
         )}
       </View>
