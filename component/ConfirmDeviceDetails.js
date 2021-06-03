@@ -13,7 +13,14 @@ import {getFocusedRouteNameFromRoute} from '@react-navigation/core';
 
 const ConfirmDeviceDetails = props => {
   const token = props.token;
-  const {deviceName, deviceRating, roomId, host, name} = props.route.params;
+  const {
+    deviceName,
+    deviceRating,
+    roomId,
+    host,
+    name,
+    range,
+  } = props.route.params;
   const [roomName, setRoomName] = useState('');
 
   useEffect(() => {
@@ -40,6 +47,7 @@ const ConfirmDeviceDetails = props => {
         powerRating: deviceRating,
         room: roomId,
         host: host,
+        range: range,
       });
       alert('room added');
       console.log(response.data);

@@ -20,7 +20,7 @@ import {BASE_URL} from '@env';
 import instance from '../helper';
 import DatePicker from 'react-native-date-picker';
 var moment = require('moment');
-const EditDevice = props => {
+const EditDevice2 = props => {
   const token = props.token;
   const [name, setName] = useState(props.route.params.deviceInfo.name);
   const [status, setStatus] = useState(props.route.params.deviceInfo.status);
@@ -28,7 +28,7 @@ const EditDevice = props => {
     props.route.params.deviceInfo.powerRating,
   );
   const [room, setRoom] = useState('');
-  const [deviceId, setDeviceId] = useState(props.route.params.deviceInfo._id);
+  const [deviceId, setDeviceId] = useState(props.route.params.deviceInfo.id);
   const [date, setDate] = useState(props.route.params.deviceInfo.range);
 
   const getRoom = async props => {
@@ -49,7 +49,6 @@ const EditDevice = props => {
         {
           name: name,
           powerRating: rating,
-          range: date,
         },
       );
       if (response) {
@@ -70,28 +69,9 @@ const EditDevice = props => {
   };
 
   useEffect(() => {
-    console.log(props.route.params.deviceInfo, 'viewDevices');
+    console.log(props.route.params.deviceInfo.range, 'hello');
     getRoom(props);
   }, []);
-
-  const changeStartTime = (text, index) => {
-    //  olddate = date;
-    console.log(date);
-    let olddate = [];
-    olddate = date;
-    olddate[index].startTime = text;
-    console.log(olddate);
-    setDate(olddate);
-  };
-  const changeEndTime = (text, index) => {
-    // olddate = date;
-    //console.log(olddate[index].endTime);
-    let olddate = [];
-    olddate = date;
-    olddate[index].endTime = text;
-    console.log(text);
-    setDate(olddate);
-  };
 
   return (
     <View style={styles.container1}>
@@ -154,14 +134,10 @@ const EditDevice = props => {
           <View>
             {date.map((item, index) => {
               return (
-                <View
-                  style={{
-                    paddingtop: 50,
-                    //backgroundColor: 'red',
-                  }}>
+                <View>
                   <View style={styles.inputView3}>
                     <View>
-                      <Text style={styles.heading2}>Start Time</Text>
+                      <Text style={styles.heading2}>Start44 Time</Text>
                     </View>
                     <TextInput
                       style={styles.TextInput}
@@ -170,31 +146,34 @@ const EditDevice = props => {
                       selectionColor="white"
                       placeholderTextColor="#AAA"
                       underlineColorAndroid="#D2D6DE"
-                      onChangeText={text => changeStartTime(text, index)}
+                      onChangeText={m => console.log(m)}
                     />
                   </View>
-                  <View
-                    style={{
-                      paddingBottom: 50,
-                      //backgroundColor: 'red',
-                      height: 100,
-                    }}>
-                    <Text style={styles.heading3}>End Time</Text>
-                    <TextInput
-                      style={styles.TextInput}
-                      value={item.endTime.toString()}
-                      placeholder="Rating in Watts"
-                      selectionColor="white"
-                      placeholderTextColor="#AAA"
-                      underlineColorAndroid="#D2D6DE"
-                      onChangeText={i => changeEndTime(i, index)}
-                    />
+                  <View style={{marginTop: 50}}>
+                    {date
+                      .filter(value => value.startTime != item.startTime)
+                      .map(value2 => {
+                        <View style={styles.inputView3}>
+                          <View>
+                            <Text style={styles.heading2}>End Time</Text>
+                          </View>
+                          <TextInput
+                            style={styles.TextInput}
+                            value={item.startTime.toString()}
+                            placeholder="Rating in Watts"
+                            selectionColor="white"
+                            placeholderTextColor="#AAA"
+                            underlineColorAndroid="#D2D6DE"
+                            onChangeText={m => console.log(m)}
+                          />
+                        </View>;
+                      })}
                   </View>
                 </View>
               );
             })}
           </View>
-          <View style={styles.buttonOuterView}>
+          {/* <View style={styles.buttonOuterView}>
             <View style={styles.row1}>
               <Button
                 style={styles.button2}
@@ -226,7 +205,7 @@ const EditDevice = props => {
                 Update
               </Button>
             </View>
-          </View>
+          </View> */}
         </View>
       </ScrollView>
       <Footer nav={props} />
@@ -249,12 +228,6 @@ const styles = StyleSheet.create({
     marginLeft: 32,
     //marginTop: 50,
   },
-  heading3: {
-    color: '#606060',
-    marginLeft: 32,
-    marginTop: 10,
-    //marginTop: 50,
-  },
   room: {
     fontSize: 24,
     marginTop: 6,
@@ -269,12 +242,10 @@ const styles = StyleSheet.create({
     width: wp('90%'),
     height: 70,
     alignItems: 'center',
-    marginLeft: 20,
     borderRadius: 10,
   },
   container1: {
     flex: 1,
-    justifyContent: 'center',
   },
   container2: {
     // flex: 1,
@@ -309,7 +280,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: wp('90%'),
     // flex: 1,
-    marginTop: 10,
+    marginTop: 20,
     fontSize: 18,
     alignItems: 'flex-start',
     paddingLeft: 20,
@@ -317,7 +288,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F5F8',
   },
   otherboxes: {
-    // height: hp('50%'),
+    height: hp('50%'),
     width: wp('90%'),
     marginTop: 50,
     flexDirection: 'column',
@@ -327,7 +298,6 @@ const styles = StyleSheet.create({
   buttonOuterView: {
     width: wp('90%'),
     flexDirection: 'column',
-    marginLeft: 15,
     alignItems: 'center',
   },
   row1: {},
@@ -361,4 +331,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#3F51B5',
   },
 });
-export default EditDevice;
+export default EditDevice2;

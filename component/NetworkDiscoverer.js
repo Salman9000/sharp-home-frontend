@@ -40,13 +40,14 @@ const NetworkDiscoverer = props => {
   const [isScanning, setIsScanning] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const [services, setServices] = useState({});
-  const [deviceName, setDeviceName] = useState('props.route.params.deviceName');
+  const [deviceName, setDeviceName] = useState(props.route.params.deviceName);
+  const [range, setRange] = useState(props.route.params.range);
   const [deviceRating, setDeviceRating] = useState(
-    'props.route.params.deviceRating',
+    props.route.params.deviceRating,
   );
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [roomId, setRoomId] = useState('props.route.params.roomId');
+  const [roomId, setRoomId] = useState(props.route.params.roomId);
   const [wifiSsid, setWifiSsid] = useState('');
   const requestCameraPermission = async () => {
     try {
@@ -122,6 +123,7 @@ const NetworkDiscoverer = props => {
       roomId: roomId,
       host: host,
       name: name,
+      range: range,
     });
   };
 
@@ -132,7 +134,7 @@ const NetworkDiscoverer = props => {
       <TouchableOpacity
         style={styles.list}
         onPress={() => {
-          deviceExists ? Alert.alert('asd') : selectDevice(host, name);
+          deviceExists ? selectDevice(host, name) : selectDevice(host, name);
         }}>
         <Card style={styles.card} pointerEvents="none" transparent={true}>
           <CardItem style={deviceExists && styles.cardItem} header>
