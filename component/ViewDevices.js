@@ -118,15 +118,18 @@ const ViewDevices = props => {
           },
         );
       }
-      const response2 = await axios.patch(`${BASE_URL}/v1/devices/${item.id}`, {
-        status: 'on',
-      });
+      const response2 = await axios.patch(
+        `${BASE_URL}/v1/devices/info/${item._id}`,
+        {
+          status: 'on',
+        },
+      );
       console.log(response2.data);
 
       setDevices(
         devices.map(value => {
           {
-            if (value.id == item.id) {
+            if (value._id == item._id) {
               value.status = 'on';
             } else {
               value.status = value.status;
@@ -158,14 +161,17 @@ const ViewDevices = props => {
           },
         );
       }
-      const response2 = await axios.patch(`${BASE_URL}/v1/devices/${item.id}`, {
-        status: 'off',
-      });
-      console.log(response2.data);
+      const response2 = await axios.patch(
+        `${BASE_URL}/v1/devices/info/${item._id}`,
+        {
+          status: 'off',
+        },
+      );
+      // console.log(response2.data);
       setDevices(
         devices.map(value => {
           {
-            if (value.id == item.id) {
+            if (value._id == item._id) {
               value.status = 'off';
             } else {
               value.status = value.status;
