@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Alert,
+  Switch,
 } from 'react-native';
 import Header from './Header';
 import Footer from './Footer';
@@ -114,12 +115,9 @@ const ViewDevices = props => {
           },
         );
       }
-      const response2 = await axios.patch(
-        `${BASE_URL}/v1/devices/info/${item.id}`,
-        {
-          status: 'on',
-        },
-      );
+      const response2 = await axios.patch(`${BASE_URL}/v1/devices/${item.id}`, {
+        status: 'on',
+      });
       console.log(response2.data);
 
       setDevices(
@@ -127,6 +125,8 @@ const ViewDevices = props => {
           {
             if (value.id == item.id) {
               value.status = 'on';
+            } else {
+              value.status = value.status;
             }
           }
           return value;
@@ -155,18 +155,17 @@ const ViewDevices = props => {
           },
         );
       }
-      const response2 = await axios.patch(
-        `${BASE_URL}/v1/devices/info/${item.id}`,
-        {
-          status: 'off',
-        },
-      );
+      const response2 = await axios.patch(`${BASE_URL}/v1/devices/${item.id}`, {
+        status: 'off',
+      });
       console.log(response2.data);
       setDevices(
         devices.map(value => {
           {
             if (value.id == item.id) {
               value.status = 'off';
+            } else {
+              value.status = value.status;
             }
           }
           return value;
@@ -209,74 +208,97 @@ const ViewDevices = props => {
             <ScrollView style={styles.container2}>
               {devices.map(item => (
                 <View key={item.id}>
-                  <Card style={styles.card}>
+                  <Card style={styles.card} transparent={true}>
                     <Swipeout
                       right={swipeBtns}
                       autoClose={true}
                       backgroundColor="transparent"
                       onOpen={() => setDeviceItem(item)}>
-                      <TouchableOpacity onPress={() => deviceInfo(item)}>
-                        <CardItem header>
+                      <TouchableOpacity
+                        style={{
+                          borderRadius: 20,
+                        }}
+                        onPress={() => deviceInfo(item)}>
+                        <CardItem
+                          header
+                          style={{
+                            backgroundColor: 'transparent',
+                            marginLeft: 0,
+                            marginTop: 0,
+                            marginRight: 0,
+                            marginBottom: 0,
+                          }}>
                           <Left>
-                            <Text style={styles.roomName}>{item.name}</Text>
+                            <Text style={styles.deviceName}>{item.name}</Text>
                           </Left>
-                          <Right>
+                          {/* <Right>
                             <Text style={styles.deviceCount}>
                               Power Rating: {item.powerRating} kWh
                             </Text>
-                          </Right>
+                          </Right> */}
                           <Right>
-                            {item.status == 'on' ? (
+                            {item.status === 'on' ? (
                               btnLoading ? (
-                                <Button
-                                  style={{
-                                    backgroundColor: '#78ef78',
-                                    padding: 15,
-                                    borderRadius: 50,
-                                    color: 'white',
-                                  }}>
-                                  <Text>
-                                    {' '}
-                                    <Loading color="white" size="small" />
-                                  </Text>
-                                </Button>
-                              ) : (
-                                <Button
-                                  style={{
-                                    backgroundColor: '#38d238',
-                                    padding: 15,
-                                    borderRadius: 50,
-                                    color: 'white',
+                                <Switch
+                                  trackColor={{
+                                    false: '#B2B7C6',
+                                    true: '#B2B7C6',
                                   }}
-                                  onPress={() => turnOffDevice(item)}>
-                                  <Text>{item.status}</Text>
-                                </Button>
+                                  onValueChange={{}}
+                                  disabled={true}
+                                  value={item.status === 'on'}
+                                />
+                              ) : (
+                                <>
+                                  <Switch
+                                    trackColor={{
+                                      false: '#B2B7C6',
+                                      true: '#B2B7C6',
+                                    }}
+                                    thumbColor={
+                                      item.status === 'on'
+                                        ? '#38d238'
+                                        : '#EA362A'
+                                    }
+                                    onValueChange={() => turnOffDevice(item)}
+                                    value={item.status === 'on'}
+                                  />
+                                </>
                               )
                             ) : btnLoading ? (
-                              <Button
-                                style={{
-                                  backgroundColor: '#e05454',
-                                  padding: 15,
-                                  borderRadius: 50,
-                                  color: 'white',
-                                }}>
-                                <Text>
-                                  <Loading color="white" size="small" />
-                                </Text>
-                              </Button>
-                            ) : (
-                              <Button
-                                style={{
-                                  backgroundColor: '#ce2222',
-                                  padding: 15,
-                                  borderRadius: 50,
-                                  color: 'white',
+                              <Switch
+                                trackColor={{
+                                  false: '#B2B7C6',
+                                  true: '#B2B7C6',
                                 }}
-                                onPress={() => turnOnDevice(item)}>
-                                <Text>{item.status}</Text>
-                              </Button>
+                                onValueChange={{}}
+                                value={item.status === 'on'}
+                              />
+                            ) : (
+                              <Switch
+                                trackColor={{
+                                  false: '#B2B7C6',
+                                  true: '#B2B7C6',
+                                }}
+                                thumbColor={
+                                  item.status === 'on' ? '#38d238' : '#EA362A'
+                                }
+                                onValueChange={() => turnOnDevice(item)}
+                                value={item.status === 'on'}
+                              />
                             )}
                           </Right>
+                        </CardItem>
+                        <CardItem
+                          style={{
+                            marginLeft: 10,
+                            marginTop: 0,
+                            marginRight: 0,
+                            marginBottom: 0,
+                          }}>
+                          <Text style={styles.roomName}>
+                            Room Name: {item.room}
+                          </Text>
                         </CardItem>
                       </TouchableOpacity>
                     </Swipeout>
@@ -284,76 +306,6 @@ const ViewDevices = props => {
                   {/* </TouchableOpacity> */}
                 </View>
               ))}
-
-              {/* <View>
-                {devices.map(item => (
-                  {
-                    item.status == 'on' ? (
-                      <TouchableOpacity
-                        key={item.id}
-                        onPress={() => {
-                          cardPressed(item.id);
-                        }}>
-                        <Card style={styles.card} pointerEvents="none">
-                          <CardItem header>
-                            <Left>
-                              <Text style={styles.roomName}>{item.name}</Text>
-                            </Left>
-                            <Right>
-                              <Text style={styles.deviceCount}>
-                                Power Rating: {item.powerRating} kWh
-                              </Text>
-                            </Right>
-                            <Right>
-                              <Text
-                                style={{
-                                  backgroundColor: '#38d238',
-                                  padding: 15,
-                                  borderRadius: 50,
-                                  color: 'white',
-                                }}
-                                onPress={() => turnOffDevice(item)}>
-                                {item.status}
-                              </Text>
-                            </Right>
-                          </CardItem>
-                        </Card>
-                      </TouchableOpacity>
-                    ) : (
-                      <TouchableOpacity
-                        key={item.id}
-                        onPress={() => {
-                          cardPressed(item.id);
-                        }}>
-                        <Card style={styles.card} pointerEvents="none">
-                          <CardItem header>
-                            <Left>
-                              <Text style={styles.roomName}>{item.name}</Text>
-                            </Left>
-                            <Right>
-                              <Text style={styles.deviceCount}>
-                                Power Rating: {item.powerRating} kWh
-                              </Text>
-                            </Right>
-                            <Right>
-                              <Text
-                                style={{
-                                  backgroundColor: '#ce2222',
-                                  padding: 15,
-                                  borderRadius: 50,
-                                  color: 'white',
-                                }}
-                                onPress={() => turnOnDevice(item)}>
-                                {item.status}
-                              </Text>
-                            </Right>
-                          </CardItem>
-                        </Card>
-                      </TouchableOpacity>
-                    );
-                  }
-                ))}
-              </View> */}
               <Button
                 style={styles.button}
                 onPress={() => addDeviceButtonPressed(props)}>
@@ -371,6 +323,7 @@ const ViewDevices = props => {
 const styles = StyleSheet.create({
   container1: {
     flex: 1,
+    backgroundColor: '#F4F5F8',
   },
   scrollv: {
     flex: 1,
@@ -378,18 +331,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container2: {
+    backgroundColor: 'transparent',
     flex: 1,
-    width: wp('95%'),
     margin: 10,
   },
-  cardItem: {
-    width: wp('90%'),
-    height: 120,
-
-    //   alignItems: 'center',
-  },
   card: {
+    backgroundColor: '#FFFFFF',
+    width: wp('90%'),
+    alignSelf: 'center',
     marginTop: 20,
+    borderRadius: 20,
+    height: 120,
+  },
+  cardItem: {
+    backgroundColor: 'transparent',
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 15,
+    paddingBottom: 0,
   },
   TextInput: {
     height: 50,
@@ -399,16 +358,24 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingLeft: 20,
   },
-  roomName: {
+  deviceName: {
+    fontFamily: 'Roboto',
+    color: '#303849',
     fontWeight: 'bold',
-    fontSize: 28,
+    fontSize: 22,
+  },
+  roomName: {
+    fontFamily: 'Roboto',
+    color: '#303849',
+    fontWeight: '300',
+    fontSize: 14,
   },
   deviceCount: {
     fontWeight: '400',
     fontSize: 12,
   },
   desc: {
-    fontSize: 24,
+    fontSize: 14,
   },
   loading: {
     flex: 1,
@@ -435,9 +402,11 @@ const styles = StyleSheet.create({
     bottom: 20,
   },
   button: {
-    marginTop: 15,
+    justifyContent: 'center',
+    marginTop: 30,
     alignSelf: 'center',
-    width: wp('90%'),
+    width: wp('88%'),
+    backgroundColor: '#42A4FE',
   },
 });
 export default ViewDevices;

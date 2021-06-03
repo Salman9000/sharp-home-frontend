@@ -19,7 +19,7 @@ const Header = props => {
   };
   const _handleMore = () => console.log('Shown more');
   return (
-    <Appbar.Header style={[t.bgBlue900]}>
+    <Appbar.Header style={{backgroundColor: '#303849'}}>
       {props.buttonsEnabled ? (
         <Appbar.BackAction onPress={_goBack} size={20} />
       ) : (

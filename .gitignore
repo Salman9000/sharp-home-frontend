@@ -64,3 +64,4 @@ __tests__
 
 # Environment varibales
 .env*
+.env

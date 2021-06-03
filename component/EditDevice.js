@@ -73,7 +73,7 @@ const EditDevice = props => {
   return (
     <View style={styles.container1}>
       <Header
-        title="Edit a Device"
+        title="Edit Device"
         nav={props.navigation}
         buttonsEnabled={true}
       />
@@ -129,23 +129,39 @@ const EditDevice = props => {
             <Text style={styles.room}>{room}</Text>
           </View>
         </View>
-        <View style={styles.otherboxes2}>
-          <Button
-            style={styles.button1}
-            mode="contained"
-            onPress={() => {
-              cancelupdateDevice(props);
-            }}>
-            Cancel
-          </Button>
-          <Button
-            style={styles.button1}
-            mode="contained"
-            onPress={() => {
-              updateDevice(props);
-            }}>
-            Update
-          </Button>
+        <View style={styles.buttonOuterView}>
+          <View style={styles.row1}>
+            <Button
+              style={styles.button2}
+              mode="contained"
+              onPress={() => {
+                props.navigation.push('vrChooseRoomAndDevice', {
+                  roomSelect: false,
+                  deviceSelect: false,
+                });
+              }}>
+              View Device Consumption
+            </Button>
+          </View>
+          <View style={styles.row2}>
+            <Button
+              style={styles.button1}
+              mode="contained"
+              onPress={() => {
+                cancelupdateDevice(props);
+              }}>
+              Cancel
+            </Button>
+            <View style={styles.space}></View>
+            <Button
+              style={styles.button1}
+              mode="contained"
+              onPress={() => {
+                updateDevice(props);
+              }}>
+              Update
+            </Button>
+          </View>
         </View>
       </View>
       <Footer nav={props} />
@@ -181,11 +197,11 @@ const styles = StyleSheet.create({
   },
   container1: {
     flex: 1,
-    backgroundColor: '#F4F5F8',
   },
   container2: {
     flex: 1,
     alignItems: 'center',
+    backgroundColor: '#F4F5F8',
   },
   inputView: {
     // backgroundColor: 'white',
@@ -212,31 +228,39 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
-  otherboxes2: {
-    marginTop: 30,
-    height: hp('20%'),
-    width: wp('100%'),
+  buttonOuterView: {
+    width: wp('90%'),
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  row1: {},
+  row2: {
+    marginTop: 15,
     flexDirection: 'row',
-    // alignItems: 'center',
+  },
+  // otherboxes2: {
+  //   marginTop: 20,
+  //   height: hp('20%'),
+  //   width: wp('100%'),
+  //   flexDirection: 'row',
+  //   marginLeft: 10,
+  //   // alignItems: 'center',
+  // },
+  space: {
+    width: wp('5%'),
+  },
+  button2: {
+    marginTop: 35,
+    width: wp('85%'),
+    height: 45,
+    backgroundColor: '#3F51B5',
+    justifyContent: 'center',
   },
   button1: {
-    width: '40%',
-    margin: 20,
-    height: 50,
+    width: wp('40%'),
+    height: 45,
     justifyContent: 'center',
     backgroundColor: '#3F51B5',
-  },
-  on: {
-    width: 10,
-    height: 10,
-    borderRadius: 10 / 2,
-    backgroundColor: 'green',
-  },
-  off: {
-    width: 10,
-    height: 10,
-    borderRadius: 10 / 2,
-    backgroundColor: 'red',
   },
 });
 export default EditDevice;

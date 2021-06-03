@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
     width: '80%',
     height: 50,
     justifyContent: 'center',
+    backgroundColor: '#42A4FE',
   },
 });
 

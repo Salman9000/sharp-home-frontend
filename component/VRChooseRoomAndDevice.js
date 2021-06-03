@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
     marginBottom: 30,
-    width: wp('90%'),
+    width: wp('85%'),
     marginBottom: 30,
     flexDirection: 'column',
     alignItems: 'flex-start',
@@ -289,7 +289,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   button1: {
-    width: '80%',
+    backgroundColor: '#42A4FE',
+    width: '85%',
     height: 50,
     justifyContent: 'center',
     marginBottom: 30,

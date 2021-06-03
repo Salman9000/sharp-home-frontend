@@ -87,7 +87,11 @@ const SelectRoom = props => {
         ) : (
           <>
             <Button
-              style={styles.buttonContinue}
+              style={
+                roomList.length > 0
+                  ? styles.buttonActive
+                  : styles.buttonInactive
+              }
               disabled={roomList.length > 0 ? false : true}
               onPress={() => {
                 console.log(roomList);
@@ -173,37 +177,41 @@ const SelectRoom = props => {
 };
 
 const styles = StyleSheet.create({
-  buttonContinue: {
+  buttonActive: {
+    backgroundColor: '#42A4FE',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
     marginTop: 20,
+    width: wp('90%'),
+  },
+  buttonInactive: {
+    backgroundColor: '#B2B7C6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 20,
+    width: wp('90%'),
   },
   container1: {
     flex: 1,
   },
   scrollv: {
     flex: 1,
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
   },
   container2: {
+    backgroundColor: 'transparent',
     flex: 1,
-    width: wp('95%'),
     margin: 10,
   },
-  cardItem: {
-    width: wp('90%'),
-    height: 120,
-
-    //   alignItems: 'center',
-  },
   card: {
-    marginTop: 10,
-  },
-  cardHightlight: {
-    marginTop: 10,
-    backgroundColor: 'red',
+    width: wp('88%'),
+    alignSelf: 'center',
+    marginTop: 20,
+    height: 110,
   },
   TextInput: {
     height: 50,
@@ -214,15 +222,21 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   roomName: {
+    fontFamily: 'Roboto',
+    color: '#303849',
     fontWeight: 'bold',
-    fontSize: 32,
+    fontSize: 22,
   },
   deviceCount: {
+    color: '#303849',
+    fontFamily: 'Roboto',
     fontWeight: '400',
-    fontSize: 15,
+    fontSize: 12,
   },
   desc: {
-    fontSize: 24,
+    color: '#303849',
+    fontFamily: 'Roboto',
+    fontSize: 14,
   },
   loading: {
     flex: 1,

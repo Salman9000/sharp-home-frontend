@@ -259,9 +259,6 @@ const App = () => {
                 />
               )}
             </Stack.Screen>
-            {/* <Stack.Screen name="customRoomChart">
-              {props => <CustomRoomChart {...props} token={token} />}
-            </Stack.Screen> */}
           </Stack.Navigator>
         )}
       </NavigationContainer>

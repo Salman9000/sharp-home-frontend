@@ -131,14 +131,20 @@ const ViewRooms = props => {
             <ScrollView style={styles.container2}>
               {rooms.map(item => (
                 <View key={item.id}>
-                  <Card style={styles.card}>
+                  <Card style={styles.card} transparent={true}>
                     <Swipeout
                       right={swipeBtns}
                       autoClose={true}
                       backgroundColor="transparent"
                       onOpen={() => setRoomItem(item)}>
-                      <TouchableOpacity onPress={() => roomInfo(item)}>
-                        <CardItem header>
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: 'transparent',
+                          borderRadius: 20,
+                          height: 90,
+                        }}
+                        onPress={() => roomInfo(item)}>
+                        <CardItem style={styles.cardItem}>
                           <Left>
                             <Text style={styles.roomName}>{item.name}</Text>
                           </Left>
@@ -176,6 +182,7 @@ const ViewRooms = props => {
 const styles = StyleSheet.create({
   container1: {
     flex: 1,
+    backgroundColor: '#F4F5F8',
   },
   scrollv: {
     flex: 1,
@@ -183,18 +190,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container2: {
+    backgroundColor: 'transparent',
     flex: 1,
-    width: wp('95%'),
     margin: 10,
   },
-  cardItem: {
-    width: wp('90%'),
-    height: 120,
 
-    //   alignItems: 'center',
-  },
   card: {
+    backgroundColor: '#FFFFFF',
+    width: wp('88%'),
+    alignSelf: 'center',
     marginTop: 20,
+    borderRadius: 20,
+    height: 100,
+  },
+  cardItem: {
+    backgroundColor: 'transparent',
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 15,
+    paddingBottom: 0,
   },
   TextInput: {
     height: 50,
@@ -205,15 +219,21 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   roomName: {
+    fontFamily: 'Roboto',
+    color: '#303849',
     fontWeight: 'bold',
-    fontSize: 28,
+    fontSize: 22,
   },
   deviceCount: {
+    color: '#303849',
+    fontFamily: 'Roboto',
     fontWeight: '400',
     fontSize: 12,
   },
   desc: {
-    fontSize: 24,
+    color: '#303849',
+    fontFamily: 'Roboto',
+    fontSize: 14,
   },
   loading: {
     flex: 1,
@@ -240,9 +260,11 @@ const styles = StyleSheet.create({
     bottom: 20,
   },
   button: {
-    marginTop: 15,
+    justifyContent: 'center',
+    marginTop: 30,
     alignSelf: 'center',
-    width: wp('90%'),
+    width: wp('88%'),
+    backgroundColor: '#42A4FE',
   },
 });
 export default ViewRooms;
