@@ -66,8 +66,11 @@ const ViewDevices = props => {
 
   const getDevices = async () => {
     try {
-      const response = await instance(token).get(`/v1/devices`);
+      const response = await instance(token).get(
+        `/v1/devices/getDevicesWithRooms`,
+      );
       setDevices(response.data.docs);
+      console.log(response.data.docs[0].roomInfo[0].name);
       setLoading(false);
     } catch (err) {
       console.log('get devices in view devices ' + err);
@@ -297,7 +300,7 @@ const ViewDevices = props => {
                             marginBottom: 0,
                           }}>
                           <Text style={styles.roomName}>
-                            Room Name: {item.room}
+                            Room Name: {item.roomInfo[0].name}
                           </Text>
                         </CardItem>
                       </TouchableOpacity>

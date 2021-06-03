@@ -93,7 +93,11 @@ const SelectDevices = props => {
         ) : (
           <>
             <Button
-              style={styles.buttonContinue}
+              style={
+                deviceList.length > 0
+                  ? styles.buttonActive
+                  : styles.buttonInactive
+              }
               disabled={deviceList.length > 0 ? false : true}
               onPress={() => {
                 console.log(deviceList);
@@ -162,12 +166,6 @@ const SelectDevices = props => {
                   </TouchableOpacity>
                 </View>
               ))}
-
-              <Button
-                style={styles.button}
-                onPress={() => addDeviceButtonPressed(props)}>
-                <Text>Add Device</Text>
-              </Button>
             </ScrollView>
           </>
         )}
@@ -178,11 +176,21 @@ const SelectDevices = props => {
 };
 
 const styles = StyleSheet.create({
-  buttonContinue: {
+  buttonActive: {
+    backgroundColor: '#42A4FE',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
     marginTop: 20,
+    width: wp('90%'),
+  },
+  buttonInactive: {
+    backgroundColor: '#B2B7C6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 20,
+    width: wp('90%'),
   },
   container1: {
     flex: 1,
@@ -204,7 +212,9 @@ const styles = StyleSheet.create({
     //   alignItems: 'center',
   },
   card: {
-    marginTop: 10,
+    width: wp('88%'),
+    alignSelf: 'center',
+    marginTop: 20,
   },
   cardHightlight: {
     // marginTop: 20,
@@ -219,8 +229,10 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   roomName: {
+    fontFamily: 'Roboto',
+    color: '#303849',
     fontWeight: 'bold',
-    fontSize: 28,
+    fontSize: 22,
   },
   deviceCount: {
     fontWeight: '400',
