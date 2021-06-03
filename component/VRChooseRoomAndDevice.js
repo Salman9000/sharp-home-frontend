@@ -27,15 +27,15 @@ const VRChooseRoomAndDevice = props => {
   const [roomArray, setRoomArray] = useState([]);
   const [deviceArray, setDeviceArray] = useState([]);
   const [roomSelection, setRoomSelection] = useState(
-    props.route.params.roomSelect,
+    props.route.params?.roomSelect,
   );
   const [deviceSelection, setDeviceSelection] = useState(
-    props.route.params.deviceSelect,
+    props.route.params?.deviceSelect,
   );
   // let rooms = [];
   // let roomArray = [];
-  let roomSelect = props.route.params.roomSelect;
-  let deviceSelect = props.route.params.deviceSelect;
+  let roomSelect = props.route.params?.roomSelect;
+  let deviceSelect = props.route.params?.deviceSelect;
 
   useEffect(() => {
     if (props.route.params?.roomList && roomSelect == true) {
