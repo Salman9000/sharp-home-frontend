@@ -107,6 +107,16 @@ const ViewDevices = props => {
       setBtnLoading(true);
       // console.log(BASE_URL, 'turn on device');
       // console.log(item.id, 'turn on device');
+      setDevices(
+        devices.map(value => {
+          {
+            if (value._id == item._id) {
+              value.status = 'on';
+            }
+          }
+          return value;
+        }),
+      );
       if (item.ip != undefined) {
         const response = await axios.post(
           `http://${item.ip}:8081/zeroconf/switch`,
@@ -118,26 +128,15 @@ const ViewDevices = props => {
           },
         );
       }
+
       const response2 = await axios.patch(
-        `${BASE_URL}/v1/devices/info/${item._id}`,
+        `http://192.168.31.234:3000/v1/devices/info/${item._id}`,
         {
           status: 'on',
         },
       );
       console.log(response2.data);
 
-      setDevices(
-        devices.map(value => {
-          {
-            if (value._id == item._id) {
-              value.status = 'on';
-            } else {
-              value.status = value.status;
-            }
-          }
-          return value;
-        }),
-      );
       setBtnLoading(false);
     } catch (error) {
       setBtnLoading(false);
@@ -150,6 +149,16 @@ const ViewDevices = props => {
       setBtnLoading(true);
       // console.log(BASE_URL, 'turn off device');
       // console.log(item.id, 'turn off device');
+      setDevices(
+        devices.map(value => {
+          {
+            if (value._id == item._id) {
+              value.status = 'off';
+            }
+          }
+          return value;
+        }),
+      );
       if (item.ip != undefined) {
         const response = await axios.post(
           `http://${item.ip}:8081/zeroconf/switch`,
@@ -162,24 +171,13 @@ const ViewDevices = props => {
         );
       }
       const response2 = await axios.patch(
-        `${BASE_URL}/v1/devices/info/${item._id}`,
+        `http://192.168.31.234:3000/v1/devices/info/${item._id}`,
         {
           status: 'off',
         },
       );
       // console.log(response2.data);
-      setDevices(
-        devices.map(value => {
-          {
-            if (value._id == item._id) {
-              value.status = 'off';
-            } else {
-              value.status = value.status;
-            }
-          }
-          return value;
-        }),
-      );
+
       setBtnLoading(false);
     } catch (error) {
       setBtnLoading(false);
@@ -247,42 +245,19 @@ const ViewDevices = props => {
                           </Right> */}
                           <Right>
                             {item.status === 'on' ? (
-                              btnLoading ? (
+                              <>
                                 <Switch
                                   trackColor={{
                                     false: '#B2B7C6',
                                     true: '#B2B7C6',
                                   }}
-                                  onValueChange={{}}
-                                  disabled={true}
+                                  thumbColor={
+                                    item.status === 'on' ? '#38d238' : '#EA362A'
+                                  }
+                                  onValueChange={() => turnOffDevice(item)}
                                   value={item.status === 'on'}
                                 />
-                              ) : (
-                                <>
-                                  <Switch
-                                    trackColor={{
-                                      false: '#B2B7C6',
-                                      true: '#B2B7C6',
-                                    }}
-                                    thumbColor={
-                                      item.status === 'on'
-                                        ? '#38d238'
-                                        : '#EA362A'
-                                    }
-                                    onValueChange={() => turnOffDevice(item)}
-                                    value={item.status === 'on'}
-                                  />
-                                </>
-                              )
-                            ) : btnLoading ? (
-                              <Switch
-                                trackColor={{
-                                  false: '#B2B7C6',
-                                  true: '#B2B7C6',
-                                }}
-                                onValueChange={{}}
-                                value={item.status === 'on'}
-                              />
+                              </>
                             ) : (
                               <Switch
                                 trackColor={{

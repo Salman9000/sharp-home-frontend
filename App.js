@@ -37,6 +37,7 @@ import CustomRoomChart from './component/CustomRoomChart';
 import EditDevice from './component/EditDevice';
 import ViewRooms from './component/ViewRooms';
 import EditRoom from './component/EditRoom';
+import Notifications from './component/Notifications';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -184,6 +185,15 @@ const App = () => {
                   {...props}
                   token={token}
                   options={{title: 'All Devices'}}
+                />
+              )}
+            </Stack.Screen>
+            <Stack.Screen name="notifications">
+              {props => (
+                <Notifications
+                  {...props}
+                  token={token}
+                  options={{title: 'Notifications'}}
                 />
               )}
             </Stack.Screen>
