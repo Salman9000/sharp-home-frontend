@@ -29,17 +29,18 @@ import instance from '../helper';
 import Loading from './Loading';
 
 const ChooseRoom = props => {
-  const {deviceName, deviceRating, range} = props.route.params;
+  const {deviceName, deviceRating, range, host} = props.route.params;
   const token = props.token;
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const cardPressed = id => {
-    props.navigation.push('deviceDiscover', {
+    props.navigation.push('confirmDeviceDetails', {
       deviceName: deviceName,
       deviceRating: deviceRating,
       roomId: id,
       range: range,
+      host: host,
     });
   };
 

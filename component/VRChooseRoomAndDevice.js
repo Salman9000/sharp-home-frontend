@@ -66,14 +66,14 @@ const VRChooseRoomAndDevice = props => {
 
   const selectRoom = props => {
     roomSelect = true;
-    props.navigation.navigate('selectRoom', {
+    props.navigation.push('selectRoom', {
       roomArray: roomArray,
     });
   };
 
   const selectDevices = props => {
     deviceSelect = true;
-    props.navigation.navigate('selectDevice', {
+    props.navigation.push('selectDevice', {
       deviceArray: deviceArray,
     });
   };
@@ -249,6 +249,7 @@ const styles = StyleSheet.create({
   },
   iconStyle: {
     color: 'black',
+    marginLeft: 20,
     // marginTop: 0,
     // padding: 0,
   },

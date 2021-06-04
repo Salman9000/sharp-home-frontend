@@ -18,6 +18,7 @@ const AddDevice = props => {
   const [showDropDown, setShowDropDown] = useState(false);
   const [range, setRange] = useState();
   const [value, setValue] = useState(null);
+  const {host} = props.route.params;
   // const [items, setItems] = useState([
   //   {label: 'Apple', value: 'apple'},
   //   {label: 'Banana', value: 'banana'},
@@ -76,24 +77,17 @@ const AddDevice = props => {
   }, [value]);
 
   const chooseRoom = props => {
-    if (name.length === 0 || rating.length === 0) {
-      alert('Name and Rating are compulsory!');
+    if (name.length === 0 || rating.length === 0 || range == null) {
+      alert('Device Name, Rating and Device Type are compulsory!');
     } else {
       props.navigation.push('chooseRoom', {
         deviceName: name,
         deviceRating: rating,
         range: range,
+        host: host,
       });
     }
   };
-
-  const genderList = [
-    {label: 'Male', value: 'male'},
-
-    {label: 'Female', value: 'female'},
-
-    {label: 'Others', value: 'others'},
-  ];
 
   return (
     <Provider>
@@ -129,7 +123,7 @@ const AddDevice = props => {
             </View>
             <SafeAreaView style={styles.containerStyle}>
               <DropDown
-                label={'Gender'}
+                label={'Choose a Device'}
                 mode={'outlined'}
                 value={value}
                 setValue={setValue}
@@ -177,9 +171,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   containerStyle: {
-    flex: 1,
-    width: wp('80%'),
-    marginHorizontal: 20,
+    // flex: 1,
+    width: wp('90%'),
+    // marginHorizontal: 20,
 
     justifyContent: 'center',
   },
