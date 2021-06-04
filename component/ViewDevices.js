@@ -99,7 +99,7 @@ const ViewDevices = props => {
   };
 
   const addDeviceButtonPressed = props => {
-    props.navigation.navigate('addDevice');
+    props.navigation.navigate('deviceDiscover');
   };
 
   const turnOnDevice = async item => {

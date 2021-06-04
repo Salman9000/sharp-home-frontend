@@ -615,6 +615,7 @@ const ApplianceChart = props => {
                     if (element.bardata)
                       return (
                         <BarChart
+                          key={element.id}
                           data={element.bardata}
                           width={wp('80%')}
                           height={220}

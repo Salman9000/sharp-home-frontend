@@ -21,6 +21,7 @@ const HomeScreen = props => {
   const [rooms, setRooms] = useState([]);
   const [devices, setDevices] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [count, setCount] = useState(0);
   const token = props.token;
   // console.log(token);
   const getDevices = async () => {
@@ -30,8 +31,14 @@ const HomeScreen = props => {
     setLoading(false);
   };
 
+  const getNotifications = async () => {
+    const response = await instance(token).get('/v1/notification/getunseen');
+    setCount(response.data.count);
+  };
+
   useEffect(() => {
     getDevices();
+    getNotifications();
   }, []);
 
   const addDevice2Pressed = props => {
@@ -44,7 +51,12 @@ const HomeScreen = props => {
 
   return (
     <View style={styles.scroll}>
-      <Header title="Welcome" nav={props.navigation} buttonsEnabled={false} />
+      <Header
+        title="Welcome"
+        nav={props.navigation}
+        count={count}
+        buttonsEnabled={false}
+      />
       <View style={styles.scrollv}>
         {loading ? (
           <Loading />

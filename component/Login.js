@@ -35,7 +35,7 @@ const Login = props => {
     try {
       console.log(BASE_URL);
       const response = await axios.post(
-        `http://192.168.31.234:3000/v1/auth/login`,
+        `http://192.168.18.6:3000/v1/auth/login`,
         {
           email: 'test2@test.com',
           password: 'test1234',

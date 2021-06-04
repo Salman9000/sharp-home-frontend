@@ -40,14 +40,14 @@ const NetworkDiscoverer = props => {
   const [isScanning, setIsScanning] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const [services, setServices] = useState({});
-  const [deviceName, setDeviceName] = useState(props.route.params.deviceName);
-  const [range, setRange] = useState(props.route.params.range);
-  const [deviceRating, setDeviceRating] = useState(
-    props.route.params.deviceRating,
-  );
+  // const [deviceName, setDeviceName] = useState(props.route.params.deviceName);
+  // const [range, setRange] = useState(props.route.params.range);
+  // const [deviceRating, setDeviceRating] = useState(
+  //   props.route.params.deviceRating,
+  // );
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [roomId, setRoomId] = useState(props.route.params.roomId);
+  // const [roomId, setRoomId] = useState(props.route.params.roomId);
   const [wifiSsid, setWifiSsid] = useState('');
   const requestCameraPermission = async () => {
     try {
@@ -117,13 +117,14 @@ const NetworkDiscoverer = props => {
 
   const selectDevice = (host, name) => {
     console.log(roomId);
-    props.navigation.navigate('confirmDeviceDetails', {
-      deviceName: deviceName,
-      deviceRating: deviceRating,
-      roomId: roomId,
+
+    props.navigation.navigate('addDevice', {
+      // deviceName: deviceName,
+      // deviceRating: deviceRating,
+      // roomId: roomId,
       host: host,
       name: name,
-      range: range,
+      // range: range,
     });
   };
 
