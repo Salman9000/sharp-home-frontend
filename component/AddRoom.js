@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const axios = require('axios');
 import instance from '../helper';
 import {BASE_URL} from '@env';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const AddRoom = props => {
   const [name, setName] = useState('');
@@ -41,42 +42,44 @@ const AddRoom = props => {
   return (
     <View style={styles.container1}>
       <Header title="Add a Room" nav={props.navigation} buttonsEnabled={true} />
-      <View style={styles.container2}>
-        <View style={styles.otherboxes}>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.TextInput}
-              value={name}
-              placeholder="Name"
-              selectionColor="black"
-              placeholderTextColor="#AAA"
-              underlineColorAndroid="#D2D6DE"
-              onChangeText={name => setName(name)}
-            />
+      <ScrollView>
+        <View style={styles.container2}>
+          <View style={styles.otherboxes}>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.TextInput}
+                value={name}
+                placeholder="Name"
+                selectionColor="black"
+                placeholderTextColor="#AAA"
+                underlineColorAndroid="#D2D6DE"
+                onChangeText={name => setName(name)}
+              />
+            </View>
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.TextInput}
+                value={desc}
+                placeholder="Description"
+                selectionColor="black"
+                placeholderTextColor="#AAA"
+                underlineColorAndroid="#D2D6DE"
+                onChangeText={desc => setDesc(desc)}
+              />
+            </View>
           </View>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.TextInput}
-              value={desc}
-              placeholder="Description"
-              selectionColor="black"
-              placeholderTextColor="#AAA"
-              underlineColorAndroid="#D2D6DE"
-              onChangeText={desc => setDesc(desc)}
-            />
+          <View style={styles.otherboxes2}>
+            <Button
+              style={styles.button1}
+              mode="contained"
+              onPress={() => {
+                addRoom(props);
+              }}>
+              Add Room
+            </Button>
           </View>
         </View>
-        <View style={styles.otherboxes2}>
-          <Button
-            style={styles.button1}
-            mode="contained"
-            onPress={() => {
-              addRoom(props);
-            }}>
-            Add Room
-          </Button>
-        </View>
-      </View>
+      </ScrollView>
       <Footer nav={props} />
     </View>
   );
