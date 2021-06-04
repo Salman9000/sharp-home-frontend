@@ -130,7 +130,7 @@ const ViewDevices = props => {
       }
 
       const response2 = await axios.patch(
-        `http://192.168.31.234:3000/v1/devices/info/${item._id}`,
+        `${BASE_URL}/v1/devices/info/${item._id}`,
         {
           status: 'on',
         },
@@ -171,7 +171,7 @@ const ViewDevices = props => {
         );
       }
       const response2 = await axios.patch(
-        `http://192.168.31.234:3000/v1/devices/info/${item._id}`,
+        `${BASE_URL}/v1/devices/info/${item._id}`,
         {
           status: 'off',
         },

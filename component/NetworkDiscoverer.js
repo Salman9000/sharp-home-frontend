@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   // Text,
+  View,
   SafeAreaView,
   FlatList,
   RefreshControl,
@@ -101,12 +102,20 @@ const NetworkDiscoverer = props => {
 
     zeroconf.on('stop', () => {
       setIsScanning(false);
-      console.log('[Stop]');
+      // console.log('[Stop]');
+      let abc = zeroconf.getServices();
+      let service = Object.entries(abc).map(value => value[1]);
+      console.log(service);
+      setServices(service);
     });
 
     zeroconf.on('resolved', service => {
       // console.log('[Resolve]', JSON.stringify(service, null, 2));
-      setServices({...services, [service.host]: service});
+      // console.log(service);
+      // let abc = zeroconf.getServices();
+      // setServices({...services, service});
+      // console.log(, 'Asd');
+      zeroconf.stop();
     });
 
     zeroconf.on('error', err => {
@@ -116,8 +125,6 @@ const NetworkDiscoverer = props => {
   }, []);
 
   const selectDevice = (host, name) => {
-    console.log(roomId);
-
     props.navigation.navigate('addDevice', {
       // deviceName: deviceName,
       // deviceRating: deviceRating,
@@ -128,30 +135,31 @@ const NetworkDiscoverer = props => {
     });
   };
 
-  const renderRow = ({item, index}) => {
-    const {name, fullName, host, id} = services[item];
-    let deviceExists = devices.map(value => value.deviceid).includes(id);
-    return (
-      <TouchableOpacity
-        style={styles.list}
-        onPress={() => {
-          deviceExists ? selectDevice(host, name) : selectDevice(host, name);
-        }}>
-        <Card style={styles.card} pointerEvents="none" transparent={true}>
-          <CardItem style={deviceExists && styles.cardItem} header>
-            <Left>
-              <Text style={styles.roomName}>{name}</Text>
-            </Left>
-            <Right>
-              <Text style={styles.deviceCount}> {host}</Text>
-              {deviceExists && <Text>Device already added</Text>}
-            </Right>
-          </CardItem>
-        </Card>
-        {/* <ListItem title={name} subtitle={fullName} /> */}
-      </TouchableOpacity>
-    );
-  };
+  // const renderRow = ({item, index}) => {
+  //   const {name, fullName, host, id} = services[item];
+  //   // console.log(services);
+  //   let deviceExists = devices.map(value => value.deviceid).includes(id);
+  //   return (
+  //     <TouchableOpacity
+  //       style={styles.list}
+  //       onPress={() => {
+  //         deviceExists ? selectDevice(host, name) : selectDevice(host, name);
+  //       }}>
+  //       <Card style={styles.card} pointerEvents="none" transparent={true}>
+  //         <CardItem style={deviceExists && styles.cardItem} header>
+  //           <Left>
+  //             <Text style={styles.roomName}>{name}</Text>
+  //           </Left>
+  //           <Right>
+  //             <Text style={styles.deviceCount}> {host}</Text>
+  //             {deviceExists && <Text>Device already added</Text>}
+  //           </Right>
+  //         </CardItem>
+  //       </Card>
+  //       {/* <ListItem title={name} subtitle={fullName} /> */}
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   const refreshData = () => {
     setLoading(true);
@@ -167,7 +175,7 @@ const NetworkDiscoverer = props => {
     // clearTimeout(timeout);
     setTimeout(() => {
       zeroconf.stop();
-    }, 5000);
+    }, 2);
   };
 
   const service = services[selectedService];
@@ -199,7 +207,8 @@ const NetworkDiscoverer = props => {
       {services.length < 1 && (
         <Text style={styles.ssid}>Unable to find devices</Text>
       )}
-      <FlatList
+      {/* {console.log(Object.keys(services))} */}
+      {/* <FlatList
         data={Object.keys(services)}
         renderItem={renderRow}
         keyExtractor={key => key}
@@ -210,7 +219,41 @@ const NetworkDiscoverer = props => {
             tintColor="skyblue"
           />
         }
-      />
+      /> */}
+      <View style={styles.container}>
+        {services.length > 0 &&
+          services.map(value => {
+            let deviceExists = devices
+              .map(value => value.deviceid)
+              .includes(value.name);
+            return (
+              <TouchableOpacity
+                style={styles.list}
+                onPress={() => {
+                  deviceExists
+                    ? selectDevice(value.host, value.name)
+                    : selectDevice(value.host, value.name);
+                }}>
+                <Card
+                  style={styles.card}
+                  pointerEvents="none"
+                  transparent={false}>
+                  <CardItem style={deviceExists && styles.cardItem} header>
+                    <Left>
+                      <Text style={styles.roomName}>{value.name}</Text>
+                    </Left>
+                    <Right>
+                      <Text style={styles.deviceCount}> {value.host}</Text>
+                      {deviceExists && <Text>Device already added</Text>}
+                    </Right>
+                  </CardItem>
+                </Card>
+                {/* <ListItem title={name} subtitle={fullName} /> */}
+              </TouchableOpacity>
+            );
+          })}
+      </View>
+
       <Footer nav={props} />
     </SafeAreaView>
   );
@@ -229,6 +272,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginRight: 10,
     marginLeft: 10,
+    backgroundColor: 'red',
   },
   cardItem: {
     // width: wp('90%'),
