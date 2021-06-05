@@ -18,7 +18,7 @@ const ConfirmDeviceDetails = props => {
     deviceRating,
     roomId,
     host,
-    name,
+    deviceid,
     range,
   } = props.route.params;
   const [roomName, setRoomName] = useState('');
@@ -46,10 +46,11 @@ const ConfirmDeviceDetails = props => {
         name: deviceName,
         powerRating: deviceRating,
         room: roomId,
-        host: host,
+        ip: host,
         range: range,
+        deviceid: deviceid,
       });
-      alert('room added');
+      alert('Device added');
       console.log(response.data);
       props.navigation.navigate('home');
     } catch (error) {

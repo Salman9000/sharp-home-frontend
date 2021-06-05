@@ -40,7 +40,7 @@ const EditRoom = props => {
   const cancelupdateRoom = async props => {
     setName('');
     setDesc('');
-    props.navigation.push('viewDevices');
+    props.navigation.push('viewRooms');
   };
 
   return (

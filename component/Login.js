@@ -34,18 +34,21 @@ const Login = props => {
     setLoading(true);
     try {
       console.log(BASE_URL);
-      const response = await axios.post(`${BASE_URL}/v1/auth/login`, {
-        email: 'test2@test.com',
-        password: 'test1234',
-        // email: 'test3@test.com',
-        // password: 'test1234',
-        // email: 'test@test.com',
-        // password: 'test1234',
-        // email: 'rasheedaabbas@gmail.com',
-        // password: 'rashi123',
-        // email: email,
-        // password: password,
-      });
+      const response = await axios.post(
+        `http://192.168.31.154:3000/v1/auth/login`,
+        {
+          email: 'test2@test.com',
+          password: 'test1234',
+          // email: 'test3@test.com',
+          // password: 'test1234',
+          // email: 'test@test.com',
+          // password: 'test1234',
+          // email: 'rasheedaabbas@gmail.com',
+          // password: 'rashi123',
+          // email: email,
+          // password: password,
+        },
+      );
       // console.log(response.data.tokens.access.token);
       await AsyncStorage.setItem('token', response.data.tokens.access.token);
       props.setToken(response.data.tokens.access.token);
@@ -116,6 +119,8 @@ const Login = props => {
               placeholder="Password"
               secureTextEntry={true}
               placeholderTextColor="#ffffff"
+              selectionColor="white"
+              color="white"
               onChangeText={pass => setpassword(pass)}
             />
           </View>
@@ -161,6 +166,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignItems: 'flex-start',
     backgroundColor: '#003f5c',
+    color: 'white',
   },
   Text: {
     color: 'white',

@@ -19,6 +19,7 @@ import {Card, CardItem, Body, Text, Left, Right, Icon} from 'native-base';
 import {BASE_URL} from '@env';
 import instance from '../helper';
 import DatePicker from 'react-native-date-picker';
+import {createIconSetFromFontello} from 'react-native-vector-icons';
 var moment = require('moment');
 const EditDevice = props => {
   const token = props.token;
@@ -28,6 +29,8 @@ const EditDevice = props => {
     props.route.params.deviceInfo.powerRating,
   );
   const [room, setRoom] = useState('');
+  const [roomId, setRoomId] = useState();
+  // const [roomId,setRoomId]= useState()
   const [deviceId, setDeviceId] = useState(props.route.params.deviceInfo._id);
   const [date, setDate] = useState(props.route.params.deviceInfo.range);
 
@@ -200,9 +203,11 @@ const EditDevice = props => {
                 style={styles.button2}
                 mode="contained"
                 onPress={() => {
-                  props.navigation.push('vrChooseRoomAndDevice', {
+                  console.log(props.route.params.deviceInfo.room);
+                  props.navigation.push('vrRooms', {
                     roomSelect: false,
-                    deviceSelect: false,
+                    deviceSelect: true,
+                    deviceArray: [{id: deviceId}],
                   });
                 }}>
                 View Device Consumption
@@ -350,7 +355,7 @@ const styles = StyleSheet.create({
     marginTop: 35,
     width: wp('85%'),
     height: 45,
-    backgroundColor: '#3F51B5',
+    backgroundColor: '#42A4FE',
     justifyContent: 'center',
   },
   button1: {
@@ -358,7 +363,7 @@ const styles = StyleSheet.create({
     height: 45,
     margin: 10,
     justifyContent: 'center',
-    backgroundColor: '#3F51B5',
+    backgroundColor: '#42A4FE',
   },
 });
 export default EditDevice;

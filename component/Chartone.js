@@ -59,6 +59,7 @@ const ChartOne = props => {
   ]);
   const [currentGraph, setCurrentGraph] = useState(3);
   const [refreshing, setRefreshing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const wait = timeout => {
     return new Promise(resolve => setTimeout(resolve, timeout));
   };
@@ -79,75 +80,84 @@ const ChartOne = props => {
   }, []);
 
   const getGraphs = async type => {
-    switch (type) {
-      case 'today':
-        if (!buttonArray[3].data) {
-          setLoading(true);
-          const value = await instance(token).get(`/v1/activity/${type}`);
-          (value.data.resultOneDay.inputArray.datasets.color = (opacity = 1) =>
-            'rgba(0,255,255, 1)'),
-            (gData = {
-              labels: value.data.resultOneDay.inputArray.labels,
-              datasets: [value.data.resultOneDay.inputArray.datasets],
-              consumption: value.data.resultOneDay.overallConsumption,
-              startDate: value.data.startDate,
-              endDate: null,
-            });
+    try {
+      switch (type) {
+        case 'today':
+          if (!buttonArray[3].data) {
+            setLoading(true);
+            const value = await instance(token).get(`/v1/activity/${type}`);
+            (value.data.resultOneDay.inputArray.datasets.color = (
+              opacity = 1,
+            ) => 'rgba(0,255,255, 1)'),
+              (gData = {
+                labels: value.data.resultOneDay.inputArray.labels,
+                datasets: [value.data.resultOneDay.inputArray.datasets],
+                consumption: value.data.resultOneDay.overallConsumption,
+                startDate: value.data.startDate,
+                endDate: null,
+              });
 
-          updateGraph(3, gData);
-          setLoading(false);
-        }
-        break;
-      case '7days':
-        if (!buttonArray[1].data) {
-          setLoading(true);
-          const value = await instance(token).get(`/v1/activity/${type}`);
-          (value.data.result7Days.inputArray.datasets.color = (opacity = 1) =>
-            'rgba(0,255,255, 1)'),
-            (gData = {
-              labels: value.data.result7Days.inputArray.labels,
-              datasets: [value.data.result7Days.inputArray.datasets],
-              consumption: value.data.result7Days.overallConsumption,
-              startDate: value.data.startDate,
-              endDate: value.data.endDate,
-            });
-          updateGraph(1, gData);
-        }
-        break;
-      case '1month':
-        if (!buttonArray[0].data) {
-          setLoading(true);
-          const value = await instance(token).get(`/v1/activity/${type}`);
-          (value.data.result1Month.inputArray.datasets.color = (opacity = 1) =>
-            'rgba(0,255,255, 1)'),
-            (gData = {
-              labels: value.data.result1Month.inputArray.labels,
-              datasets: [value.data.result1Month.inputArray.datasets],
-              consumption: value.data.result1Month.overallConsumption,
-              startDate: value.data.startDate,
-              endDate: value.data.endDate,
-            });
-          updateGraph(0, gData);
-          setLoading(false);
-        }
-        break;
-      case 'yesterday':
-        if (!buttonArray[2].data) {
-          setLoading(true);
-          const value = await instance(token).get(`/v1/activity/${type}`);
-          (value.data.resultOneDay.inputArray.datasets.color = (opacity = 1) =>
-            'rgba(0,255,255, 1)'),
-            (gData = {
-              labels: value.data.resultOneDay.inputArray.labels,
-              datasets: [value.data.resultOneDay.inputArray.datasets],
-              consumption: value.data.resultOneDay.overallConsumption,
-              startDate: value.data.startDate,
-              endDate: null,
-            });
-          updateGraph(2, gData);
-          setLoading(false);
-        }
-        break;
+            updateGraph(3, gData);
+            setLoading(false);
+          }
+          break;
+        case '7days':
+          if (!buttonArray[1].data) {
+            setLoading(true);
+            const value = await instance(token).get(`/v1/activity/${type}`);
+            (value.data.result7Days.inputArray.datasets.color = (opacity = 1) =>
+              'rgba(0,255,255, 1)'),
+              (gData = {
+                labels: value.data.result7Days.inputArray.labels,
+                datasets: [value.data.result7Days.inputArray.datasets],
+                consumption: value.data.result7Days.overallConsumption,
+                startDate: value.data.startDate,
+                endDate: value.data.endDate,
+              });
+            updateGraph(1, gData);
+          }
+          break;
+        case '1month':
+          if (!buttonArray[0].data) {
+            setLoading(true);
+            const value = await instance(token).get(`/v1/activity/${type}`);
+            (value.data.result1Month.inputArray.datasets.color = (
+              opacity = 1,
+            ) => 'rgba(0,255,255, 1)'),
+              (gData = {
+                labels: value.data.result1Month.inputArray.labels,
+                datasets: [value.data.result1Month.inputArray.datasets],
+                consumption: value.data.result1Month.overallConsumption,
+                startDate: value.data.startDate,
+                endDate: value.data.endDate,
+              });
+            updateGraph(0, gData);
+            setLoading(false);
+          }
+          break;
+        case 'yesterday':
+          if (!buttonArray[2].data) {
+            setLoading(true);
+            const value = await instance(token).get(`/v1/activity/${type}`);
+            (value.data.resultOneDay.inputArray.datasets.color = (
+              opacity = 1,
+            ) => 'rgba(0,255,255, 1)'),
+              (gData = {
+                labels: value.data.resultOneDay.inputArray.labels,
+                datasets: [value.data.resultOneDay.inputArray.datasets],
+                consumption: value.data.resultOneDay.overallConsumption,
+                startDate: value.data.startDate,
+                endDate: null,
+              });
+            updateGraph(2, gData);
+            setLoading(false);
+          }
+          break;
+      }
+    } catch (error) {
+      // console.log(error, 'aaaaaaaaaaaaaaaaaaaaaaaaaa');
+      setErrorMessage('No Data Found');
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -214,6 +224,14 @@ const ChartOne = props => {
       </View>
       {loading ? (
         <Text></Text>
+      ) : errorMessage ? (
+        <Title
+          style={{
+            alignSelf: 'center',
+            color: 'black',
+          }}>
+          No Data Found
+        </Title>
       ) : (
         buttonArray
           .filter(value => value.selected == true)

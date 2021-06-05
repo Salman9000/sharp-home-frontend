@@ -29,7 +29,7 @@ import instance from '../helper';
 import Loading from './Loading';
 
 const ChooseRoom = props => {
-  const {deviceName, deviceRating, range, host} = props.route.params;
+  const {deviceName, deviceRating, range, host, deviceid} = props.route.params;
   const token = props.token;
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -41,6 +41,7 @@ const ChooseRoom = props => {
       roomId: id,
       range: range,
       host: host,
+      deviceid: deviceid,
     });
   };
 
@@ -194,7 +195,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 80,
-    backgroundColor: '#1e90ff',
+    backgroundColor: '#42A4FE',
     padding: 7,
     alignSelf: 'flex-end',
     position: 'absolute',

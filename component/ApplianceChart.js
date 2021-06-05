@@ -89,6 +89,13 @@ const ApplianceChart = props => {
       fillShadowGradient: '#4048CC',
     },
   ]);
+  let datasets = [
+    {
+      data: [20, 45, 28, 80, 99, 43],
+      color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+      strokeWidth: 2, // optional
+    },
+  ];
   const [currentGraph, setCurrentGraph] = useState(3);
   const [refreshing, setRefreshing] = useState(false);
   //   const [errorMessage, setErrorMessage] = useState(null);
@@ -97,7 +104,7 @@ const ApplianceChart = props => {
 
     (opacity = 1) => `rgba(20,122,214, 1)`,
 
-    (opacity = 1) => `rgba(0,102,0, 1)`,
+    (opacity = 1) => `rgba(255,165,0, 1)`,
   ];
 
   const [errorMessage, setErrorMessage] = useState(null);
@@ -133,6 +140,7 @@ const ApplianceChart = props => {
               value.data.resultConsumption.inputArray.datasets[i].color =
                 colorArray[i];
             }
+
             gData = {
               labels: value.data.resultConsumption.inputArray.labels,
               datasets: value.data.resultConsumption.inputArray.datasets,
@@ -255,6 +263,7 @@ const ApplianceChart = props => {
               value.data.resultConsumption.inputArray.datasets[i].color =
                 colorArray[i];
             }
+
             gData = {
               labels: value.data.resultConsumption.inputArray.labels,
               datasets: value.data.resultConsumption.inputArray.datasets,
@@ -481,6 +490,7 @@ const ApplianceChart = props => {
             {buttonArray
               .filter(value => value.selected == true)
               .map((element, index) => {
+                // console.log(element.data.datasets[1].data);
                 if (element.data)
                   return (
                     <LineChart
@@ -503,22 +513,22 @@ const ApplianceChart = props => {
                         })
                       }
                       chartConfig={{
-                        // backgroundColor: '#4050B5',
+                        backgroundColor: '#4050B5',
                         backgroundGradientFrom: 'white',
                         backgroundGradientTo: 'white',
                         fillShadowGradientOpacity: 1,
                         useShadowColorFromDataset: true,
                         fillShadowGradient: 'red',
                         strokeWidth: 1,
-                        // backgroundGradientFromOpacity: 0,
-                        // backgroundGradientToOpacity: 0,
+                        backgroundGradientFromOpacity: 0,
+                        backgroundGradientToOpacity: 0,
                         decimalPlaces: 2, // optional, defaults to 2dp
-                        // color: (opacity = 255) => `rgba(208,91,84, ${opacity})`,
+                        color: (opacity = 255) => `rgba(208,91,84, ${opacity})`,
                         labelColor: (opacity = 1) =>
                           `rgba(0, 0, 0, ${opacity})`,
-                        style: {
-                          borderRadius: 0,
-                        },
+                        // style: {
+                        //   borderRadius: 0,
+                        // },
                         propsForDots: {
                           r: '0.1',
                           strokeWidth: '1',
@@ -627,6 +637,7 @@ const ApplianceChart = props => {
                           withHorizontalLabels={true}
                           backgroundColor="red"
                           yAxisSuffix="/KW"
+                          fromZero={true}
                           chartConfig={{
                             backgroundGradientFrom: '#4048CC',
                             backgroundGradientTo: '#4048CC',

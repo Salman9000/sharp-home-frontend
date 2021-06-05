@@ -130,7 +130,7 @@ const NetworkDiscoverer = props => {
       // deviceRating: deviceRating,
       // roomId: roomId,
       host: host,
-      name: name,
+      deviceid: name,
       // range: range,
     });
   };
@@ -194,7 +194,7 @@ const NetworkDiscoverer = props => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title={'Scanning For Devices'} />
+      <Header title={'Scanning For Devices'} buttonsEnabled={true} />
       <Text style={styles.state}>
         {isScanning ? 'Scanning for Devices' : 'Scanning Stopped'}
       </Text>

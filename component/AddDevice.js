@@ -18,7 +18,7 @@ const AddDevice = props => {
   const [showDropDown, setShowDropDown] = useState(false);
   const [range, setRange] = useState();
   const [value, setValue] = useState(null);
-  const {host} = props.route.params;
+  const {host, deviceid} = props.route.params;
   // const [items, setItems] = useState([
   //   {label: 'Apple', value: 'apple'},
   //   {label: 'Banana', value: 'banana'},
@@ -77,7 +77,7 @@ const AddDevice = props => {
   }, [value]);
 
   const chooseRoom = props => {
-    if (name.length === 0 || rating.length === 0 || range == null) {
+    if (name.length === 0 || rating.length === 0 || value == null) {
       alert('Device Name, Rating and Device Type are compulsory!');
     } else {
       props.navigation.push('chooseRoom', {
@@ -85,6 +85,7 @@ const AddDevice = props => {
         deviceRating: rating,
         range: range,
         host: host,
+        deviceid: deviceid,
       });
     }
   };

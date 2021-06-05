@@ -87,7 +87,7 @@ const VRrooms = props => {
             <ScrollView style={{backgroundColor: 'white'}}>
               <View style={styles.buttonView1}>
                 <Button
-                  style={styles.button1}
+                  style={{backgroundColor: '#42A4FE'}}
                   mode="contained"
                   onPress={() => {
                     props.navigation.push('chooseDate', {
